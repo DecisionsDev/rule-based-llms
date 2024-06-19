@@ -1,0 +1,24 @@
+
+property loadGetterSetterAsProperties "true"
+property origin "xom:/hr_decision_service//Users/smery/Dev/BA/rule-based-llms/decision_services/hr_decision_service/hr_decision_service_xom/target/hr_decision_service_xom-0.1.0.jar"
+property uuid "e35c7c98-06d5-4137-9078-f3e3f248e984"
+package com.ibm.rules.llms.demo.hrservice;
+
+
+public class Employee
+{
+    public string hiringDate;
+    public string name;
+    public Employee();
+}
+
+public class Util
+{
+    public Util();
+    public static boolean isAfter(string arg1, string arg2);
+    public static boolean isBefore(string arg1, string arg2);
+    public static boolean isSameDate(string arg1, string arg2);
+    public static java.time.ZonedDateTime parseDate(string arg);
+    public static long yearsOfService(string arg);
+}
+

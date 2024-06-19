@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ilog.rules.studio.model.brl:ActionRule xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ilog.rules.studio.model.brl="http://ilog.rules.studio/model/brl.ecore">
+  <name>compute_total_timeoff_days</name>
+  <uuid>939869d2-3943-4572-ba99-ebcdf6b0fa59</uuid>
+  <locale>en_US</locale>
+  <definition><![CDATA[definitions 
+	set 'total' to 'the number of holidays' + 'the number of vacation days' + 'the number of sick days'; 
+then
+	set 'timeoff days' to total + " days per year"; 
+]]></definition>
+</ilog.rules.studio.model.brl:ActionRule>

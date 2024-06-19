@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ilog.rules.studio.model.brl:ActionRule xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ilog.rules.studio.model.brl="http://ilog.rules.studio/model/brl.ecore">
+  <name>calculate_vacation_5</name>
+  <uuid>571e6edd-5741-4671-96c9-be6ab1b32e6e</uuid>
+  <locale>en_US</locale>
+  <definition><![CDATA[definitions
+	set 'the years of service' to the years of service from the hiring date of 'the employee';
+if 
+	'the years of service' is more than 20 
+and 
+	(the hiring date of 'the employee' is before "January 1, 2004"
+	or the hiring date of 'the employee' is "January 1, 2004")
+then 
+	set 'the number of vacation days' to 25 ;]]></definition>
+</ilog.rules.studio.model.brl:ActionRule>

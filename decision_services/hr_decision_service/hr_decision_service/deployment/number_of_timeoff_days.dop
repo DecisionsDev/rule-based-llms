@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<com.ibm.rules.studio.model.decisionservice:Operation xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:com.ibm.rules.studio.model.decisionservice="http://com.ibm.rules.studio/model/decisionservice.ecore" xmlns:ilog.rules.studio.model.query.extractor="http://ilog.rules.studio/model/query/extractor.ecore" rulesetName="number_of_timeoff_days" usingRuleflow="true" ruleflowName="ruleflow" targetRuleProjectName="hr_decision_service">
+  <name>number_of_timeoff_days</name>
+  <uuid>d821f204-0ce4-4c4d-b063-9a30e13a2e1f</uuid>
+  <description><![CDATA[Calculate the number of time-off days an employee is eligible to.]]></description>
+  <referencedVariables variableName="employeeId" variableSetName="vars">
+    <variableSet href="../rules/vars.var#ae1c93d8-3d89-40ab-9c52-d22b8bb23e6b"/>
+  </referencedVariables>
+  <referencedVariables variableName="hiringDate" variableSetName="vars">
+    <variableSet href="../rules/vars.var#ae1c93d8-3d89-40ab-9c52-d22b8bb23e6b"/>
+  </referencedVariables>
+  <referencedVariables variableName="timeoffDays" variableSetName="vars" direction="OUT">
+    <variableSet href="../rules/vars.var#ae1c93d8-3d89-40ab-9c52-d22b8bb23e6b"/>
+  </referencedVariables>
+  <ruleflow href="../rules/ruleflow.rfl#28918873-8aa6-4bce-9a91-50e55ac75957"/>
+  <extractor xsi:type="ilog.rules.studio.model.query.extractor:QueryExtractor" name="number_of_timeoff_days_extractor" validator="Default Validator"/>
+  <targetRuleProject href="../../hr_decision_service#29fdf060-029c-41c7-b3d9-d6f5e3f82f49"/>
+</com.ibm.rules.studio.model.decisionservice:Operation>

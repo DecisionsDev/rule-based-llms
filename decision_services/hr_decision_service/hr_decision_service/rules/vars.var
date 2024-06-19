@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ilog.rules.studio.model.base:VariableSet xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ilog.rules.studio.model.base="http://ilog.rules.studio/model/base.ecore">
+  <name>vars</name>
+  <uuid>ae1c93d8-3d89-40ab-9c52-d22b8bb23e6b</uuid>
+  <variables name="employeeId" type="java.lang.String" initialValue="" verbalization="employee id"/>
+  <variables name="hiringDate" type="java.lang.String" initialValue="" verbalization="hiringDate"/>
+  <variables name="timeoffDays" type="java.lang.String" initialValue="" verbalization="timeoff days"/>
+  <variables name="employee" type="com.ibm.rules.llms.demo.hrservice.Employee" initialValue="" verbalization="the employee"/>
+  <variables name="vacationDays" type="int" initialValue="" verbalization="the number of vacation days"/>
+  <variables name="holidays" type="int" initialValue="" verbalization="the number of holidays"/>
+  <variables name="sickDays" type="int" initialValue="" verbalization="the number of sick days"/>
+</ilog.rules.studio.model.base:VariableSet>

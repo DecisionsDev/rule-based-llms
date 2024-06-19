@@ -1,0 +1,15 @@
+{
+    "engine" :  "odm",
+    "toolName" : "GetNumberOfVacationDaysPerYearInput",
+    "toolDescription" : "retrieve the number of vacation days per year for a given employee and his hiring date.",
+    "toolPath" :  "/hr_decision_service/1.0/number_of_timeoff_days/1.0",
+    "args" : [
+        {
+            "argName" : "employeeId", "argType": "str", "argDescription": "the employee name"
+        },
+        {
+            "argName" : "hiringDate", "argType": "str", "argDescription": "the hiring date"
+        }
+    ],
+    "output" : "timeoffDays"
+}

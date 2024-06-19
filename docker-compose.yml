@@ -1,0 +1,69 @@
+version: "3.8"
+services:
+  odm:
+    image: ibmcom/odm
+    hostname: odm
+    profiles:
+      - odm
+    container_name: odm
+    environment:
+      - LICENSE=accept
+      - SAMPLE=true
+    healthcheck:
+      test: curl -k -f http://localhost:9060/res/login.jsf || exit 1
+      interval: 5s
+      timeout: 10s
+      retries: 30
+      start_period: 10s
+    ports:
+      - 9060:9060
+  ollama:
+    image: ollama/ollama
+    hostname: ollama
+    profiles:
+      - ollama
+    volumes:
+        - ./start-ollama.sh:/start-ollama.sh
+    container_name: ollama
+    entrypoint: ["/usr/bin/bash", "/start-ollama.sh"]
+    ports:
+        - 11434:11434
+  backend:
+    image: backend
+    hostname: backend
+    profiles:
+      - dev
+    volumes:
+      - ./data:/data
+    build: rule-agent
+    # depends_on:
+    #   odm:
+    #     condition: service_healthy
+    environment:
+      - ODM_SERVER_URL=http://odm:9060
+      - ODM_USERNAME=odmAdmin
+      - ODM_PASSWORD=odmAdmin
+      - PYTHONUNBUFFERED=1
+      - DATADIR=/data
+    env_file: 
+      - "ollama.env"
+      - "watsonx.env"
+      - "ads.env"
+    ports:
+      - 9000:9000
+    extra_hosts:   
+      - "host.containers.internal:host-gateway"
+# If you are using Podman, comment out the line above and uncomment the following line with your IP address:
+#      - "host.containers.internal:${HOST_IP_ADDRESS}"
+  frontend:
+    image: chatbot-frontend
+    build: 
+      context: chatbot-frontend
+      args:
+      - API_URL=http://localhost:9000
+    profiles:
+      - dev
+    depends_on:
+      - backend
+    ports:
+      - 8080:80

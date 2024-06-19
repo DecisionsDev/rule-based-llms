@@ -1,0 +1,16 @@
+# Vocabulary Properties
+uuid = 48430be0-b4c0-4a39-abd2-844cfdb47631
+
+# com.ibm.rules.llms.demo.hrservice.Employee
+com.ibm.rules.llms.demo.hrservice.Employee#concept.label = employee
+com.ibm.rules.llms.demo.hrservice.Employee.hiringDate#phrase.action = set the hiring date of {this} to {hiring date}
+com.ibm.rules.llms.demo.hrservice.Employee.hiringDate#phrase.navigation = {hiring date} of {this}
+com.ibm.rules.llms.demo.hrservice.Employee.name#phrase.action = set the name of {this} to {name}
+com.ibm.rules.llms.demo.hrservice.Employee.name#phrase.navigation = {name} of {this}
+
+# com.ibm.rules.llms.demo.hrservice.Util
+com.ibm.rules.llms.demo.hrservice.Util#concept.label = util
+com.ibm.rules.llms.demo.hrservice.Util.isAfter(java.lang.String,java.lang.String)#phrase.navigation = {0} is after {1}
+com.ibm.rules.llms.demo.hrservice.Util.isBefore(java.lang.String,java.lang.String)#phrase.navigation = {0} is before {1}
+com.ibm.rules.llms.demo.hrservice.Util.isSameDate(java.lang.String,java.lang.String)#phrase.navigation = {0} is the same date as {1}
+com.ibm.rules.llms.demo.hrservice.Util.yearsOfService(java.lang.String)#phrase.navigation = the years of service from {0}

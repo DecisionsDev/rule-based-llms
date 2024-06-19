@@ -1,0 +1,14 @@
+ibm-generative-ai
+flask
+flask-cors
+langchain
+langchain_community
+langchain_core
+langchain-text-splitters
+langsmith
+# To be removed when this issue is merge in Langchain https://github.com/langchain-ai/langchain/issues/22972
+tenacity==8.3.0
+fastembed
+chromadb
+pypdf
+
