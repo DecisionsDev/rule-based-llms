@@ -10,13 +10,13 @@ ODM Decision Server needs to be started before deploying a Decision Service into
 
 When ODM is started, use the URL http://localhost:9060⁠ to display a welcome page that lists all the ODM components. You can also directly access the individual components through the following URLs:
 
-| Component	| URL	| Username	| Password
----
-| Decision Server console⁠	| http://localhost:9060/res⁠	| odmAdmin	| odmAdmin
-| Decision Server Runtime⁠	| http://localhost:9060/DecisionService⁠	| odmAdmin	| odmAdmin
-| Decision Center Business console⁠	| http://localhost:9060/decisioncenter⁠	| odmAdmin	| odmAdmin
-| Decision Runner⁠	| http://localhost:9060/DecisionRunner⁠	| odmAdmin	| odmAdmin
-| Sample application⁠	| http://localhost:9060/loan-server⁠		
+| Component | URL | Username | Password |
+|----------|----------|----------|---------- |
+| Decision Server console⁠    | http://localhost:9060/res⁠   | odmAdmin   | odmAdmin |
+| Decision Server Runtime⁠    | http://localhost:9060/DecisionService⁠   | odmAdmin   | odmAdmin |
+| Decision Center Business console⁠    | http://localhost:9060/decisioncenter⁠   | odmAdmin   | odmAdmin |
+| Decision Runner⁠    | http://localhost:9060/DecisionRunner   | odmAdmin   | odmAdmin |
+| Sample application    | http://localhost:9060/loan-server   | odmAdmin   | odmAdmin |
 
 
 # How to deploy a Decision Service to ODM
