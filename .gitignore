@@ -1,0 +1,49 @@
+# Node things
+**/node_modules
+
+# Compiled class file
+*.class
+
+# Log file
+*.log
+*.err
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+!*/src/test/resources/**/*.jar
+!data/**/decisionapps/*.jar
+*.war
+*.nar
+*.ear
+*.tar.gz
+*.rar
+**/target
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+# IDE files
+**/.idea/
+**/*.iml
+**/.settings
+# **/.project
+**/.vscode
+**/mvnw
+**/__pycache__
+
+
+# Git files
+**/.DS_Store
+/dependency-reduced-pom.xml
+/cp.txt
+
+# private files
+**/.env.local
+tmp
+TODO.md
