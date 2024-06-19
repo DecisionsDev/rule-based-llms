@@ -11,7 +11,7 @@ and uses the response to anwser the user question.
 In this project we're using [IBM Operational Decision Manager](https://www.ibm.com/products/operational-decision-manager) and [IBM Automation Decision Services](https://www.ibm.com/products/automation-decision-services) to illustrate how to implement rule-based decision services. 
 
 There are several sub-projects:
-- rule-agent-python: a Langchain for Python implementation of the chatbot backend. 
+- rule-agent: a Langchain for Python implementation of the chatbot backend. 
 - decision-services: some examples of IBM ODM and IBM ADS decision services
 - chatbot-frontend:  a React web application to interact with the conversational backend. 
 
