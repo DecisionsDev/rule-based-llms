@@ -37,7 +37,7 @@ Here are some quick steps to get the demo running using IBM watsonx.ai cloud ser
 
 1. Set-up connection to IBM watsonx.ai
 
-See [Setup watsonx.ai](#setup-wastonx)
+See [Setup watsonx.ai](#setup-ibm-wastonxai)
 
 2. run ODM:
 ```sh
