@@ -2,13 +2,15 @@
 
 This project illustrates the combination of LLMs with a rule engine. 
 
+Please check out [this presentation](<doc/Rule-Based LLM Demo.pptx>) and [this video](<doc/Rule-Based LLM Demo.mp4>) for an exhaustive presentation of what this project is about. 
+
 It features a chatbot powered by a LLM which has access to rule-based Decision Services. When the question
 can be answered by an existing Decision Service, the LLM provides the parameters to call this Decision Service
 and uses the response to anwser the user question. 
 
 <img src="doc/architecture.png" width="600px" heigh="400px" />
 
-In this project we're using [IBM Operational Decision Manager](https://www.ibm.com/products/operational-decision-manager) and [IBM Automation Decision Services](https://www.ibm.com/products/automation-decision-services) to illustrate how to implement rule-based decision services. 
+In this project, we're using [IBM Operational Decision Manager](https://www.ibm.com/products/operational-decision-manager) and [IBM Automation Decision Services](https://www.ibm.com/products/automation-decision-services) to illustrate how to implement rule-based decision services. 
 
 There are several sub-projects:
 - rule-agent: a Langchain for Python implementation of the chatbot backend. 
