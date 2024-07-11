@@ -49,7 +49,10 @@ Here are the names and descriptions for each tool:"""
 SUFFIX_WITH_TOOLS = """Given the user input, return the name and input of the tool to use.
 The tool you return needs to be one from the list. 
 Return your response as a JSON blob with 'name' and 'arguments' keys.
-The value associated with the 'arguments' key should be a dictionary of parameters."""
+The value associated with the 'arguments' key should be a dictionary of parameters.
+Please format dates as 'yyyy-mm-dd'.
+Return the JSON blob only. Don't provide explanation. 
+"""
 
     #    nlg_prompt_template = """
     #    You are an assistant that has access to external tools.
@@ -82,11 +85,20 @@ The value associated with the 'arguments' key should be a dictionary of paramete
     #    This is the true answer, don't challenge it, don't try to invent another one and use it to respond with 1 sentence.
     #   """
     
+# NLG_SYSTEM_PROMPT = """
+#        The user input contains a question for which the response is: {result}. 
+#        Generate the simplest sentence using this response. Don't provide any explanation.
+#       For example, if the question is "what is the price of a pair of shoes" and the response is "$89", then generate: "the price of a pair of shoes is $89.".
+#       """
+
 NLG_SYSTEM_PROMPT = """
         The user input contains a question for which the response is: {result}. 
         Generate the simplest sentence using this response. Don't provide any explanation.
         For example, if the question is "what is the price of a pair of shoes" and the response is "$89", then generate: "the price of a pair of shoes is $89.".
+        Don't use the user input. Generate one sentence.
        """
+
+
 INSTRUCTIONS_WITH_CONTEXT = """
             <s> [INST] You are an assistant for question-answering tasks. Use the following pieces of retrieved context 
             to answer the question. If you don't know the answer, just say that you don't know. Use three sentences

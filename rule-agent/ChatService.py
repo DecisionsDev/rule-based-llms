@@ -33,6 +33,8 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 # create a LLM service
 llm = createLLM()
 
+print("Using LLM model: ", llm.model_id)
+
 # create Decision services (ODM and ADS)
 odmService = ODMService()
 adsService = ADSService()
