@@ -2,7 +2,7 @@
 
 This project illustrates the combination of LLMs with a rule engine. 
 
-Please check out [this presentation](<doc/Rule-Based LLMs Presentation.pptx>) and [this video](<doc/Rule-Based LLMs Video.mp4>) for an exhaustive presentation of what this project is about. 
+Please check out [this presentation](<doc/Rule-based LLMs Presentation.pptx>) and [this video](<doc/Rule-based LLMs Video.mp4>) for an exhaustive presentation of what this project is about. 
 
 It features a chatbot powered by a LLM which has access to rule-based Decision Services. When the question
 can be answered by an existing Decision Service, the LLM provides the parameters to call this Decision Service
