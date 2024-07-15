@@ -36,9 +36,9 @@ services:
     volumes:
       - ./data:/data
     build: rule-agent
-    # depends_on:
-    #   odm:
-    #     condition: service_healthy
+    depends_on:
+       odm:
+         condition: service_healthy
     environment:
       - ODM_SERVER_URL=http://odm:9060
       - ODM_USERNAME=odmAdmin
