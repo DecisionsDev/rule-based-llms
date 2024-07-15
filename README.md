@@ -70,7 +70,7 @@ John Doe is an Acme Corp employee who has been hired on November 1st, 1999. How 
 ### Clone the code
 1. Open a new terminal
 ```shell
-git clone https://github.ibm.com/stephane-mery/rule-based-llms.git
+git clone https://github.ibm.com/DecisionDev/rule-based-llms.git
 cd rule-based-llms
 ```
 
