@@ -35,10 +35,22 @@ llm = createLLM()
 
 print("Using LLM model: ", llm.model_id)
 
+# Try to create adsService, If ADSService is not defined or fails to initialize, fall back to odmService
+def get_rule_services():
+    try:
+        adsService = ADSService()
+        return {"ads": adsService}
+    except (NameError, AttributeError):
+        pass
+    odmService = ODMService()
+    return {"odm": odmService}
+
+ruleServices = get_rule_services()
+
 # create Decision services (ODM and ADS)
-odmService = ODMService()
-adsService = ADSService()
-ruleServices = { "odm": odmService, "ads": adsService}
+#odmService = ODMService()
+#adsService = ADSService()
+#ruleServices = { "odm": odmService, "ads": adsService}
 
 # create an AI Agent using Decision Services
 ruleAIAgent = RuleAIAgent(llm, ruleServices)
