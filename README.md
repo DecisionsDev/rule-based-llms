@@ -70,7 +70,7 @@ John Doe is an Acme Corp employee who has been hired on November 1st, 1999. How 
 ### Clone the code
 1. Open a new terminal
 ```shell
-git clone https://github.ibm.com/DecisionDev/rule-based-llms.git
+git clone https://github.com/DecisionsDev/rule-based-llms.git
 cd rule-based-llms
 ```
 
@@ -91,7 +91,7 @@ If you run the application outside Docker, you need to set your following enviro
 export LLM_TYPE=WATSONX
 export WATSONX_URL=<URL to watsonx.ai>
 export WATSONX_APIKEY=<your watsonx API Key>
-export WATSONX_MODEL_NAME=mistralai/mixtral-8x7b-instruct-v01
+export WATSONX_MODEL_NAME=ibm/granite-13b-chat-v2
 ```
 
 ### Setup Ollama
@@ -380,6 +380,11 @@ Make sure the ODM or ADS URL and the decision service path match what has been d
 
 ```sh
 docker system prune
+```
+   * If docker-compose is not found, try:
+
+```sh
+docker compose --profile odm up 
 ```
 # License
 The files in this repository are licensed under the [Apache License 2.0](LICENSE).
