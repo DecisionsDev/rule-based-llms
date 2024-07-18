@@ -45,7 +45,8 @@ def get_rule_services():
     odmService = ODMService()
     return {"odm": odmService}
 
-ruleServices = get_rule_services()
+ruleServices = {"odm": ODMService()}
+
 
 # create Decision services (ODM and ADS)
 #odmService = ODMService()
@@ -80,9 +81,9 @@ for directory in catalog_dirs:
 
 @app.route(ROUTE + '/chat_with_tools', methods=['GET'])
 def chat_with_tools():
-    if (not odmService.isConnected and not adsService.isConnected):
-        print("Error: Not connected to any Decision runtime")
-        return {'output' : 'Not connected to any Decision runtime', 'type' : 'error'}
+#    if (not odmService.isConnected and not adsService.isConnected):
+#        print("Error: Not connected to any Decision runtime")
+#        return {'output' : 'Not connected to any Decision runtime', 'type' : 'error'}
 
     userInput = request.args.get('userMessage')    
     print("chat_with_tools: received request ", userInput) 
