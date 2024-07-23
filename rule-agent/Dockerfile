@@ -13,7 +13,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
-FROM python:3.9 as builder
+FROM python:3.10 as builder
 WORKDIR /code
 
 
