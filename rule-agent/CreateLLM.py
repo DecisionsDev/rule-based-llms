@@ -16,12 +16,18 @@
 import os
 from CreateLLMLocal import createLLMLocal
 from CreateLLMWatson import  createLLMWatson
+from CreateLLMBAM import  createLLMBAM
 
 def createLLM():
     llm_type = os.getenv("LLM_TYPE","LOCAL_OLLAMA")
     if llm_type == "LOCAL_OLLAMA":
+        print("Using LLM Service: Ollama")
         return createLLMLocal()
+    elif llm_type == "BAM":
+        print("Using LLM Service: IBM BAM")
+        return createLLMBAM()
     elif llm_type == "WATSONX":
+        print("Using LLM Service: IBM watsonx.ai")
         return createLLMWatson()
     else:
         print ("Env variable LLM_TYPE not defined.")

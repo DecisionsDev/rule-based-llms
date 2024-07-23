@@ -1,3 +1,4 @@
+langchain-ibm
 ibm-generative-ai
 flask
 flask-cors

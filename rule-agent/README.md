@@ -8,6 +8,10 @@ In the directory, install Python requirements:
 ```
 pip3 install -r requirements.txt
 ```
+or alternatively
+```
+python3.12 -m pip install -r requirements.txt
+```
 
 To run the service, use the following command:
 ```

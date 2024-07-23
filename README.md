@@ -78,10 +78,11 @@ You can use Ollama or WatsonX as a LLM service. Follow the steps below depending
 
 ### Setup IBM wastonx.ai
 
-1. Create a watsonx.ai account. Follow links from https://www.ibm.com/products/watsonx-ai to set-up a Cloud instance.
+1. Create an IBM watsonx.ai account. Follow links from https://www.ibm.com/products/watsonx-ai to set-up a Cloud instance.
 2. Generate an API key in your ```Profile and settings``` section.
+3. Instantiate a watsonx.ai service from your IBM account. 
 3. Edit the ```wastonx.env``` file:
-  * Uncomment the relevant line and set your WatsonX API key.
+  * Uncomment the relevant line and set your IBM watsonx.ai API key and your IBM watsonx.ai Project Id.
 
 Then you can proceed to the next step: [Launch the docker topology](#launch-the-docker-topology) or [Run the application locally](#launch-the-application-locally)
 
@@ -91,6 +92,7 @@ If you run the application outside Docker, you need to set your following enviro
 export LLM_TYPE=WATSONX
 export WATSONX_URL=<URL to watsonx.ai>
 export WATSONX_APIKEY=<your watsonx API Key>
+export WATSONX_PROJECT_ID=<your watsonx.ai Project ID>
 export WATSONX_MODEL_NAME=ibm/granite-13b-chat-v2
 ```
 

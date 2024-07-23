@@ -14,34 +14,25 @@
 #    limitations under the License.
 #
 import os
-from langchain_ibm import ChatWatsonx
-from ibm_watsonx_ai.metanames import GenTextParamsMetaNames
-            
+from genai.extensions.langchain import LangChainChatInterface
+from genai.schema import TextGenerationParameters, TextGenerationReturnOptions
+from genai import Client, Credentials
 
-def createLLMWatson():
+def createLLMBAM():
     if not 'WATSONX_APIKEY' in os.environ:
-        print('Please set env variable WATSONX_APIKEY to your IBM watsonx.ai service API Key')
+        print('Please set env variable WATSONX_APIKEY to your IBM Generative AI key')
         exit()
     if not 'WATSONX_URL' in os.environ:
         print('Please set env variable WATSONX_URL to your IBM Generative AI  endpoint URL')
         exit()
-    if not 'WATSONX_PROJECT_ID' in os.environ:
-        print('Please set env variable WATSONX_PROJECT_ID to your IBM watsonx.ai Project ID')
-        exit()
-    watsonx_model=os.getenv("WATSONX_MODEL_NAME","mistralai/mistral-7b-instruct-v0-2")
+    watson_model=os.getenv("WATSONX_MODEL_NAME","mistralai/mistral-7b-instruct-v0-2")
     api_key = os.getenv("WATSONX_APIKEY")
     api_url = os.getenv("WATSONX_URL")
-    project_id = os.getenv("WATSONX_PROJECT_ID")
 
-    parameters = {
-        GenTextParamsMetaNames.DECODING_METHOD: "greedy",
-        GenTextParamsMetaNames.MAX_NEW_TOKENS: 400
-    }
+    creds = Credentials(api_key, api_endpoint=api_url)
+    params = TextGenerationParameters(decoding_method="greedy", max_new_tokens=400)
+    client = Client(credentials=creds)
 
-    llm = ChatWatsonx(
-        model_id=watsonx_model,
-        url=api_url,
-        api_key=api_key,
-        project_id=project_id,
-        params=parameters)
+    llm = LangChainChatInterface(client=client,
+            model_id=watson_model, parameters=params)
     return llm
