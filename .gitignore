@@ -37,6 +37,7 @@ hs_err_pid*
 **/.vscode
 **/mvnw
 **/__pycache__
+**/.syncEntries
 
 
 # Git files

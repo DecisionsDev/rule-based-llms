@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ilog.rules.studio.model.base:RuleProject xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:com.ibm.rules.studio.model.decisionservice="http://com.ibm.rules.studio/model/decisionservice.ecore" xmlns:ilog.rules.studio.model.base="http://ilog.rules.studio/model/base.ecore" xmlns:ilog.rules.studio.model.bom="http://ilog.rules.studio/model/bom.ecore" xmlns:ilog.rules.studio.model.query="http://ilog.rules.studio/model/query.ecore" xmlns:ilog.rules.studio.model.xom="http://ilog.rules.studio/model/xom.ecore" buildMode="DecisionEngine" isADecisionService="true" migrationFlag="3">
+<ilog.rules.studio.model.base:RuleProject xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:com.ibm.rules.studio.model.decisionservice="http://com.ibm.rules.studio/model/decisionservice.ecore" xmlns:ilog.rules.studio.model.base="http://ilog.rules.studio/model/base.ecore" xmlns:ilog.rules.studio.model.bom="http://ilog.rules.studio/model/bom.ecore" xmlns:ilog.rules.studio.model.xom="http://ilog.rules.studio/model/xom.ecore" buildMode="DecisionEngine" isADecisionService="true" migrationFlag="3">
   <name>hr_decision_service</name>
   <uuid>29fdf060-029c-41c7-b3d9-d6f5e3f82f49</uuid>
   <outputLocation>output</outputLocation>
@@ -16,9 +16,6 @@
   </modelFolders>
   <modelFolders xsi:type="ilog.rules.studio.model.bom:BOMFolder">
     <name>bom</name>
-  </modelFolders>
-  <modelFolders xsi:type="ilog.rules.studio.model.query:QueryFolder">
-    <name>queries</name>
   </modelFolders>
   <modelFolders xsi:type="ilog.rules.studio.model.base:ResourceFolder">
     <name>resources</name>
