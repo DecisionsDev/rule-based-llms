@@ -35,18 +35,18 @@ llm = createLLM()
 
 print("Using LLM model: ", llm.model_id)
 
-# Try to create adsService, If ADSService is not defined or fails to initialize, fall back to odmService
+
+# Try adsService, If adsService is not connected, fall back to odmService
 def get_rule_services():
-    try:
-        adsService = ADSService()
+    if adsService.isConnected:
         return {"ads": adsService}
-    except (NameError, AttributeError):
-        pass
-    odmService = ODMService()
-    return {"odm": odmService}
+    else:
+        return {"odm": odmService}
 
-ruleServices = {"odm": ODMService()}
-
+# create a Decision service
+adsService = ADSService()
+odmService = ODMService()
+ruleServices = get_rule_services()
 
 # create Decision services (ODM and ADS)
 #odmService = ODMService()
@@ -81,9 +81,9 @@ for directory in catalog_dirs:
 
 @app.route(ROUTE + '/chat_with_tools', methods=['GET'])
 def chat_with_tools():
-#    if (not odmService.isConnected and not adsService.isConnected):
-#        print("Error: Not connected to any Decision runtime")
-#        return {'output' : 'Not connected to any Decision runtime', 'type' : 'error'}
+    if (not odmService.isConnected):
+        print("Error: Not connected to any Decision runtime")
+        return {'output' : 'Not connected to any Decision runtime', 'type' : 'error'}
 
     userInput = request.args.get('userMessage')    
     print("chat_with_tools: received request ", userInput) 
