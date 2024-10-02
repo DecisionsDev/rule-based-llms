@@ -33,7 +33,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 # create a LLM service
 llm = createLLM()
 
-print("Using LLM model: ", llm.model_id)
+# print("Using LLM model: ", llm.model_id)
 
 
 # Try adsService, If adsService is not connected, fall back to odmService
