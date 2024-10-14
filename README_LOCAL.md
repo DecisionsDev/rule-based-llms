@@ -59,9 +59,9 @@ docker-compose up
 ```
 This will run the ODM for Developpers docker images in conjonction with the sample web application.
 Wait
-4. Wait a few minutes until you see the message `` * Running on all addresses (0.0.0.0)```
-5. Then  you are ready to open a browser to this url : http://localhost:8000
 
+4. Wait a few minutes until you see the message `` * Running on all addresses (0.0.0.0)```
+5. Now that the demo is set up, you're ready to use it. For further instructions on how to interact with the demo, please refer to the [Usage Guide](README.md#using-the-chatbot-ui).
 
 > Notes: 
 > If you are already running ODM somewhere, you need to set-up the following environment variables:
