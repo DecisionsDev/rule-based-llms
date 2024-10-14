@@ -61,19 +61,26 @@ This will run the ODM for Developpers docker images in conjonction with the samp
 Wait
 
 4. Wait a few minutes until you see the message `` * Running on all addresses (0.0.0.0)```
-5. Now that the demo is set up, you're ready to use it. For further instructions on how to interact with the demo, please refer to the [Usage Guide](README.md#using-the-chatbot-ui).
+5. Now that the demo is set up, you're ready to use it.
 
-> Notes: 
-> If you are already running ODM somewhere, you need to set-up the following environment variables:
->```sh
-> export ODM_SERVER_URL=<ODM Runtime URL>
-> export ODM_USERNAME=<ODM user, default odmAdmin>
-> export ODM_PASSWORD=<ODM user password, default odmAdmin>
-> ```
-> And change the docker-compose.yml file accordingly. 
+    **For further instructions on how to interact with the demo, please refer to the [Usage Guide](README.md#using-the-chatbot-ui)**
 
+### Addtional informations
 
-> If you want to run this demonstration with ADS instead of Operation Decision Manager see this [documentation](README_ADS.md)
+#### Using an existing ODM installation
+ If you are already running ODM somewhere, you need to set-up the following environment variables:
+ 
+```shell
+export ODM_SERVER_URL=<ODM Runtime URL>
+export ODM_USERNAME=<ODM user, default odmAdmin>
+export ODM_PASSWORD=<ODM user password, default odmAdmin>
+```
+
+And change the docker-compose.yml file accordingly. 
+
+#### Using ADS 
+
+If you want to run this demonstration with ADS instead of Operation Decision Manager see this [documentation](README_ADS.md)
 
 
 
