@@ -3,8 +3,6 @@ services:
   odm:
     image: ibmcom/odm
     hostname: odm
-    profiles:
-      - odm
     container_name: odm
     environment:
       - LICENSE=accept
@@ -17,28 +15,15 @@ services:
       start_period: 10s
     ports:
       - 9060:9060
-  ollama:
-    image: ollama/ollama
-    hostname: ollama
-    profiles:
-      - ollama
-    volumes:
-        - ./start-ollama.sh:/start-ollama.sh
-    container_name: ollama
-    entrypoint: ["/usr/bin/bash", "/start-ollama.sh"]
-    ports:
-        - 11434:11434
   backend:
     image: backend
     hostname: backend
-    profiles:
-      - dev
     volumes:
       - ./data:/data
     build: rule-agent
-#    depends_on:
-#       odm:
-#         condition: service_healthy
+    depends_on:
+       odm:
+         condition: service_healthy
     environment:
       - ODM_SERVER_URL=http://odm:9060
       - ODM_USERNAME=odmAdmin
@@ -46,9 +31,7 @@ services:
       - PYTHONUNBUFFERED=1
       - DATADIR=/data
     env_file: 
-      - "ollama.env"
-      - "watsonx.env"
-      - "ads.env"
+      - "llm.env"
     ports:
       - 9000:9000
     extra_hosts:   
@@ -61,8 +44,6 @@ services:
       context: chatbot-frontend
       args:
       - API_URL=http://localhost:9000
-    profiles:
-      - dev
     depends_on:
       - backend
     ports:
