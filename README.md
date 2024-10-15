@@ -57,7 +57,7 @@ Once WSL is enabled, configure Rancher Desktop to support it:
 You can run this demonstration using two different LLM configurations and depending on your setup, follow the respective guide below:
 
 1. [Running with Ollama (Local)](README_LOCAL.md) using [Ollama](https://ollama.com/), where the LLM runs directly on your machine.
-2. [Running with Watsonx.ai (Cloud)](#running-with-watsonx-ai-cloud) using [Watsonx.ai](https://www.ibm.com/watsonx), accessing IBM's AI models in the cloud.
+2. [Running with Watsonx.ai (Cloud)](#README_WATSONX.md) using [Watsonx.ai](https://www.ibm.com/watsonx), accessing IBM's AI models in the cloud.
 
 
 
