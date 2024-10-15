@@ -44,37 +44,9 @@ Copy the `ollama.env` file to llm.env so that the demonstration will used this m
 cp ollama.env llm.env
 ```
 
-### Launch the docker topology
+### Launch the Demo
 
-1. Open a new terminal
-2. Build the docker demonstration 
-```shell
-docker-compose build
-```
-Once the build process completes
-
-3. Run the demonstration
-```shell
-docker-compose up
-```
-This will run the ODM for Developpers docker images in conjonction with the sample web application.
-Wait
-
-4. Wait a few minutes until you see the message `` * Running on all addresses (0.0.0.0)```
-5. Now that the demo is set up, you're ready to use it. For further instructions on how to interact with the demo, please refer to the [Usage Guide](README.md#using-the-chatbot-ui).
-
-> Notes: 
-> If you are already running ODM somewhere, you need to set-up the following environment variables:
->```sh
-> export ODM_SERVER_URL=<ODM Runtime URL>
-> export ODM_USERNAME=<ODM user, default odmAdmin>
-> export ODM_PASSWORD=<ODM user password, default odmAdmin>
-> ```
-> And change the docker-compose.yml file accordingly. 
-
-
-> If you want to run this demonstration with ADS instead of Operation Decision Manager see this [documentation](README_ADS.md)
-
+Once the environment is set up, you are ready to run the demo. Follow the instructions on [how to launch the demo with docker](README.md#launch-the-docker-topology)
 
 
 # License

@@ -52,12 +52,45 @@ Once WSL is enabled, configure Rancher Desktop to support it:
 <img src="doc/wsl.png" width="600px" heigh="400px" />
 
 
-## Running the demonstration
+## Setting up your environement for the demonstration
 
 You can run this demonstration using two different LLM configurations and depending on your setup, follow the respective guide below:
 
 1. [Running with Ollama (Local)](README_LOCAL.md) using [Ollama](https://ollama.com/), where the LLM runs directly on your machine.
 2. [Running with Watsonx.ai (Cloud)](#running-with-watsonx-ai-cloud) using [Watsonx.ai](https://www.ibm.com/watsonx), accessing IBM's AI models in the cloud.
+
+
+
+### Launch the docker topology
+
+1. Open a new terminal
+2. Build the docker demonstration 
+```shell
+docker-compose build
+```
+Once the build process completes
+
+3. Run the demonstration
+```shell
+docker-compose up
+```
+This will run the ODM for Developpers docker images in conjonction with the sample web application.
+Wait
+
+4. Wait a few minutes until you see the message `` * Running on all addresses (0.0.0.0)```
+5. Now that the demo is set up, you're ready to use it. For further instructions on how to interact with the demo, please refer to the next step [Usage Guide](#using-the-chatbot-ui).
+
+> Notes: 
+> If you are already running ODM somewhere, you need to set-up the following environment variables:
+>```sh
+> export ODM_SERVER_URL=<ODM Runtime URL>
+> export ODM_USERNAME=<ODM user, default odmAdmin>
+> export ODM_PASSWORD=<ODM user password, default odmAdmin>
+> ```
+> And change the docker-compose.yml file accordingly. 
+
+
+> If you want to run this demonstration with ADS instead of Operation Decision Manager see this [documentation](README_ADS.md)
 
 
 ### Using the chatbot UI
