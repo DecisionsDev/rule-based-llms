@@ -93,32 +93,41 @@ Wait
 > If you want to run this demonstration with ADS instead of Operation Decision Manager see this [documentation](README_ADS.md)
 
 
-### Using the chatbot UI
 
-On this URL: http://localhost:8080 (or http://localhost:5173/ if you are running outside Docker), you have a Chatbot web application in which you can ask questions that will be answered by the combination of the underlying LLM and rule-based decision services. 
+### Demo Walkthrough: Chatbot and Rule-based Decision Services
 
-The answer can be answered by the LLM only, augmented with a policy document provided using RAG. If you click on ```Use Decision Services``` toggle, the policy document will not be used but registered Decision Services will to answer the question. 
+Once the Docker setup is complete, access the chatbot web application at [http://localhost:8080](http://localhost:8080). 
 
-With the pre-packaged HR Service application, you can ask the following question: 
+In this chatbot, you can ask questions that will be answered by combining the capabilities of the underlying LLM and the rule-based decision services. 
+
+The chatbot can answer questions in two modes:
+- **LLM-only**: The answer is generated purely by the LLM, possibly augmented with policy documents via Retrieval-Augmented Generation (RAG).
+- **Decision Services mode**: If you activate the "Use Decision Services" toggle, the chatbot will query registered Decision Services instead of relying on policy documents.
+
+#### Demo Scenario: HR Service Example
+
+With the pre-packaged HR Service application, you can ask the following example question:
 
 ```
-John Doe is an Acme Corp employee who has been hired on November 1st, 1999. How many vacation days the employee John Doe can take each year?
+John Doe is an Acme Corp employee who was hired on November 1st, 1999. How many vacation days is John Doe entitled to each year?
 ```
 
-Using the policy document, an answer similar to that will be generated:
+In **LLM-only mode** (augmented with the policy document), the response might look like this:
+
 ```
 Based on the context provided, John Doe, being an Acme Corp employee with less than 10 years of service, is entitled to three weeks of vacation per year.
 ```
 
-Note that this answer is wrong. The business policies to determine how much time-off days this employee is eligible to have not been interpreted correctly. 
+Note that this answer is **incorrect**. The business policies have not been interpreted accurately by the LLM.
 
-If using the Decision Service implementing these business policies, the answer should be similar to:
+When switching to **Decision Services mode**, the chatbot uses the rule-based decision service to generate the response. The correct answer would be:
 
 ```
-John Doe, being an Acme Corp employee, gets to enjoy 43 days of vacation each year.
+John Doe, being an Acme Corp employee, is entitled to 43 days of vacation per year.
 ```
 
-Note that this answer is correct as it is based on the response provided by the Decision Service which implements the corporate business policies to determine how much time-off days an Acme Corp employee is eligible to. 
+This answer is based on the business policies encoded within the decision service, ensuring accuracy in the interpretation of corporate rules.
+
 
 
 ## Using the application 
