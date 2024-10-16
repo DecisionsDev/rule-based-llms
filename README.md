@@ -26,6 +26,7 @@ See dedicated READMEs in all sub-projects
 A demo application (HR Service) showcases the system’s capabilities. Follow the instructions below to run the demo and explore the integration.
 
 <img src="doc/demo_hr.gif"  />
+
 ---
 
 ## Prerequisites
