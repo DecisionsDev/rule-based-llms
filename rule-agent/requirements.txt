@@ -1,5 +1,7 @@
 langchain-ibm
 ibm-generative-ai
+# To be removed when this issue is fixed in Langchain https://github.com/qdrant/fastembed/issues/385
+onnxruntime==1.19.2
 flask
 flask-cors
 langchain
