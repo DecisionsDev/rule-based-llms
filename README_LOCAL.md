@@ -4,7 +4,7 @@ To run the demo locally using Ollama, refer to the [Ollama Setup Guide](#ollama-
 
 ## Installation Instructions
 ### Install Ollama
-[Ollama](https://ollama.ai/) allows you to run open-source large language models, such as Mistral AI, locally.
+[Ollama](https://ollama.ai/) allows you to run open-source large language models, such as IBM Granite or Mistral AI, locally.
 
 Ollama bundles model weights, configuration, and data into a single package, defined by a Modelfile.
 
