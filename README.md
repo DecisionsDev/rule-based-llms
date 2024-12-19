@@ -45,9 +45,8 @@ This demo has been successfully tested on MacOS M1 and Windows 11 using Rancher 
 
 ### Setup Instructions for Windows OS with Rancher
 
-To run the demonstration on Windows, you'll need to enable [WSL (Windows Subsystem for Linux)](https://learn.microsoft.com/fr-fr/windows/wsl/install).
-
-Once WSL is enabled, configure Rancher Desktop to support it:
+1. To run the demonstration on Windows, you'll need to enable [WSL (Windows Subsystem for Linux)](https://learn.microsoft.com/fr-fr/windows/wsl/install).
+2. Once WSL is enabled, configure Rancher Desktop to support it:
 
 <img src="doc/wsl.png" width="600px" heigh="400px" />
 
@@ -64,7 +63,10 @@ You can run this demonstration using two different LLM configurations and depend
 ### Launch the docker topology
 
 1. Open a new terminal
-2. Build the docker demonstration 
+> In Windows open a command prompt and run ```wsl```
+2. Docker login
+> If it's not the case you need to create an account to docker.
+3. Build the docker demonstration 
 ```shell
 docker-compose build
 ```
