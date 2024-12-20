@@ -45,9 +45,8 @@ This demo has been successfully tested on MacOS M1 and Windows 11 using Rancher 
 
 ### Setup Instructions for Windows OS with Rancher
 
-To run the demonstration on Windows, you'll need to enable [WSL (Windows Subsystem for Linux)](https://learn.microsoft.com/fr-fr/windows/wsl/install).
-
-Once WSL is enabled, configure Rancher Desktop to support it:
+1. To run the demonstration on Windows, you'll need to enable [WSL (Windows Subsystem for Linux)](https://learn.microsoft.com/fr-fr/windows/wsl/install).
+2. Once WSL is enabled, configure Rancher Desktop to support it:
 
 <img src="doc/wsl.png" width="600px" heigh="400px" />
 
@@ -63,22 +62,35 @@ You can run this demonstration using two different LLM configurations and depend
 
 ### Launch the docker topology
 
-1. Open a new terminal
-2. Build the docker demonstration 
+1. **Open a New Terminal**  
+   - On **Windows**: Open a Command Prompt and run the `wsl` command to start the Windows Subsystem for Linux (if applicable).  
+   - On **macOS/Linux**: Open a terminal.  
+
+2. **Log In to Docker**  
+   - To access Docker images, ensure you are logged in to Docker. Run the following command in your terminal:  
+     ```bash
+     docker login
+     ```  
+   - If you do not have a Docker account, you will need to [create one here](https://hub.docker.com/signup).  
+
+> Why is this necessary?
+>   Docker enforces download rate limits for unauthenticated users. Logging in ensures you can pull images without interruptions caused by these limits, which is especially important for this demonstration.
+   
+3. **Build the docker demonstration**
 ```shell
 docker-compose build
 ```
 Once the build process completes
 
-3. Run the demonstration
+4. **Run the demonstration**
 ```shell
 docker-compose up
 ```
 This will run the ODM for Developpers docker images in conjonction with the sample web application.
 Wait
 
-4. Wait a few minutes until you see the message `` * Running on all addresses (0.0.0.0)```
-5. Now that the demo is set up, you're ready to use it. For further instructions on how to interact with the demo, please refer to the next step [Usage Guide](#using-the-chatbot-ui).
+5. Wait a few minutes until you see the message `` * Running on all addresses (0.0.0.0)```
+6. Now that the demo is set up, you're ready to use it. For further instructions on how to interact with the demo, please refer to the next step [Usage Guide](#using-the-chatbot-ui).
 
 > Notes: 
 > If you are already running ODM somewhere, you need to set-up the following environment variables:
