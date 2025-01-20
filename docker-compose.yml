@@ -6,7 +6,8 @@ services:
     container_name: odm
     environment:
       - LICENSE=accept
-      - SAMPLE=true
+      - SAMPLE=false
+      - DC_PERSISTENCE_LOCALE=fr_FR
     healthcheck:
       test: curl -k -f http://localhost:9060/res/login.jsf || exit 1
       interval: 5s
