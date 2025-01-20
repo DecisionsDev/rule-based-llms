@@ -80,7 +80,14 @@ class GenericDecisionServiceTool(BaseTool):
         decisionOutput = self.executionService.invokeDecisionService(rulesetPath=self.toolPath, decisionInputs=kwargs)
         print("Decision service responded: ", decisionOutput)
         if (decisionOutput != None):
-            return decisionOutput[self.outputProperty]
+            # Split the string by the comma to create a list
+            outputKeys=self.outputProperty.split(',')
+            result=''
+            # Iterate over the items
+            for key in outputKeys:
+                print(key)
+                result+=str(decisionOutput[key])
+            return result
         return None
     
     async def _arun(self, query: str, description: str) -> str:

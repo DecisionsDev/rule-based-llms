@@ -11,5 +11,5 @@
             "argName" : "dateRef", "argType": "str", "argDescription": "la date de référence"
         }
     ],
-    "output" : "actions"
+    "output" : "personnes,actions"
 }
