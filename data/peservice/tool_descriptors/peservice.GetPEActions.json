@@ -1,0 +1,15 @@
+{
+    "engine" :  "odm",
+    "toolName" : "GetPEActions",
+    "toolDescription" : "Détermine les actions à réaliser lors du prochain entretien avec le client.",
+    "toolPath" :  "/PrepaInterview_ruleapp/1.0/PrepaInterview_ruleset/",
+    "args" : [
+        {
+            "argName" : "idClient", "argType": "str", "argDescription": "l'identifiant du client"
+        },
+        {
+            "argName" : "dateRef", "argType": "str", "argDescription": "la date de référence"
+        }
+    ],
+    "output" : "actions"
+}
