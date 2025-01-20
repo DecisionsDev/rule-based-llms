@@ -1,0 +1,876 @@
+{
+    "result":[
+       {
+          "message":"Proposer un compte service",
+          "personne":{
+             "segment":"SEGMENT_11",
+             "csp":"AUCUN",
+             "roleRb":"EPOUX",
+             "situationFamiliale":"SF_MARIE",
+             "conditionLogement":"AUCUN",
+             "produitsConcurrence":[
+                {
+                   "libelle":"PEL",
+                   "nom":"",
+                   "nomOrganisme":"Société Générale",
+                   "encours":12350.0,
+                   "taux":0.0,
+                   "prelevement":0.0
+                }
+             ],
+             "salaireDeclare":{
+                "periodicite":"PMS_MENSUELLE",
+                "montant":6000.0,
+                "dateDerniereModif":"2012-09-30T22: 00: 00.000+0000"
+             },
+             "typeClient":"AUCUN",
+             "fraicheurEmailPrive":"",
+             "fraicheurEmailPro":"",
+             "fraicheurTelPrive":"",
+             "fraicheurTelPro":"",
+             "crp":"NON CRP",
+             "profilInvestisseur":"",
+             "regimeMatrimonial":"",
+             "id":"pers01",
+             "prenom":"Marcel",
+             "nom":"Dupond",
+             "civilite":"MONSIEUR",
+             "dateEntreeRelation":"2009-12-31T23: 00: 00.000+0000",
+             "dateNaissance":"1954-12-30T23: 00: 00.000+0000",
+             "adresse":{
+                "libelleLigneAdresse":"9 avenue de Verdun",
+                "codePostal":"94250",
+                "codePays":"FR"
+             },
+             "profession":"Consultant",
+             "entrepriseEmployeur":"IBM",
+             "emailPrive":"",
+             "emailPro":"",
+             "numeroTelephonePrive":"",
+             "numeroTelephonePro":"",
+             "agence":"Gentilly",
+             "nombreEnfantsACharge":0,
+             "isPersonnePrincipale":true,
+             "isPossedeResidenceSecondaire":false,
+             "isSocietaire":false,
+             "isAcef":false,
+             "isCasdenFonctionnaire":false,
+             "isDiamant":false,
+             "isEnqueteCourrier":false,
+             "isAnomalie":false,
+             "isCompletude":false
+          },
+          "produit":"None",
+          "detail":""
+       },
+       {
+          "message":"Téléphone manquant",
+          "personne":{
+             "segment":"SEGMENT_11",
+             "csp":"AUCUN",
+             "roleRb":"EPOUX",
+             "situationFamiliale":"SF_MARIE",
+             "conditionLogement":"AUCUN",
+             "produitsConcurrence":[
+                {
+                   "libelle":"PEL",
+                   "nom":"",
+                   "nomOrganisme":"Société Générale",
+                   "encours":12350.0,
+                   "taux":0.0,
+                   "prelevement":0.0
+                }
+             ],
+             "salaireDeclare":{
+                "periodicite":"PMS_MENSUELLE",
+                "montant":6000.0,
+                "dateDerniereModif":"2012-09-30T22: 00: 00.000+0000"
+             },
+             "typeClient":"AUCUN",
+             "fraicheurEmailPrive":"",
+             "fraicheurEmailPro":"",
+             "fraicheurTelPrive":"",
+             "fraicheurTelPro":"",
+             "crp":"NON CRP",
+             "profilInvestisseur":"",
+             "regimeMatrimonial":"",
+             "id":"pers01",
+             "prenom":"Marcel",
+             "nom":"Dupond",
+             "civilite":"MONSIEUR",
+             "dateEntreeRelation":"2009-12-31T23: 00: 00.000+0000",
+             "dateNaissance":"1954-12-30T23: 00: 00.000+0000",
+             "adresse":{
+                "libelleLigneAdresse":"9 avenue de Verdun",
+                "codePostal":"94250",
+                "codePays":"FR"
+             },
+             "profession":"Consultant",
+             "entrepriseEmployeur":"IBM",
+             "emailPrive":"",
+             "emailPro":"",
+             "numeroTelephonePrive":"",
+             "numeroTelephonePro":"",
+             "agence":"Gentilly",
+             "nombreEnfantsACharge":0,
+             "isPersonnePrincipale":true,
+             "isPossedeResidenceSecondaire":false,
+             "isSocietaire":false,
+             "isAcef":false,
+             "isCasdenFonctionnaire":false,
+             "isDiamant":false,
+             "isEnqueteCourrier":false,
+             "isAnomalie":false,
+             "isCompletude":false
+          },
+          "produit":"None",
+          "detail":""
+       },
+       {
+          "message":"Téléphone manquant",
+          "personne":{
+             "segment":"SEGMENT_10",
+             "csp":"AUCUN",
+             "roleRb":"EPOUSE",
+             "situationFamiliale":"SF_MARIE",
+             "conditionLogement":"AUCUN",
+             "produitsConcurrence":[
+                {
+                   "libelle":"PEA",
+                   "nom":"",
+                   "nomOrganisme":"BNP",
+                   "encours":45614.28,
+                   "taux":0.0,
+                   "prelevement":0.0
+                }
+             ],
+             "salaireDeclare":{
+                "periodicite":"AUCUN",
+                "montant":0.0
+             },
+             "typeClient":"AUCUN",
+             "fraicheurEmailPrive":"",
+             "fraicheurEmailPro":"",
+             "fraicheurTelPrive":"",
+             "fraicheurTelPro":"",
+             "crp":"NON CRP",
+             "profilInvestisseur":"",
+             "regimeMatrimonial":"",
+             "id":"pers02",
+             "prenom":"Géraldine",
+             "nom":"Dupond",
+             "civilite":"MADAME",
+             "dateEntreeRelation":"2009-12-31T23: 00: 00.000+0000",
+             "dateNaissance":"1956-08-30T23: 00: 00.000+0000",
+             "adresse":{
+                "libelleLigneAdresse":"9 avenue de Verdun",
+                "codePostal":"94250",
+                "codePays":"FR"
+             },
+             "profession":"Fonctionnaire",
+             "entrepriseEmployeur":"Etat",
+             "emailPrive":"geraldine.dupond@orange.fr",
+             "emailPro":"",
+             "numeroTelephonePrive":"",
+             "numeroTelephonePro":"",
+             "agence":"Gentilly",
+             "nombreEnfantsACharge":0,
+             "isPersonnePrincipale":true,
+             "isPossedeResidenceSecondaire":false,
+             "isSocietaire":false,
+             "isAcef":false,
+             "isCasdenFonctionnaire":false,
+             "isDiamant":false,
+             "isEnqueteCourrier":false,
+             "isAnomalie":false,
+             "isCompletude":false
+          },
+          "produit":"None",
+          "detail":""
+       },
+       {
+          "message":"Mail manquant",
+          "personne":{
+             "segment":"SEGMENT_11",
+             "csp":"AUCUN",
+             "roleRb":"EPOUX",
+             "situationFamiliale":"SF_MARIE",
+             "conditionLogement":"AUCUN",
+             "produitsConcurrence":[
+                {
+                   "libelle":"PEL",
+                   "nom":"",
+                   "nomOrganisme":"Société Générale",
+                   "encours":12350.0,
+                   "taux":0.0,
+                   "prelevement":0.0
+                }
+             ],
+             "salaireDeclare":{
+                "periodicite":"PMS_MENSUELLE",
+                "montant":6000.0,
+                "dateDerniereModif":"2012-09-30T22: 00: 00.000+0000"
+             },
+             "typeClient":"AUCUN",
+             "fraicheurEmailPrive":"",
+             "fraicheurEmailPro":"",
+             "fraicheurTelPrive":"",
+             "fraicheurTelPro":"",
+             "crp":"NON CRP",
+             "profilInvestisseur":"",
+             "regimeMatrimonial":"",
+             "id":"pers01",
+             "prenom":"Marcel",
+             "nom":"Dupond",
+             "civilite":"MONSIEUR",
+             "dateEntreeRelation":"2009-12-31T23: 00: 00.000+0000",
+             "dateNaissance":"1954-12-30T23: 00: 00.000+0000",
+             "adresse":{
+                "libelleLigneAdresse":"9 avenue de Verdun",
+                "codePostal":"94250",
+                "codePays":"FR"
+             },
+             "profession":"Consultant",
+             "entrepriseEmployeur":"IBM",
+             "emailPrive":"",
+             "emailPro":"",
+             "numeroTelephonePrive":"",
+             "numeroTelephonePro":"",
+             "agence":"Gentilly",
+             "nombreEnfantsACharge":0,
+             "isPersonnePrincipale":true,
+             "isPossedeResidenceSecondaire":false,
+             "isSocietaire":false,
+             "isAcef":false,
+             "isCasdenFonctionnaire":false,
+             "isDiamant":false,
+             "isEnqueteCourrier":false,
+             "isAnomalie":false,
+             "isCompletude":false
+          },
+          "produit":"None",
+          "detail":""
+       },
+       {
+          "message":"Recommander une Carte Bancaire",
+          "personne":{
+             "segment":"SEGMENT_10",
+             "csp":"AUCUN",
+             "roleRb":"EPOUSE",
+             "situationFamiliale":"SF_MARIE",
+             "conditionLogement":"AUCUN",
+             "produitsConcurrence":[
+                {
+                   "libelle":"PEA",
+                   "nom":"",
+                   "nomOrganisme":"BNP",
+                   "encours":45614.28,
+                   "taux":0.0,
+                   "prelevement":0.0
+                }
+             ],
+             "salaireDeclare":{
+                "periodicite":"AUCUN",
+                "montant":0.0
+             },
+             "typeClient":"AUCUN",
+             "fraicheurEmailPrive":"",
+             "fraicheurEmailPro":"",
+             "fraicheurTelPrive":"",
+             "fraicheurTelPro":"",
+             "crp":"NON CRP",
+             "profilInvestisseur":"",
+             "regimeMatrimonial":"",
+             "id":"pers02",
+             "prenom":"Géraldine",
+             "nom":"Dupond",
+             "civilite":"MADAME",
+             "dateEntreeRelation":"2009-12-31T23: 00: 00.000+0000",
+             "dateNaissance":"1956-08-30T23: 00: 00.000+0000",
+             "adresse":{
+                "libelleLigneAdresse":"9 avenue de Verdun",
+                "codePostal":"94250",
+                "codePays":"FR"
+             },
+             "profession":"Fonctionnaire",
+             "entrepriseEmployeur":"Etat",
+             "emailPrive":"geraldine.dupond@orange.fr",
+             "emailPro":"",
+             "numeroTelephonePrive":"",
+             "numeroTelephonePro":"",
+             "agence":"Gentilly",
+             "nombreEnfantsACharge":0,
+             "isPersonnePrincipale":true,
+             "isPossedeResidenceSecondaire":false,
+             "isSocietaire":false,
+             "isAcef":false,
+             "isCasdenFonctionnaire":false,
+             "isDiamant":false,
+             "isEnqueteCourrier":false,
+             "isAnomalie":false,
+             "isCompletude":false
+          },
+          "produit":"None",
+          "detail":""
+       },
+       {
+          "message":"Recommander Epargne Enfant",
+          "personne":{
+             "segment":"SEGMENT_01",
+             "csp":"AUCUN",
+             "roleRb":"ENFANT",
+             "situationFamiliale":"AUCUN",
+             "conditionLogement":"AUCUN",
+             "produitsConcurrence":[
+                
+             ],
+             "salaireDeclare":"None",
+             "typeClient":"AUCUN",
+             "fraicheurEmailPrive":"",
+             "fraicheurEmailPro":"",
+             "fraicheurTelPrive":"",
+             "fraicheurTelPro":"",
+             "crp":"NON CRP",
+             "profilInvestisseur":"",
+             "regimeMatrimonial":"",
+             "id":"pers04",
+             "prenom":"Mélanie",
+             "nom":"Dupond",
+             "civilite":"MADEMOISELLE",
+             "dateEntreeRelation":"2009-12-31T23: 00: 00.000+0000",
+             "dateNaissance":"2000-03-31T22: 00: 00.000+0000",
+             "adresse":{
+                "libelleLigneAdresse":"9 avenue de Verdun",
+                "codePostal":"94250",
+                "codePays":"FR"
+             },
+             "profession":"",
+             "entrepriseEmployeur":"",
+             "emailPrive":"",
+             "emailPro":"",
+             "numeroTelephonePrive":"",
+             "numeroTelephonePro":"",
+             "agence":"Gentilly",
+             "nombreEnfantsACharge":0,
+             "isPersonnePrincipale":false,
+             "isPossedeResidenceSecondaire":false,
+             "isSocietaire":false,
+             "isAcef":false,
+             "isCasdenFonctionnaire":false,
+             "isDiamant":false,
+             "isEnqueteCourrier":false,
+             "isAnomalie":false,
+             "isCompletude":false
+          },
+          "produit":"None",
+          "detail":"épargne logement"
+       },
+       {
+          "message":"Recommander Epargne Enfant",
+          "personne":{
+             "segment":"SEGMENT_01",
+             "csp":"AUCUN",
+             "roleRb":"ENFANT",
+             "situationFamiliale":"AUCUN",
+             "conditionLogement":"AUCUN",
+             "produitsConcurrence":[
+                
+             ],
+             "salaireDeclare":"None",
+             "typeClient":"AUCUN",
+             "fraicheurEmailPrive":"",
+             "fraicheurEmailPro":"",
+             "fraicheurTelPrive":"",
+             "fraicheurTelPro":"",
+             "crp":"NON CRP",
+             "profilInvestisseur":"",
+             "regimeMatrimonial":"",
+             "id":"pers03",
+             "prenom":"Arthur",
+             "nom":"Dupond",
+             "civilite":"MONSIEUR",
+             "dateEntreeRelation":"2009-12-31T23: 00: 00.000+0000",
+             "dateNaissance":"1998-07-13T22: 00: 00.000+0000",
+             "adresse":{
+                "libelleLigneAdresse":"9 avenue de Verdun",
+                "codePostal":"94250",
+                "codePays":"FR"
+             },
+             "profession":"",
+             "entrepriseEmployeur":"",
+             "emailPrive":"",
+             "emailPro":"",
+             "numeroTelephonePrive":"",
+             "numeroTelephonePro":"",
+             "agence":"Gentilly",
+             "nombreEnfantsACharge":0,
+             "isPersonnePrincipale":false,
+             "isPossedeResidenceSecondaire":false,
+             "isSocietaire":false,
+             "isAcef":false,
+             "isCasdenFonctionnaire":false,
+             "isDiamant":false,
+             "isEnqueteCourrier":false,
+             "isAnomalie":false,
+             "isCompletude":false
+          },
+          "produit":"None",
+          "detail":"épargne logement"
+       },
+       {
+          "message":"Recommander Epargne Enfant",
+          "personne":{
+             "segment":"SEGMENT_01",
+             "csp":"AUCUN",
+             "roleRb":"ENFANT",
+             "situationFamiliale":"AUCUN",
+             "conditionLogement":"AUCUN",
+             "produitsConcurrence":[
+                
+             ],
+             "salaireDeclare":"None",
+             "typeClient":"AUCUN",
+             "fraicheurEmailPrive":"",
+             "fraicheurEmailPro":"",
+             "fraicheurTelPrive":"",
+             "fraicheurTelPro":"",
+             "crp":"NON CRP",
+             "profilInvestisseur":"",
+             "regimeMatrimonial":"",
+             "id":"pers04",
+             "prenom":"Mélanie",
+             "nom":"Dupond",
+             "civilite":"MADEMOISELLE",
+             "dateEntreeRelation":"2009-12-31T23: 00: 00.000+0000",
+             "dateNaissance":"2000-03-31T22: 00: 00.000+0000",
+             "adresse":{
+                "libelleLigneAdresse":"9 avenue de Verdun",
+                "codePostal":"94250",
+                "codePays":"FR"
+             },
+             "profession":"",
+             "entrepriseEmployeur":"",
+             "emailPrive":"",
+             "emailPro":"",
+             "numeroTelephonePrive":"",
+             "numeroTelephonePro":"",
+             "agence":"Gentilly",
+             "nombreEnfantsACharge":0,
+             "isPersonnePrincipale":false,
+             "isPossedeResidenceSecondaire":false,
+             "isSocietaire":false,
+             "isAcef":false,
+             "isCasdenFonctionnaire":false,
+             "isDiamant":false,
+             "isEnqueteCourrier":false,
+             "isAnomalie":false,
+             "isCompletude":false
+          },
+          "produit":"None",
+          "detail":"livret d'épargne liquide"
+       },
+       {
+          "message":"Recommander Epargne Enfant",
+          "personne":{
+             "segment":"SEGMENT_01",
+             "csp":"AUCUN",
+             "roleRb":"ENFANT",
+             "situationFamiliale":"AUCUN",
+             "conditionLogement":"AUCUN",
+             "produitsConcurrence":[
+                
+             ],
+             "salaireDeclare":"None",
+             "typeClient":"AUCUN",
+             "fraicheurEmailPrive":"",
+             "fraicheurEmailPro":"",
+             "fraicheurTelPrive":"",
+             "fraicheurTelPro":"",
+             "crp":"NON CRP",
+             "profilInvestisseur":"",
+             "regimeMatrimonial":"",
+             "id":"pers03",
+             "prenom":"Arthur",
+             "nom":"Dupond",
+             "civilite":"MONSIEUR",
+             "dateEntreeRelation":"2009-12-31T23: 00: 00.000+0000",
+             "dateNaissance":"1998-07-13T22: 00: 00.000+0000",
+             "adresse":{
+                "libelleLigneAdresse":"9 avenue de Verdun",
+                "codePostal":"94250",
+                "codePays":"FR"
+             },
+             "profession":"",
+             "entrepriseEmployeur":"",
+             "emailPrive":"",
+             "emailPro":"",
+             "numeroTelephonePrive":"",
+             "numeroTelephonePro":"",
+             "agence":"Gentilly",
+             "nombreEnfantsACharge":0,
+             "isPersonnePrincipale":false,
+             "isPossedeResidenceSecondaire":false,
+             "isSocietaire":false,
+             "isAcef":false,
+             "isCasdenFonctionnaire":false,
+             "isDiamant":false,
+             "isEnqueteCourrier":false,
+             "isAnomalie":false,
+             "isCompletude":false
+          },
+          "produit":"None",
+          "detail":"livret d'épargne liquide"
+       },
+       {
+          "message":"Recommander Epargne Logement",
+          "personne":"None",
+          "produit":"None",
+          "detail":"PEL"
+       },
+       {
+          "message":"Recommander Epargne Logement",
+          "personne":"None",
+          "produit":"None",
+          "detail":"CEL"
+       },
+       {
+          "message":"Recommander LivretA_LDD",
+          "personne":{
+             "segment":"SEGMENT_10",
+             "csp":"AUCUN",
+             "roleRb":"EPOUSE",
+             "situationFamiliale":"SF_MARIE",
+             "conditionLogement":"AUCUN",
+             "produitsConcurrence":[
+                {
+                   "libelle":"PEA",
+                   "nom":"",
+                   "nomOrganisme":"BNP",
+                   "encours":45614.28,
+                   "taux":0.0,
+                   "prelevement":0.0
+                }
+             ],
+             "salaireDeclare":{
+                "periodicite":"AUCUN",
+                "montant":0.0
+             },
+             "typeClient":"AUCUN",
+             "fraicheurEmailPrive":"",
+             "fraicheurEmailPro":"",
+             "fraicheurTelPrive":"",
+             "fraicheurTelPro":"",
+             "crp":"NON CRP",
+             "profilInvestisseur":"",
+             "regimeMatrimonial":"",
+             "id":"pers02",
+             "prenom":"Géraldine",
+             "nom":"Dupond",
+             "civilite":"MADAME",
+             "dateEntreeRelation":"2009-12-31T23: 00: 00.000+0000",
+             "dateNaissance":"1956-08-30T23: 00: 00.000+0000",
+             "adresse":{
+                "libelleLigneAdresse":"9 avenue de Verdun",
+                "codePostal":"94250",
+                "codePays":"FR"
+             },
+             "profession":"Fonctionnaire",
+             "entrepriseEmployeur":"Etat",
+             "emailPrive":"geraldine.dupond@orange.fr",
+             "emailPro":"",
+             "numeroTelephonePrive":"",
+             "numeroTelephonePro":"",
+             "agence":"Gentilly",
+             "nombreEnfantsACharge":0,
+             "isPersonnePrincipale":true,
+             "isPossedeResidenceSecondaire":false,
+             "isSocietaire":false,
+             "isAcef":false,
+             "isCasdenFonctionnaire":false,
+             "isDiamant":false,
+             "isEnqueteCourrier":false,
+             "isAnomalie":false,
+             "isCompletude":false
+          },
+          "produit":"None",
+          "detail":""
+       },
+       {
+          "message":"Recommander LivretA_LDD",
+          "personne":{
+             "segment":"SEGMENT_11",
+             "csp":"AUCUN",
+             "roleRb":"EPOUX",
+             "situationFamiliale":"SF_MARIE",
+             "conditionLogement":"AUCUN",
+             "produitsConcurrence":[
+                {
+                   "libelle":"PEL",
+                   "nom":"",
+                   "nomOrganisme":"Société Générale",
+                   "encours":12350.0,
+                   "taux":0.0,
+                   "prelevement":0.0
+                }
+             ],
+             "salaireDeclare":{
+                "periodicite":"PMS_MENSUELLE",
+                "montant":6000.0,
+                "dateDerniereModif":"2012-09-30T22: 00: 00.000+0000"
+             },
+             "typeClient":"AUCUN",
+             "fraicheurEmailPrive":"",
+             "fraicheurEmailPro":"",
+             "fraicheurTelPrive":"",
+             "fraicheurTelPro":"",
+             "crp":"NON CRP",
+             "profilInvestisseur":"",
+             "regimeMatrimonial":"",
+             "id":"pers01",
+             "prenom":"Marcel",
+             "nom":"Dupond",
+             "civilite":"MONSIEUR",
+             "dateEntreeRelation":"2009-12-31T23: 00: 00.000+0000",
+             "dateNaissance":"1954-12-30T23: 00: 00.000+0000",
+             "adresse":{
+                "libelleLigneAdresse":"9 avenue de Verdun",
+                "codePostal":"94250",
+                "codePays":"FR"
+             },
+             "profession":"Consultant",
+             "entrepriseEmployeur":"IBM",
+             "emailPrive":"",
+             "emailPro":"",
+             "numeroTelephonePrive":"",
+             "numeroTelephonePro":"",
+             "agence":"Gentilly",
+             "nombreEnfantsACharge":0,
+             "isPersonnePrincipale":true,
+             "isPossedeResidenceSecondaire":false,
+             "isSocietaire":false,
+             "isAcef":false,
+             "isCasdenFonctionnaire":false,
+             "isDiamant":false,
+             "isEnqueteCourrier":false,
+             "isAnomalie":false,
+             "isCompletude":false
+          },
+          "produit":"None",
+          "detail":""
+       },
+       {
+          "message":"Alerter sur l'arrivée à terme",
+          "personne":{
+             "segment":"SEGMENT_11",
+             "csp":"AUCUN",
+             "roleRb":"EPOUX",
+             "situationFamiliale":"SF_MARIE",
+             "conditionLogement":"AUCUN",
+             "produitsConcurrence":[
+                {
+                   "libelle":"PEL",
+                   "nom":"",
+                   "nomOrganisme":"Société Générale",
+                   "encours":12350.0,
+                   "taux":0.0,
+                   "prelevement":0.0
+                }
+             ],
+             "salaireDeclare":{
+                "periodicite":"PMS_MENSUELLE",
+                "montant":6000.0,
+                "dateDerniereModif":"2012-09-30T22: 00: 00.000+0000"
+             },
+             "typeClient":"AUCUN",
+             "fraicheurEmailPrive":"",
+             "fraicheurEmailPro":"",
+             "fraicheurTelPrive":"",
+             "fraicheurTelPro":"",
+             "crp":"NON CRP",
+             "profilInvestisseur":"",
+             "regimeMatrimonial":"",
+             "id":"pers01",
+             "prenom":"Marcel",
+             "nom":"Dupond",
+             "civilite":"MONSIEUR",
+             "dateEntreeRelation":"2009-12-31T23: 00: 00.000+0000",
+             "dateNaissance":"1954-12-30T23: 00: 00.000+0000",
+             "adresse":{
+                "libelleLigneAdresse":"9 avenue de Verdun",
+                "codePostal":"94250",
+                "codePays":"FR"
+             },
+             "profession":"Consultant",
+             "entrepriseEmployeur":"IBM",
+             "emailPrive":"",
+             "emailPro":"",
+             "numeroTelephonePrive":"",
+             "numeroTelephonePro":"",
+             "agence":"Gentilly",
+             "nombreEnfantsACharge":0,
+             "isPersonnePrincipale":true,
+             "isPossedeResidenceSecondaire":false,
+             "isSocietaire":false,
+             "isAcef":false,
+             "isCasdenFonctionnaire":false,
+             "isDiamant":false,
+             "isEnqueteCourrier":false,
+             "isAnomalie":false,
+             "isCompletude":false
+          },
+          "produit":{
+             "type":"epargne",
+             "statistiquesMensuelles":[
+                
+             ],
+             "statistique12Mois":"None",
+             "statistique3Mois":"None",
+             "mouvements":[
+                
+             ],
+             "versementPeriodique":"None",
+             "id":"asv01",
+             "numeroCompte":"",
+             "idsProprietaires":[
+                
+             ],
+             "dateOuverture":"2009-12-31T23: 00: 00.000+0000",
+             "dateEcheance":"2013-06-30T22: 00: 00.000+0000",
+             "code":"ASSVIE",
+             "libelle":"Assurance Vie Liberté",
+             "codeFamilleNiv1":"",
+             "libelleFamilleNiv1":"",
+             "codeFamilleNiv2":"",
+             "libelleFamilleNiv2":"",
+             "codeFamilleNiv3":"",
+             "libelleFamilleNiv3":"",
+             "solde":20000.0,
+             "soldeMaximum":0.0,
+             "taux":0.0
+          },
+          "detail":""
+       },
+       {
+          "message":"Alerter sur l'arrivée à terme",
+          "personne":{
+             "segment":"SEGMENT_11",
+             "csp":"AUCUN",
+             "roleRb":"EPOUX",
+             "situationFamiliale":"SF_MARIE",
+             "conditionLogement":"AUCUN",
+             "produitsConcurrence":[
+                {
+                   "libelle":"PEL",
+                   "nom":"",
+                   "nomOrganisme":"Société Générale",
+                   "encours":12350.0,
+                   "taux":0.0,
+                   "prelevement":0.0
+                }
+             ],
+             "salaireDeclare":{
+                "periodicite":"PMS_MENSUELLE",
+                "montant":6000.0,
+                "dateDerniereModif":"2012-09-30T22: 00: 00.000+0000"
+             },
+             "typeClient":"AUCUN",
+             "fraicheurEmailPrive":"",
+             "fraicheurEmailPro":"",
+             "fraicheurTelPrive":"",
+             "fraicheurTelPro":"",
+             "crp":"NON CRP",
+             "profilInvestisseur":"",
+             "regimeMatrimonial":"",
+             "id":"pers01",
+             "prenom":"Marcel",
+             "nom":"Dupond",
+             "civilite":"MONSIEUR",
+             "dateEntreeRelation":"2009-12-31T23: 00: 00.000+0000",
+             "dateNaissance":"1954-12-30T23: 00: 00.000+0000",
+             "adresse":{
+                "libelleLigneAdresse":"9 avenue de Verdun",
+                "codePostal":"94250",
+                "codePays":"FR"
+             },
+             "profession":"Consultant",
+             "entrepriseEmployeur":"IBM",
+             "emailPrive":"",
+             "emailPro":"",
+             "numeroTelephonePrive":"",
+             "numeroTelephonePro":"",
+             "agence":"Gentilly",
+             "nombreEnfantsACharge":0,
+             "isPersonnePrincipale":true,
+             "isPossedeResidenceSecondaire":false,
+             "isSocietaire":false,
+             "isAcef":false,
+             "isCasdenFonctionnaire":false,
+             "isDiamant":false,
+             "isEnqueteCourrier":false,
+             "isAnomalie":false,
+             "isCompletude":false
+          },
+          "produit":{
+             "type":"epargne",
+             "statistiquesMensuelles":[
+                
+             ],
+             "statistique12Mois":"None",
+             "statistique3Mois":"None",
+             "mouvements":[
+                
+             ],
+             "versementPeriodique":"None",
+             "id":"pea01",
+             "numeroCompte":"",
+             "idsProprietaires":[
+                
+             ],
+             "dateOuverture":"2009-12-31T23: 00: 00.000+0000",
+             "dateEcheance":"2013-06-30T22: 00: 00.000+0000",
+             "code":"PEA",
+             "libelle":"PEA",
+             "codeFamilleNiv1":"",
+             "libelleFamilleNiv1":"",
+             "codeFamilleNiv2":"",
+             "libelleFamilleNiv2":"",
+             "codeFamilleNiv3":"",
+             "libelleFamilleNiv3":"",
+             "solde":10000.0,
+             "soldeMaximum":0.0,
+             "taux":0.0
+          },
+          "detail":""
+       },
+       {
+          "message":"Recommander Assurance Obsèques",
+          "personne":"None",
+          "produit":"None",
+          "detail":""
+       },
+       {
+          "message":"Recommander Assurance Auto",
+          "personne":"None",
+          "produit":"None",
+          "detail":""
+       },
+       {
+          "message":"Recommander Credit Conso",
+          "personne":"None",
+          "produit":"None",
+          "detail":""
+       },
+       {
+          "message":"Recommander Credit",
+          "personne":"None",
+          "produit":"None",
+          "detail":""
+       },
+       {
+          "message":"Aborder la fiscalité",
+          "personne":"None",
+          "produit":"None",
+          "detail":"Imposition importante"
+       }
+    ]
+ }
