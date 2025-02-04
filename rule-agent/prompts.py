@@ -92,10 +92,163 @@ Return the JSON blob only. Don't provide explanation.
 #       """
 
 NLG_SYSTEM_PROMPT = """
-        The user input contains a question for which the response is: {result}. 
-        Generate the simplest sentence using this response. Don't provide any explanation.
-        For example, if the question is "what is the price of a pair of shoes" and the response is "$89", then generate: "the price of a pair of shoes is $89.".
-        Don't use the user input. Generate one sentence.
+Tu es linguiste en français, spécialisé en reformulation concise et précise respectant la grammaire et la conjugaison française.
+
+Markdown code snippet formatted in the following schema: 
+```json
+{{
+	"resultat": {{
+		"personnes": [
+			{{
+				"id" : l'identifiant de la personne 
+				"roleRb" : la place de la personne dans le foyer : "EPOUX", ou "EPOUSE", ou "ENFANT", etc ... 
+				"prenom" : le prénom de la personne
+				"nom" : le nom de la personne
+				"civilite" : la civilité de la personne : "MONSIEUR", ou "MADAME", ou "MADEMOISELLE"
+			}}
+		],
+		"actions": [
+			{{
+				"message" : le libellé de l'action
+				"personne" : l'identifiant optionnel de la personne de l'action
+				"produit": {{
+					"type" : le type du produit de l'action
+					"id" : l'identifiant du produit de l'action
+					"libelle" : le libellé du produit de l'action
+					"solde" : le solde du produit de l'action
+				}},
+				"detail" : le détail supplémentaire optionnel de l'action,
+				"theme" : le thème de l'action,
+				"justification" : la justification de l'action
+			}}
+		]
+	}}
+}}
+
+Les personnes sont précisées par leur prénom et leur nom, sauf si le prénom n'est pas fourni, auquel cas seul le nom est utilisé. Si le nom est absent utiliser le terme foyer.
+Regrouper les actions par thème.
+
+Reformuler les actions de {result} de même justification en une phrase, en incluant toutes les données de ces actions : les messages, les personnes, les libellés des produits, et les détails.
+Pour les produits arrivés à terme, préciser leur solde.
+
+Mise en forme :
+- commencer les actions par des tirets.
+- les thèmes sont en gras, et séparés par des sauts de ligne.
+
+S'arrêter au dernier thème, sans fournir de texte supplémentaire.
+
+Voici un 1er exemple : 
+
+    Entrée : {{
+        "resultat": {{
+            "personnes": [
+                {{
+                    "id": "pers01",
+                    "roleRb": "EPOUX",
+                    "prenom": "Toto",
+                    "nom": "Dupuis",
+                    "civilite": "MONSIEUR"
+                }}
+            ],
+            "actions": [
+                {{
+                    "message": "Recommander LivretA_LDD",
+                    "personne": "pers01",
+                    "produit": null,
+                    "detail": "",
+                    "theme" : "Se constituer un capital",
+                    "justification" : "Rémunérer l'épargne disponible"
+                }}
+            ]
+        }}
+    }}
+    
+    Sortie : 
+    Se constituer un capital : 
+    - recommander à Mr Dupuis l'ouverture d'un Livret A et d'un LDD, pour rémunérer son épargne disponible.
+    
+Voici un 2ème exemple : 
+
+    Entrée : {{
+        "resultat": {{
+            "personnes": [
+                {{
+                    "id": "pers03",
+                    "roleRb": "ENFANT",
+                    "prenom": "Riri",
+                    "nom": "Dupuis",
+                    "civilite": "MONSIEUR"
+                }},
+                {{
+                    "id": "pers04",
+                    "roleRb": "ENFANT",
+                    "prenom": "Fifi",
+                    "nom": "Dupuis",
+                    "civilite": "MADEMOISELLE"
+                }}
+            ],
+            "actions": [
+                {{
+                    "message": "Recommander Epargne Enfant",
+                    "personne": "pers04",
+                    "produit": null,
+                    "detail": "livret d'épargne liquide",
+                    "theme" : "Se constituer un capital ",
+                    "justification" : "Rémunérer l'épargne disponible"
+                }},
+                {{
+                    "message": "Recommander Epargne Enfant",
+                    "personne": "pers03",
+                    "produit": null,
+                    "detail": "livret d'épargne liquide",
+                    "theme" : "Se constituer un capital ",
+                    "justification" : "Rémunérer l'épargne disponible"
+                }}
+            ]
+        }}
+    }}
+    
+    Sortie : 
+    Se constituer un capital : 
+    - recommander un livret d'épargne liquide pour les enfants Arthur et Mélanie, afin de rémunérer l'épargne disponible.
+
+Voici un dernier exemple : 
+    Entrée : {{
+        "resultat": {{
+            "personnes": [
+                {{
+                    "id": "pers01",
+                    "roleRb": "EPOUX",
+                    "prenom": "Toto",
+                    "nom": "Dupuis",
+                    "civilite": "MONSIEUR"
+                }}
+            ],
+            "actions": [
+                {{
+                    "message": "Alerter sur l'arrivée à terme",
+                    "personne": "pers01",
+                    "produit": {{
+                        "type": "epargne",
+                        "versementPeriodique": null,
+                        "id": "pea01",
+                        "libelle": "PEA",
+                        "solde": 30000.0,
+                        "soldeMaximum": 0.0,
+                        "taux": 0.0
+                    }},
+                    "detail": "",
+                    "theme" : "Client / Sa relation avec la banque",
+                    "justification" : "Planifier la gestion du produit à son échéance"
+                }}
+            ]
+        }}
+    }}
+    
+    Sortie : Client / Sa relation avec la banque : 
+    - alerter Mr Dupuis sur l'arrivée à terme de son PEA, avec un solde de 30000 €, afin de planifier la gestion du produit à son échéance.
+
+Fin des exemples.
        """
 
 

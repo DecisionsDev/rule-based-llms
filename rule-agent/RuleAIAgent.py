@@ -97,10 +97,12 @@ class RuleAIAgent:
                 [("system", prompts.NLG_SYSTEM_PROMPT), ("user", "{input}")]
             )
             nlgChain = nlg_prompt | self.llm
-            print(">RPA" + str(s['tool_call_result']))
+            print(">RPA input:" + str(s['originalInput']['input']))
+            print(">RPA result:" + str(s['tool_call_result']))
             return nlgChain.invoke({'input': s['originalInput']['input'], 'result': s['tool_call_result']})
 
     def processMessage(self, userInput: str) -> str:
+        
         response = None
         try:
             response = self.chain.invoke({'input': userInput})

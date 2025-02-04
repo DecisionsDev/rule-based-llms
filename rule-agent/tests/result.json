@@ -1,35 +1,12 @@
 {
 	"result": {
-		"personnes": [
+		"personne":
 			{
 				"id": "pers01",
 				"roleRb": "EPOUX",
 				"prenom": "Marcel",
-				"nom": "Dupond",
-				"civilite": "MONSIEUR"
+				"nom": "Dupond"
 			},
-			{
-				"id": "pers02",
-				"roleRb": "EPOUSE",
-				"prenom": "Géraldine",
-				"nom": "Dupond",
-				"civilite": "MADAME"
-			},
-			{
-				"id": "pers03",
-				"roleRb": "ENFANT",
-				"prenom": "Arthur",
-				"nom": "Dupond",
-				"civilite": "MONSIEUR"
-			},
-			{
-				"id": "pers04",
-				"roleRb": "ENFANT",
-				"prenom": "Mélanie",
-				"nom": "Dupond",
-				"civilite": "MADEMOISELLE"
-			}
-		],
 		"actions": [
 			{
 				"message": "Proposer un compte service",
@@ -38,126 +15,8 @@
 				"detail": ""
 			},
 			{
-				"message": "Téléphone manquant",
+				"message": "Recommander un Livret A",
 				"personne": "pers01",
-				"produit": null,
-				"detail": ""
-			},
-			{
-				"message": "Téléphone manquant",
-				"personne": "pers02",
-				"produit": null,
-				"detail": ""
-			},
-			{
-				"message": "Mail manquant",
-				"personne": "pers01",
-				"produit": null,
-				"detail": ""
-			},
-			{
-				"message": "Recommander une Carte Bancaire",
-				"personne": "pers02",
-				"produit": null,
-				"detail": ""
-			},
-			{
-				"message": "Recommander Epargne Enfant",
-				"personne": "pers04",
-				"produit": null,
-				"detail": "épargne logement"
-			},
-			{
-				"message": "Recommander Epargne Enfant",
-				"personne": "pers03",
-				"produit": null,
-				"detail": "épargne logement"
-			},
-			{
-				"message": "Recommander Epargne Enfant",
-				"personne": "pers04",
-				"produit": null,
-				"detail": "livret d'épargne liquide"
-			},
-			{
-				"message": "Recommander Epargne Enfant",
-				"personne": "pers03",
-				"produit": null,
-				"detail": "livret d'épargne liquide"
-			},
-			{
-				"message": "Recommander Epargne Logement",
-				"personne": null,
-				"produit": null,
-				"detail": "PEL"
-			},
-			{
-				"message": "Recommander Epargne Logement",
-				"personne": null,
-				"produit": null,
-				"detail": "CEL"
-			},
-			{
-				"message": "Recommander LivretA_LDD",
-				"personne": "pers02",
-				"produit": null,
-				"detail": ""
-			},
-			{
-				"message": "Recommander LivretA_LDD",
-				"personne": "pers01",
-				"produit": null,
-				"detail": ""
-			},
-			{
-				"message": "Alerter sur l'arrivée à terme",
-				"personne": "pers01",
-				"produit": {
-					"type": "epargne",
-					"versementPeriodique": null,
-					"id": "asv01",
-					"libelle": "Assurance Vie Liberté",
-					"solde": 20000.0,
-					"soldeMaximum": 0.0,
-					"taux": 0.0
-				},
-				"detail": ""
-			},
-			{
-				"message": "Alerter sur l'arrivée à terme",
-				"personne": "pers01",
-				"produit": {
-					"type": "epargne",
-					"versementPeriodique": null,
-					"id": "pea01",
-					"libelle": "PEA",
-					"solde": 10000.0,
-					"soldeMaximum": 0.0,
-					"taux": 0.0
-				},
-				"detail": ""
-			},
-			{
-				"message": "Recommander Assurance Obsèques",
-				"personne": null,
-				"produit": null,
-				"detail": ""
-			},
-			{
-				"message": "Recommander Assurance Auto",
-				"personne": null,
-				"produit": null,
-				"detail": ""
-			},
-			{
-				"message": "Recommander Credit Conso",
-				"personne": null,
-				"produit": null,
-				"detail": ""
-			},
-			{
-				"message": "Recommander Credit",
-				"personne": null,
 				"produit": null,
 				"detail": ""
 			},
@@ -166,7 +25,7 @@
 				"personne": null,
 				"produit": null,
 				"detail": "Imposition importante"
-			}
-		]
+			}			
+		]			
 	}
 }
