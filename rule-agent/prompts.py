@@ -92,163 +92,70 @@ Return the JSON blob only. Don't provide explanation.
 #       """
 
 NLG_SYSTEM_PROMPT = """
-Tu es linguiste en français, spécialisé en reformulation concise et précise respectant la grammaire et la conjugaison française.
+Remet le contexte à 0.
 
 Markdown code snippet formatted in the following schema: 
 ```json
 {{
-	"resultat": {{
 		"personnes": [
 			{{
-				"id" : l'identifiant de la personne 
-				"roleRb" : la place de la personne dans le foyer : "EPOUX", ou "EPOUSE", ou "ENFANT", etc ... 
-				"prenom" : le prénom de la personne
-				"nom" : le nom de la personne
-				"civilite" : la civilité de la personne : "MONSIEUR", ou "MADAME", ou "MADEMOISELLE"
+				"id" : string, \\\\ l'identifiant de la personne 
+				"roleRb" : string, \\\\ la place de la personne dans le foyer : "EPOUX", ou "EPOUSE", ou "ENFANT", etc ... 
+				"prenom" : string, \\\\ le prénom de la personne
+				"nom" : string, \\\\ le nom de la personne
+				"civilite" : string \\\\ la civilité de la personne : "MONSIEUR", ou "MADAME", ou "MADEMOISELLE"
 			}}
 		],
 		"actions": [
 			{{
-				"message" : le libellé de l'action
-				"personne" : l'identifiant optionnel de la personne de l'action
+				"message" : string, \\\\ le libellé de l'action
+				"personne" : string, \\\\ l'identifiant optionnel de la personne de l'action
 				"produit": {{
-					"type" : le type du produit de l'action
-					"id" : l'identifiant du produit de l'action
-					"libelle" : le libellé du produit de l'action
-					"solde" : le solde du produit de l'action
+					"type" : string, \\\\ le type du produit de l'action
+					"id" : string, \\\\ l'identifiant du produit de l'action
+					"libelle" : string, \\\\ le libellé du produit de l'action
+					"solde" : string \\\\ le solde du produit de l'action
 				}},
-				"detail" : le détail supplémentaire optionnel de l'action,
-				"theme" : le thème de l'action,
-				"justification" : la justification de l'action
+				"detail" : string, \\\\ le détail supplémentaire optionnel de l'action,
+				"theme" : string, \\\\ le thème de l'action,
+				"justification" : string \\\\ l'objectif de l'action
 			}}
 		]
-	}}
 }}
+```
 
-Les personnes sont précisées par leur prénom et leur nom, sauf si le prénom n'est pas fourni, auquel cas seul le nom est utilisé. Si le nom est absent utiliser le terme foyer.
-Regrouper les actions par thème.
+Ignorer les actions sans thème ou sans justification.
+Préciser le solde des produits arrivés à terme.
+Pour les enfants, utiliser uniquement le prénom sans le nom.
+Pour l'époux et l'épouse, utiliser la civilité, le prénom et le nom.
+Pour l'EPOUX, remplacer MONSIEUR par Mr.
+Pour l'EPOUSE, remplacer MADAME par Mme.
+Attribuer au foyer les actions sans personne.
+Afficher chaque thème en gras, en sautant une ligne entre chaque thème.
 
-Reformuler les actions de {result} de même justification en une phrase, en incluant toutes les données de ces actions : les messages, les personnes, les libellés des produits, et les détails.
-Pour les produits arrivés à terme, préciser leur solde.
+Voici un exemple :
+    Entrée : {{'personnes': [{{'id': 'pers01', 'roleRb': 'EPOUX', 'prenom': 'Toto', 'nom': 'Dupuis', 'civilite': 'MONSIEUR'}}, {{'id': 'pers02', 'roleRb': 'EPOUSE', 'prenom': 'Titi', 'nom': 'Dupuis', 'civilite': 'MADAME'}}], 'actions': [{{'message': 'Recommander xxx', 'personne': 'pers01', 'produit': None, 'detail': 'DDD', 'theme' : 'Thème 1', 'justification' : 'Améliorer un aspect'}}, {{'message': 'Compléter xxx', 'personne': 'pers02', 'produit': None, 'detail': '', 'theme' : 'Thème 1', 'justification' : 'Fluidifier un aspect'}}, {{'message': 'Proposer xxx', 'personne': '', 'produit': None, 'detail': '', 'theme' : 'Thème 1', 'justification' : 'Enrichir un aspect'}}]]}}
+    Sortie :
+    **Thème 1** :
+        - Recommander xxx (DDD) à Mr Dupuis, afin d'améliorer un aspect.
+        - Compléter xxx de Mme Dupuis, afin de fluidifier un aspect.
+        - Proposer xxx au foyer, afin d'enrichir un aspect.
 
-Mise en forme :
-- commencer les actions par des tirets.
-- les thèmes sont en gras, et séparés par des sauts de ligne.
+Reformuler en une seule phrase concise les actions sans détail, ayant le même message et la même justification.
+Voici un exemple :
+    Entrée : {{'personnes': [{{'id': 'pers01', 'roleRb': 'EPOUX', 'prenom': 'Toto', 'nom': 'Dupuis', 'civilite': 'MONSIEUR'}}, {{'id': 'pers02', 'roleRb': 'EPOUSE', 'prenom': 'Titi', 'nom': 'Dupuis', 'civilite': 'MADAME'}}], 'actions': [{{'message': 'Recommander xxx', 'personne': 'pers01', 'produit': None, 'detail': 'DDD', 'theme' : 'Thème 1', 'justification' : 'Améliorer un aspect'}}, {{'message': 'Recommander xxx', 'personne': 'pers02', 'produit': None, 'detail': 'DDD', 'theme' : 'Thème 1', 'justification' : 'Améliorer un aspect'}}]}}
+    Sortie :
+    **Thème 1** :
+        - Recommander xxx (DDD) à Mr et Mme Dupuis, afin d'améliorer un aspect.
 
-S'arrêter au dernier thème, sans fournir de texte supplémentaire.
-
-Voici un 1er exemple : 
-
-    Entrée : {{
-        "resultat": {{
-            "personnes": [
-                {{
-                    "id": "pers01",
-                    "roleRb": "EPOUX",
-                    "prenom": "Toto",
-                    "nom": "Dupuis",
-                    "civilite": "MONSIEUR"
-                }}
-            ],
-            "actions": [
-                {{
-                    "message": "Recommander LivretA_LDD",
-                    "personne": "pers01",
-                    "produit": null,
-                    "detail": "",
-                    "theme" : "Se constituer un capital",
-                    "justification" : "Rémunérer l'épargne disponible"
-                }}
-            ]
-        }}
-    }}
-    
-    Sortie : 
-    Se constituer un capital : 
-    - recommander à Mr Dupuis l'ouverture d'un Livret A et d'un LDD, pour rémunérer son épargne disponible.
-    
-Voici un 2ème exemple : 
-
-    Entrée : {{
-        "resultat": {{
-            "personnes": [
-                {{
-                    "id": "pers03",
-                    "roleRb": "ENFANT",
-                    "prenom": "Riri",
-                    "nom": "Dupuis",
-                    "civilite": "MONSIEUR"
-                }},
-                {{
-                    "id": "pers04",
-                    "roleRb": "ENFANT",
-                    "prenom": "Fifi",
-                    "nom": "Dupuis",
-                    "civilite": "MADEMOISELLE"
-                }}
-            ],
-            "actions": [
-                {{
-                    "message": "Recommander Epargne Enfant",
-                    "personne": "pers04",
-                    "produit": null,
-                    "detail": "livret d'épargne liquide",
-                    "theme" : "Se constituer un capital ",
-                    "justification" : "Rémunérer l'épargne disponible"
-                }},
-                {{
-                    "message": "Recommander Epargne Enfant",
-                    "personne": "pers03",
-                    "produit": null,
-                    "detail": "livret d'épargne liquide",
-                    "theme" : "Se constituer un capital ",
-                    "justification" : "Rémunérer l'épargne disponible"
-                }}
-            ]
-        }}
-    }}
-    
-    Sortie : 
-    Se constituer un capital : 
-    - recommander un livret d'épargne liquide pour les enfants Arthur et Mélanie, afin de rémunérer l'épargne disponible.
-
-Voici un dernier exemple : 
-    Entrée : {{
-        "resultat": {{
-            "personnes": [
-                {{
-                    "id": "pers01",
-                    "roleRb": "EPOUX",
-                    "prenom": "Toto",
-                    "nom": "Dupuis",
-                    "civilite": "MONSIEUR"
-                }}
-            ],
-            "actions": [
-                {{
-                    "message": "Alerter sur l'arrivée à terme",
-                    "personne": "pers01",
-                    "produit": {{
-                        "type": "epargne",
-                        "versementPeriodique": null,
-                        "id": "pea01",
-                        "libelle": "PEA",
-                        "solde": 30000.0,
-                        "soldeMaximum": 0.0,
-                        "taux": 0.0
-                    }},
-                    "detail": "",
-                    "theme" : "Client / Sa relation avec la banque",
-                    "justification" : "Planifier la gestion du produit à son échéance"
-                }}
-            ]
-        }}
-    }}
-    
-    Sortie : Client / Sa relation avec la banque : 
-    - alerter Mr Dupuis sur l'arrivée à terme de son PEA, avec un solde de 30000 €, afin de planifier la gestion du produit à son échéance.
-
-Fin des exemples.
+Reformuler en une seule phrase concise les actions avec un détail, ayant la même personne, le même message et la même justification.
+Voici un exemple :
+    Entrée : {{'personnes': [{{'id': 'pers01', 'roleRb': 'EPOUX', 'prenom': 'Toto', 'nom': 'Dupuis', 'civilite': 'MONSIEUR'}}, 'actions': [{{'message': 'Recommander xxx', 'personne': 'pers01', 'produit': None, 'detail': 'DDD', 'theme' : 'Thème 1', 'justification' : 'Améliorer un aspect'}}, {{'message': 'Recommander xxx', 'personne': 'pers01', 'produit': None, 'detail': 'UUU', 'theme' : 'Thème 1', 'justification' : 'Améliorer un aspect'}}]}}
+    Sortie :
+    **Thème 1** :
+        - Recommander xxx (DDD, UUU) à Mr Dupuis, afin d'améliorer un aspect.
+        
+Voici les données à traiter : {result}
        """
 
 
