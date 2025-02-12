@@ -99,7 +99,11 @@ class RuleAIAgent:
             nlgChain = nlg_prompt | self.llm
             print(">RPA input:" + str(s['originalInput']['input']))
             print(">RPA result:" + str(s['tool_call_result']))
-            return nlgChain.invoke({'input': s['originalInput']['input'], 'result': s['tool_call_result']})
+            response= nlgChain.invoke({'input': s['originalInput']['input'], 'result': s['tool_call_result']})
+            with open("reports/output.html", "w") as file:
+                file.write(str(response))
+            response = response+" http://localhost:9000/reports/output.html"
+            return str(response)
 
     def processMessage(self, userInput: str) -> str:
         

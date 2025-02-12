@@ -13,7 +13,7 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
-from flask import Flask, request
+from flask import Flask, request,send_from_directory
 from flask_cors import CORS
 from RuleAIAgent import RuleAIAgent
 from AIAgent import AIAgent
@@ -99,6 +99,12 @@ def chat_without_tools():
     response = aiAgent.processMessage(userInput)  
     # print("response: ", response)  
     return response
+
+
+@app.route('/reports/<path:path>')
+def send_report(path):
+    # Using request args for path will expose you to directory traversal attacks
+    return send_from_directory('reports', path)
 
 print ('Running chat service')
 
