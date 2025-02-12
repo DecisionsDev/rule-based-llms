@@ -94,68 +94,31 @@ Return the JSON blob only. Don't provide explanation.
 NLG_SYSTEM_PROMPT = """
 Remet le contexte à 0.
 
-Markdown code snippet formatted in the following schema: 
-```json
-{{
-		"personnes": [
-			{{
-				"id" : string, \\\\ l'identifiant de la personne 
-				"roleRb" : string, \\\\ la place de la personne dans le foyer : "EPOUX", ou "EPOUSE", ou "ENFANT", etc ... 
-				"prenom" : string, \\\\ le prénom de la personne
-				"nom" : string, \\\\ le nom de la personne
-				"civilite" : string \\\\ la civilité de la personne : "MONSIEUR", ou "MADAME", ou "MADEMOISELLE"
-			}}
-		],
-		"actions": [
-			{{
-				"message" : string, \\\\ le libellé de l'action
-				"personne" : string, \\\\ l'identifiant optionnel de la personne de l'action
-				"produit": {{
-					"type" : string, \\\\ le type du produit de l'action
-					"id" : string, \\\\ l'identifiant du produit de l'action
-					"libelle" : string, \\\\ le libellé du produit de l'action
-					"solde" : string \\\\ le solde du produit de l'action
-				}},
-				"detail" : string, \\\\ le détail supplémentaire optionnel de l'action,
-				"theme" : string, \\\\ le thème de l'action,
-				"justification" : string \\\\ l'objectif de l'action
-			}}
-		]
-}}
-```
+Voici les données à traiter :
+{input}
+{result}
 
-Ignorer les actions sans thème ou sans justification.
-Préciser le solde des produits arrivés à terme.
-Pour les enfants, utiliser uniquement le prénom sans le nom.
-Pour l'époux et l'épouse, utiliser la civilité, le prénom et le nom.
-Pour l'EPOUX, remplacer MONSIEUR par Mr.
-Pour l'EPOUSE, remplacer MADAME par Mme.
+Ignorer les actions sans thème.
+Pour les enfants, utiliser uniquement le prénom.
+Pour l'époux et l'épouse, utiliser la civilité et le nom.
 Attribuer au foyer les actions sans personne.
-Afficher chaque thème en gras, en sautant une ligne entre chaque thème.
+Préciser le solde des produits arrivés à terme.
+Rédiger une phrase par action.
 
+Regrouper des actions.
 Voici un exemple :
-    Entrée : {{'personnes': [{{'id': 'pers01', 'roleRb': 'EPOUX', 'prenom': 'Toto', 'nom': 'Dupuis', 'civilite': 'MONSIEUR'}}, {{'id': 'pers02', 'roleRb': 'EPOUSE', 'prenom': 'Titi', 'nom': 'Dupuis', 'civilite': 'MADAME'}}], 'actions': [{{'message': 'Recommander xxx', 'personne': 'pers01', 'produit': None, 'detail': 'DDD', 'theme' : 'Thème 1', 'justification' : 'Améliorer un aspect'}}, {{'message': 'Compléter xxx', 'personne': 'pers02', 'produit': None, 'detail': '', 'theme' : 'Thème 1', 'justification' : 'Fluidifier un aspect'}}, {{'message': 'Proposer xxx', 'personne': '', 'produit': None, 'detail': '', 'theme' : 'Thème 1', 'justification' : 'Enrichir un aspect'}}]]}}
+    Entrée : {{'personnes': [{{'id': 'Id01', 'roleRb': 'EPOUX', 'prenom': 'Toto', 'nom': 'Dupuis', 'civilite': 'MONSIEUR'}}, {{'id': 'Id02', 'roleRb': 'EPOUSE', 'prenom': 'Titi', 'nom': 'Dupuis', 'civilite': 'MADAME'}}], 'actions': [{{'message': 'Recommander xxx', 'personne': 'Id01', 'produit': None, 'detail': 'DDD', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}, {{'message': 'Recommander xxx', 'personne': 'Id02', 'produit': None, 'detail': 'DDD', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}, {{'message': 'Compléter xxx', 'personne': 'Id01', 'produit': None, 'detail': '', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}, {{'message': 'Compléter xxx', 'personne': 'Id02', 'produit': None, 'detail': '', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}]}}
     Sortie :
-    **Thème 1** :
-        - Recommander xxx (DDD) à Mr Dupuis, afin d'améliorer un aspect.
-        - Compléter xxx de Mme Dupuis, afin de fluidifier un aspect.
-        - Proposer xxx au foyer, afin d'enrichir un aspect.
-
-Reformuler en une seule phrase concise les actions sans détail, ayant le même message et la même justification.
-Voici un exemple :
-    Entrée : {{'personnes': [{{'id': 'pers01', 'roleRb': 'EPOUX', 'prenom': 'Toto', 'nom': 'Dupuis', 'civilite': 'MONSIEUR'}}, {{'id': 'pers02', 'roleRb': 'EPOUSE', 'prenom': 'Titi', 'nom': 'Dupuis', 'civilite': 'MADAME'}}], 'actions': [{{'message': 'Recommander xxx', 'personne': 'pers01', 'produit': None, 'detail': 'DDD', 'theme' : 'Thème 1', 'justification' : 'Améliorer un aspect'}}, {{'message': 'Recommander xxx', 'personne': 'pers02', 'produit': None, 'detail': 'DDD', 'theme' : 'Thème 1', 'justification' : 'Améliorer un aspect'}}]}}
-    Sortie :
-    **Thème 1** :
         - Recommander xxx (DDD) à Mr et Mme Dupuis, afin d'améliorer un aspect.
-
-Reformuler en une seule phrase concise les actions avec un détail, ayant la même personne, le même message et la même justification.
-Voici un exemple :
-    Entrée : {{'personnes': [{{'id': 'pers01', 'roleRb': 'EPOUX', 'prenom': 'Toto', 'nom': 'Dupuis', 'civilite': 'MONSIEUR'}}, 'actions': [{{'message': 'Recommander xxx', 'personne': 'pers01', 'produit': None, 'detail': 'DDD', 'theme' : 'Thème 1', 'justification' : 'Améliorer un aspect'}}, {{'message': 'Recommander xxx', 'personne': 'pers01', 'produit': None, 'detail': 'UUU', 'theme' : 'Thème 1', 'justification' : 'Améliorer un aspect'}}]}}
+        - Compléter xxx de Mr et Mme Dupuis, afin d'améliorer un aspect.
+Voici un autre exemple :
+    Entrée : {{'personnes': [{{'id': 'Id01', 'roleRb': 'EPOUX', 'prenom': 'Toto', 'nom': 'Dupuis', 'civilite': 'MONSIEUR'}}, 'actions': [{{'message': 'Recommander xxx', 'personne': 'Id01', 'produit': None, 'detail': 'DDD', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}, {{'message': 'Recommander xxx', 'personne': 'Id01', 'produit': None, 'detail': 'UUU', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}]}}
     Sortie :
-    **Thème 1** :
         - Recommander xxx (DDD, UUU) à Mr Dupuis, afin d'améliorer un aspect.
-        
-Voici les données à traiter : {result}
+
+Traduire le résultat de français à la langue de la phrase {input}.
+
+Sortie : 
        """
 
 
