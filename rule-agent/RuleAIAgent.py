@@ -101,9 +101,9 @@ class RuleAIAgent:
             print(">RPA result:" + str(s['tool_call_result']))
             response= nlgChain.invoke({'input': s['originalInput']['input'], 'result': s['tool_call_result']})
             with open("reports/output.html", "w") as file:
-                file.write(str(response))
-            response = response+" http://localhost:9000/reports/output.html"
-            return str(response)
+                file.write(response.content)
+            response.content = "http://localhost:9000/reports/output.html"
+            return response
 
     def processMessage(self, userInput: str) -> str:
         
@@ -122,6 +122,6 @@ class RuleAIAgent:
             textResponse = response.content
         else:
             textResponse = response    
-
+            
         translation_table = str.maketrans({'"': r'\"','\n': r' ', '\t': r' ', '\r': r' ' })
         return '{ "input": "' + userInput.translate(translation_table) + '", "output": "' + textResponse.translate(translation_table) + '"}'

@@ -160,6 +160,7 @@ Formate le résultat en HTML en suivant le modèle suivant, en créant une secti
 </html>
 
 Traduire le résultat de français à la langue de la phrase {input}.
+Dans le résultat, traduire le mot 'Commentaires' de français à la langue de la phrase {input}
 
 Sortie : 
        """
