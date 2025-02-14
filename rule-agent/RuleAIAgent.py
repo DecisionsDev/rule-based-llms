@@ -115,10 +115,9 @@ class RuleAIAgent:
             #response3= nlgChain3.invoke({'input': s['originalInput']['input'], 'result': response2.content})            
             #with open("reports/output.html", "w") as file:
             #    file.write(response3.content)
-            #response3.content = response2.content + " http://localhost:9000/reports/output.html"
+            response1.content = response1.content + " [HTLM Report](http://localhost:9000/reports/output.html)"
             
-            response = response1
-            return response
+            return response1
 
     def processMessage(self, userInput: str) -> str:
         
@@ -137,6 +136,6 @@ class RuleAIAgent:
             textResponse = response.content
         else:
             textResponse = response    
-            
+
         translation_table = str.maketrans({'"': r'\"','\n': r' ', '\t': r' ', '\r': r' ' })
         return '{ "input": "' + userInput.translate(translation_table) + '", "output": "' + textResponse.translate(translation_table) + '"}'
