@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   odm:
-    image: ibmcom/odm
+    image: ibmcom/odm:9.0
     hostname: odm
     container_name: odm
     environment:
@@ -39,13 +39,15 @@ services:
       - "host.containers.internal:host-gateway"
 # If you are using Podman, comment out the line above and uncomment the following line with your IP address:
 #      - "host.containers.internal:${HOST_IP_ADDRESS}"
+
   frontend:
     image: chatbot-frontend
-    build: 
-      context: chatbot-frontend
-      args:
-      - API_URL=http://localhost:9000
+    build:
+      context: chatbot
+    environment:
+      - BACKEND_SERVICE=http://backend:9000
+    ports:
+      - 8080:7860
     depends_on:
       - backend
-    ports:
-      - 8080:80
+
