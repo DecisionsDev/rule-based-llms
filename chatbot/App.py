@@ -66,7 +66,7 @@ textarea {
 
 async def send_message(message: str, use_decision_engine: bool) -> dict:
     endpoint = 'chat_with_tools' if use_decision_engine else 'chat_without_tools'
-    base_url = 'http://localhost:9000'  # Replace with your actual API URL
+    base_url = 'http://backend:9000'  # Replace with your actual API URL
     url = f"{base_url}/rule-agent/{endpoint}?userMessage={message}"
 
     response = requests.get(url, headers={'Access-Control-Allow-Origin': '*'})

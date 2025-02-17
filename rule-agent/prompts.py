@@ -172,13 +172,21 @@ Concevoir une phrase par action, en respectant les consignes suivantes :
 - Ignorer les actions sans thème.
 - Attribuer au foyer les actions sans personne.
 - Pour les enfants, utiliser uniquement le prénom.
-- Pour l'époux et l'épouse, utiliser la civilité et le nom.
+- Pour les époux, utiliser la civilité et le nom.
 - Remplacer MONSIEUR par Mr.
 - Remplacer MADAME par Mme.
 - Préciser le solde des produits arrivés à terme, en euro.
 - Séparer la partie décimale de la partie entière par une virgule.
 
-Voici un exemple :
+Commencer avec le thème "Gérer le quotidien".
+Le thème suivant est "Données à recueillir/enrichir".
+Le thème suivant est "Se constituer un capital".
+Le thème suivant est "Client / Sa relation avec la banque".
+Le thème suivant est "Protéger ses biens et sa famille"
+Le thème suivant est "Financer ses projets".
+Terminer avec le dernier thème "Points d'attention".
+
+*exemple* :
     Entrée : {{'personnes': [{{'id': 'Id01', 'roleRb': 'EPOUX', 'prenom': 'Toto', 'nom': 'Dupuis', 'civilite': 'MONSIEUR'}}, {{'id': 'Id02', 'roleRb': 'EPOUSE', 'prenom': 'Titi', 'nom': 'Dupuis', 'civilite': 'MADAME'}}, {{'id': 'Id03', 'roleRb': 'ENFANT', 'prenom': 'Tutu', 'nom': 'Dupuis', 'civilite': ''}}, {{'id': 'Id04', 'roleRb': 'ENFANT', 'prenom': 'Tata', 'nom': 'Dupuis', 'civilite': ''}}], 'actions': [{{'message': 'Recommander xxx', 'personne': 'Id01', 'produit': None, 'detail': 'DDD', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}, {{'message': 'Recommander xxx', 'personne': 'Id02', 'produit': None, 'detail': 'DDD', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}},{{'message': 'Recommander xxx', 'personne': 'Id03', 'produit': None, 'detail': 'DDD', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}},{{'message': 'Recommander xxx', 'personne': 'Id04', 'produit': None, 'detail': 'DDD', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}, {{'message': 'Compléter xxx', 'personne': 'Id01', 'produit': None, 'detail': '', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}, {{'message': 'Compléter xxx', 'personne': 'Id02', 'produit': None, 'detail': '', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}},{{'message': 'Recommander yyy', 'personne': 'Id01', 'produit': None, 'detail': 'DDD', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}, {{'message': 'Recommander yyy', 'personne': 'Id01', 'produit': None, 'detail': 'UUU', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}, {{'message': 'Proposer zzz', 'personne': 'Id02', 'produit': None, 'detail': '', 'theme': 'Thème 2', 'justification': 'Améliorer un aspect'}}]}}
     Sortie :
       Thème 1
@@ -187,7 +195,7 @@ Voici un exemple :
              - Recommander yyy (DDD, UUU) à Mr Dupuis, afin d'améliorer un aspect.
       Thème 2
              - Proposer zzz à Mme Dupuis, afin d'améliorer un aspect.
-Fin de l'exemple.
+*Fin d'exemple*
 
 Voici les données à traiter : {result}
 Sortie : 
