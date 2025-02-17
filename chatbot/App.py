@@ -1,8 +1,8 @@
 import gradio as gr
 import requests
 import asyncio
-import os
-
+import os, json
+from gradio import ChatMessage
 def chatbot_response(input_text):
     return "Hello! This is a Carbon-themed chatbot."
 
@@ -40,13 +40,6 @@ carbon_css = """
     border-bottom: 2px solid #e0e0e0;
 }
 
-textarea {
-    border: 1px solid #8d8d8d;
-    border-radius: 8px;
-    padding: 6px;
-    font-size: 1rem;
-    color: #161616;
-}
 
 .toggle-button {
     background-color: #0f62fe;
@@ -72,41 +65,58 @@ async def send_message(message: str, use_decision_engine: bool) -> dict:
     response = requests.get(url, headers={'Access-Control-Allow-Origin': '*'})
 
     if response.status_code == 200:
-        return response.json()
+        return response.content
     else:
         return {"error": "Failed to fetch data"}
 
-def chatbot_response(input_text: str, use_decision_engine: bool):
+def chatbot_response(user_input: str, use_decision_engine: bool):
     # Call the async function and wait for the result
-    result = asyncio.run(send_message(input_text, use_decision_engine))
-    return result
+    result = asyncio.run(send_message(user_input, use_decision_engine))
+    return json.loads(result)['output']
 
-# Fonction de chatbot simple
-def chatbot(message, use_decision_service):
-    # Logique du chatbot ici
-    # if use_decision_service:
-    #     response = f"Decision Service activé : {message}"
-    # else:
-    #     response = f"Vous avez dit : {message}"
-    
-    return chatbot_response(message,use_decision_service)['output']
+
+# JavaScript for the timer
+timer_js = """
+<script>
+let timerElement = document.createElement('div');
+timerElement.id = 'timer';
+timerElement.style.fontSize = '1.5rem';
+timerElement.style.marginTop = '20px';
+document.body.appendChild(timerElement);
+
+let seconds = 0;
+function updateTimer() {
+    seconds++;
+    document.getElementById('timer').innerText = `Time elapsed: ${seconds} seconds`;
+}
+setInterval(updateTimer, 1000);
+</script>
+"""
+
 
 
 # Créer l'interface Gradio
-with gr.Blocks(css=carbon_css) as demo:
+with gr.Blocks(css=carbon_css,title="Chatbot ODM + LLM") as demo:
     gr.HTML("""<h1 class="header">IBM LLM + Decisions Chatbot</h1>""")
-    chatbot_interface = gr.Chatbot(show_copy_button=True,   
+    gr.HTML(timer_js) 
+    use_decision_service=gr.Checkbox(label="Decision Service", container=False)
+    chatbot_interface = gr.Chatbot(show_copy_button=True,   type="messages",
                             avatar_images=(None, (os.path.join(os.path.dirname(__file__), "bot.png"))))  
     message = gr.Textbox(show_label=False,label=None,placeholder="Type you message here ...",submit_btn=True)
-    use_decision_service = gr.Checkbox(label="Decision Service", container=False)
-
-   
     def respond(message, use_decision_service, chat_history):
-        bot_message = chatbot(message, use_decision_service)
-        chat_history.append((message, bot_message))
-        return "", chat_history
+        chat_history.append(   ChatMessage(
+            role="user",
+            content=message,
+        ))
 
-    message.submit(respond, [message, use_decision_service, chatbot_interface], [message, chatbot_interface])
+        bot_message = chatbot_response(message, use_decision_service)
+      
+        chat_history.append(    ChatMessage(
+            role="assistant",
+            content=bot_message,
+        ))
+        return "",chat_history
+    message.submit(respond, [message, use_decision_service, chatbot_interface],[message,chatbot_interface])
 
 # Lancer l'application
 demo.launch(allowed_paths=[], server_name="0.0.0.0",show_api=False,favicon_path=(os.path.join(os.path.dirname(__file__), "bot.png")))

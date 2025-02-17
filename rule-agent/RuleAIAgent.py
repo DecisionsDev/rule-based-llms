@@ -19,6 +19,7 @@ from langchain.prompts import PromptTemplate
 from langchain.tools.render import ( render_text_description, render_text_description_and_args)
 from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.messages.ai import AIMessage
+import json
 from operator import itemgetter
 from langchain_core.runnables import (
     RunnableParallel,
@@ -137,5 +138,7 @@ class RuleAIAgent:
         else:
             textResponse = response    
 
-        translation_table = str.maketrans({'"': r'\"','\n': r' ', '\t': r' ', '\r': r' ' })
-        return '{ "input": "' + userInput.translate(translation_table) + '", "output": "' + textResponse.translate(translation_table) + '"}'
+        data={}
+        data['input']=userInput
+        data['output']=textResponse
+        return json.dumps(data)
