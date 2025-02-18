@@ -95,7 +95,7 @@ class RuleAIAgent:
             return converse.invoke({'input':s['originalInput']['input']})
         else:
             #print(">RPA input:" + str(s['originalInput']['input']))
-            #print(">RPA result:" + str(s['tool_call_result']))
+            print(">RPA result:" + str(s['tool_call_result']))
 
             nlg_prompt1 = ChatPromptTemplate.from_messages(
                 [("system", prompts.NLG_SYSTEM_PROMPT1), ("user", "{input}")]
@@ -108,19 +108,19 @@ class RuleAIAgent:
                 [("system", prompts.NLG_SYSTEM_PROMPT2), ("user", "{input}")]
             )
             nlgChain2 = nlg_prompt2 | self.llm
-            #response2= nlgChain2.invoke({'input': s['originalInput']['input'], 'result': response1.content})
-            #print(">RPA NLG2: " + response2.content)
+            response2= nlgChain2.invoke({'input': s['originalInput']['input'], 'result': response1.content})
+            print(">RPA NLG2: " + response2.content)
             
             nlg_prompt3 = ChatPromptTemplate.from_messages(
                 [("system", prompts.NLG_SYSTEM_PROMPT3), ("user", "{input}")]
             )
             nlgChain3 = nlg_prompt3 | self.llm
-            #response3= nlgChain3.invoke({'input': s['originalInput']['input'], 'result': response2.content})            
-            #with open("reports/output.html", "w") as file:
-            #    file.write(response3.content)
-            #response3.content = response2.content + " [HTLM Report](http://localhost:9000/reports/output.html)"
+            response3= nlgChain3.invoke({'input': s['originalInput']['input'], 'result': response2.content})            
+            with open("reports/output.html", "w") as file:
+                file.write(response3.content)
+            response3.content = response2.content + " [HTLM Report](http://localhost:9000/reports/output.html)"
             
-            return response1
+            return response3
 
     def processMessage(self, userInput: str) -> str:
         

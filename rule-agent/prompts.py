@@ -162,6 +162,12 @@ Formate le résultat en HTML en suivant le modèle suivant, en créant une secti
 Traduire le résultat de français à la langue de la phrase {input}.
 Dans le résultat, traduire le mot 'Commentaires' de français à la langue de la phrase {input}
 
+@page {{
+	size: a4;
+	margin-bottom: 10;
+}}
+
+Voici les données à traiter : {result}
 Sortie : 
        """
 
@@ -187,7 +193,7 @@ Le thème suivant est "Financer ses projets".
 Terminer avec le dernier thème "Points d'attention".
 
 *exemple* :
-    Entrée : {{'personnes': [{{'id': 'Id01', 'roleRb': 'EPOUX', 'prenom': 'Toto', 'nom': 'Dupuis', 'civilite': 'MONSIEUR'}}, {{'id': 'Id02', 'roleRb': 'EPOUSE', 'prenom': 'Titi', 'nom': 'Dupuis', 'civilite': 'MADAME'}}, {{'id': 'Id03', 'roleRb': 'ENFANT', 'prenom': 'Tutu', 'nom': 'Dupuis', 'civilite': ''}}, {{'id': 'Id04', 'roleRb': 'ENFANT', 'prenom': 'Tata', 'nom': 'Dupuis', 'civilite': ''}}], 'actions': [{{'message': 'Recommander xxx', 'personne': 'Id01', 'produit': None, 'detail': 'DDD', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}, {{'message': 'Recommander xxx', 'personne': 'Id02', 'produit': None, 'detail': 'DDD', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}},{{'message': 'Recommander xxx', 'personne': 'Id03', 'produit': None, 'detail': 'DDD', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}},{{'message': 'Recommander xxx', 'personne': 'Id04', 'produit': None, 'detail': 'DDD', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}, {{'message': 'Compléter xxx', 'personne': 'Id01', 'produit': None, 'detail': '', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}, {{'message': 'Compléter xxx', 'personne': 'Id02', 'produit': None, 'detail': '', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}},{{'message': 'Recommander yyy', 'personne': 'Id01', 'produit': None, 'detail': 'DDD', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}, {{'message': 'Recommander yyy', 'personne': 'Id01', 'produit': None, 'detail': 'UUU', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}, {{'message': 'Proposer zzz', 'personne': 'Id02', 'produit': None, 'detail': '', 'theme': 'Thème 2', 'justification': 'Améliorer un aspect'}}]}}
+    Entrée : {{'personnes': [{{'id': 'Id01', 'dateEntreeRelation': '2009-12-31T23:00:00.000+0000', 'dateNaissance': '1954-12-30T23:00:00.000+0000', 'segment': 'SEGMENT_11', 'profession': 'Consultant', 'entrepriseEmployeur': 'IBM', 'roleRb': 'EPOUX', 'emailPrive': '', 'numeroTelephonePrive': '', 'prenom': 'Marcel', 'nom': 'Dupuis', 'civilite': 'MONSIEUR'}}, {{'id': 'Id02', 'dateEntreeRelation': '2009-12-31T23:00:00.000+0000', 'dateNaissance': '1956-08-30T23:00:00.000+0000', 'segment': 'SEGMENT_10', 'profession': 'Fonctionnaire', 'entrepriseEmployeur': 'Etat', 'roleRb': 'EPOUSE', 'emailPrive': 'geraldine.dupuisATorange.fr', 'numeroTelephonePrive': '', 'prenom': 'Géraldine', 'nom': 'Dupuis', 'civilite': 'MADAME'}}, {{'id': 'Id03', 'dateEntreeRelation': '2009-12-31T23:00:00.000+0000', 'dateNaissance': '1998-07-13T22:00:00.000+0000', 'segment': 'SEGMENT_01', 'profession': '', 'entrepriseEmployeur': '', 'roleRb': 'ENFANT', 'emailPrive': '', 'numeroTelephonePrive': '', 'prenom': 'Tutu', 'nom': 'Dupuis', 'civilite': 'MONSIEUR'}}, {{'id': 'Id04', 'dateEntreeRelation': '2009-12-31T23:00:00.000+0000', 'dateNaissance': '2000-03-31T22:00:00.000+0000', 'segment': 'SEGMENT_01', 'profession': '', 'entrepriseEmployeur': '', 'roleRb': 'ENFANT', 'emailPrive': '', 'numeroTelephonePrive': '', 'prenom': 'Tata', 'nom': 'Dupuis', 'civilite': 'MADEMOISELLE'}}], 'actions': [{{'message': 'Recommander xxx', 'personne': 'Id01', 'produit': None, 'detail': 'DDD', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}, {{'message': 'Recommander xxx', 'personne': 'Id02', 'produit': None, 'detail': 'DDD', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}},{{'message': 'Recommander xxx', 'personne': 'Id03', 'produit': None, 'detail': 'DDD', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}},{{'message': 'Recommander xxx', 'personne': 'Id04', 'produit': None, 'detail': 'DDD', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}, {{'message': 'Compléter xxx', 'personne': 'Id01', 'produit': None, 'detail': '', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}, {{'message': 'Compléter xxx', 'personne': 'Id02', 'produit': None, 'detail': '', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}},{{'message': 'Recommander yyy', 'personne': 'Id01', 'produit': None, 'detail': 'DDD', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}, {{'message': 'Recommander yyy', 'personne': 'Id01', 'produit': None, 'detail': 'UUU', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}, {{'message': 'Proposer zzz', 'personne': 'Id02', 'produit': None, 'detail': '', 'theme': 'Thème 2', 'justification': 'Améliorer un aspect'}}]}}
     Sortie :
       Thème 1
              - Recommander xxx (DDD) à Mr et Mme Dupuis, ainsi qu'à Tutu et Tata, afin d'améliorer un aspect.
@@ -198,28 +204,314 @@ Terminer avec le dernier thème "Points d'attention".
 *Fin d'exemple*
 
 Voici les données à traiter : {result}
+
 Sortie : 
-       """
+
+"""
+
+NLG_SYSTEM_PROMPT1_SANSEX = """
+Process the input and generate the appropriate output based on the following instructions.
+Your task is to transform a set of actions into a structured format with specific rules.
+
+There are multiple actions, each with a message, person, product, detail, theme, and justification.
+The specific rules are :
+1. Ignore actions without a theme.
+2. Assign actions without a person to the "foyer" (household).
+3. For children, use only their first names.
+4. For spouses, use their civility (Mr. or Mme.) and last name.
+5. Replace "MONSIEUR" with "Mr." and "MADAME" with "Mme."
+6. For products that have reached their term, specify the balance in euros, using a comma as the decimal separator.
+
+Your approach will be:
+1. Group actions by their themes.
+2. For each action, determine the person or if it's for the household.
+3. Apply the naming conventions based on the person's role.
+4. For actions involving products at term, include the solde (balance) in euros.
+5. Combine actions with different persons but the same message and no detail into a single sentence, using the message, the products, and the justification.
+6. Combine actions with no person or different persons but the same message and the same detail or no detail into a single sentence, using the message, the products, and the justification.
+7. Combine actions with different details but the same message and the same person into a single sentence, using the message, the products, and the justification.
+8. Combine actions with different details but the same message and no person into a single sentence, using the message, the products, and the justification.
+
+Starting with the first theme, "Gérer le quotidien".
+Next theme is "Données à recueillir/enrichir".
+Next theme is "Se constituer un capital".
+Next theme is "Client / Sa relation avec la banque".
+Next theme is "Protéger ses biens et sa famille"
+Next theme is "Financer ses projets".
+Finally, last theme is "Points d'attention".
+
+Then structure each theme, combining actions where possible and applying the naming rules. 
+Ensure that for products with a solde, I format the amount correctly, like 20 000,00 €.
+
+Putting it all together, Make sure each theme is a section in bold, and each action is a bullet point under it, properly formatted.
+End the output after the last sentence.
+
+Input : {result}
+Output :
+"""
 
 NLG_SYSTEM_PROMPT2 = """
+Resets the context to 0.
+Translate {result} from French to the language of {input}.
+Putting it all together, Make sure each theme is a section in bold, and each action is a bullet point under it, properly formatted.
+Output :
+"""
+       
+NLG_SYSTEM_PROMPT3 = """
 Remet le contexte à 0.
 
-Voici les données à traiter :
+Voici les données à traiter : 
 {input}
 {result}
 
-Traduire {result} de français à la langue de la phrase {input}.
-Formater les thèmes en gras.
-
-Sortie : 
-       """
-
-NLG_SYSTEM_PROMPT3 = """
-Remet le contexte à 0.
-Voici les données à traiter : {result}
-
 Formate {result} en HTML en suivant le modèle suivant, en créant une section par thème :
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> <html> <head> <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script> <style type="text/css"> @page {{ size: a4; margin-bottom: 10; }} @media print {{ html,body {{width: 210mm; height: 297mm}} }} html {{ background-color: #D3D3D3; display: flex; justify-content: center; }} body {{ font-family: 'Roboto', sans-serif; font-size: small; background-color: white; width: 1024px; -webkit-print-color-adjust: exact; }} li {{ margin: 0; padding: 0.2em; }} .header-bg {{ width: 100%; color: white; position: relative; height: 207px; }} .header-bg img {{ position: absolute; top: 0; left: 0; z-index: 0; }} .header-bg>div {{ position: absolute; top: 0; left: 0; z-index: 1; display: flex; flex-direction: column; align-items: flex-end; width: 100%; padding-right: 10px; box-sizing: border-box; padding-top: 30px; }} .title {{ background-color: #305c9f; color: white; padding-left: 70px; position: relative; padding-top: 15px; padding-bottom: 15px; font-size: 18px; }} .title::before {{ content: ''; position: absolute; height: 8px; width: 90px; background-color: #f0f3f8; transform: rotate(-45deg); top: 20px; left: -11px; }} .comm-img {{ position: relative; display: inline-table; width:100%; }} .comm-img > img{{ width:100%; }} .comm-img::before {{ content: 'Commentaires'; position: absolute; height: 15px; width: 90px; top: 7px; left: 19px; font-family: 'Shadows Into Light', cursive; font-size: 18px; }} </style>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> <html> 
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+<style type="text/css">
+
+html {{
+	background-color: #D3D3D3;
+	display: flex;
+	justify-content: center;
+}}
+
+
+body {{
+	font-family: 'Roboto', sans-serif;
+	font-size: small;
+	background-color: white;
+	width: 1024px;
+	-webkit-print-color-adjust: exact;
+}}
+
+#Carre {{
+	list-style-image: url('./images/checkBox.jpg');
+}}
+
+#Rond {{
+	list-style-type: circle;
+}}
+
+#Triangle {{
+	list-style-image: url('./images/puce_triangle.gif');
+}}
+
+table.TableauPrelevementsMensuels {{
+	border: 1px;
+	width: calc(100% - 30px);
+	margin-left: 30px;
+	font-size: 12px;
+	padding: 0 0.5em;
+	border-collapse: collapse;
+	line-height: 20px;
+}}
+
+table.TableauPrelevementsMensuels th {{
+	text-align: left;
+}}
+
+table.TableauPrelevementsMensuels th:nth-child(2) {{
+	text-align: right;
+}}
+
+table.TableauPrelevementsMensuels td {{
+	padding: 0 0.5em;
+	text-align: left;
+	font-weight: 300;
+}}
+
+table.TableauPrelevementsMensuels td p {{
+	position: relative;
+}}
+
+table.TableauPrelevementsMensuels td:nth-child(1) {{
+	content: '';
+	height: 1px;
+	width: 300px;
+	<!-- background-color: LightGrey; -->
+	top: 10px;
+	<!-- right: -61px; -->
+}}
+
+table.TableauPrelevementsMensuels td:nth-child(2) {{
+	width: 100px;
+	text-align: right;
+	font-weight: bold;
+	color: #294c96;
+}}
+table.TableauMouvementsImportants {{
+	border: 1px;
+	width: calc(100% - 30px); margin-left : 30px;
+	font-size: 12px;
+	padding: 0 0.5em;
+	border-collapse: collapse;
+	line-height: 20px;
+	margin-left: 30px;
+}}
+
+table.TableauMouvementsImportants th {{
+	text-align: left;
+}}
+
+table.TableauMouvementsImportants th:nth-child(1n+2) {{
+	text-align: center;
+	width: 70px;
+}}
+
+table.TableauMouvementsImportants td {{
+	padding: 0 0.5em;
+	text-align: left;
+}}
+
+table.TableauMouvementsImportants td p {{
+	position: relative;
+}}
+
+table.TableauMouvementsImportants td:nth-child(3) {{
+	text-align: right;
+	font-weight: bold;
+	color: #294c96;
+}}
+
+table.TableauMouvementsImportants td:nth-child(1) p::after {{
+	content: '';
+	position: absolute;
+	height: 1px;
+	width: calc(100% + 70px);
+	background-color: LightGrey;
+	top: 10px;
+	right: -131px;
+}}
+
+table.graphes td {{
+	width: 50%;
+	font-size: 12px;
+	border-style: hidden;
+	background: white;
+}}
+
+li {{
+	margin: 0;
+	padding: 0.2em;
+}}
+
+.header-bg {{
+	width: 100%;
+	color: white;
+	position: relative;
+	height: 207px;
+}}
+
+.header-bg img {{
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 0;
+}}
+
+.header-bg>div {{
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	width: 100%;
+	padding-right: 10px;
+	box-sizing: border-box;
+	padding-top: 30px;
+}}
+
+.personne td>strong {{
+	background-color: #9cb0d7;
+	border-bottom: 3px solid white;
+	display: inline-block;
+	color: white;
+	text-align: center;
+	padding: 10px;
+	box-sizing: border-box;
+	width: 100%;
+	font-size: 18px;
+}}
+
+.personne li {{
+	list-style-type: none;
+}}
+
+.personne .right ul {{
+	padding-right: 40px;
+}}
+
+.title {{
+	background-color: #305c9f;
+	color: white;
+	padding-left: 70px;
+	position: relative;
+	padding-top: 15px;
+	padding-bottom: 15px;
+	font-size: 18px;
+}}
+
+.title::before {{
+	content: '';
+	position: absolute;
+	height: 8px;
+	width: 90px;
+	background-color: #f0f3f8;
+	transform: rotate(-45deg);
+	top: 20px;
+	left: -11px;
+}}
+
+.recommandations {{
+	background-color: #f0f3f8;
+}}
+
+.recommandations ul {{
+	padding-top: 3px;
+	padding-bottom: 3px;
+}}
+
+.commentaire {{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}}
+
+.comm-img {{
+	position: relative;
+	display: inline-table;
+	width:100%;
+}}
+
+.comm-img  > img{{
+	width:100%;
+}}
+
+.comm-img::before {{
+	content: 'Commentaires';
+	position: absolute;
+	height: 15px;
+	width: 90px;
+	top: 7px;
+	left: 19px;
+	font-family: 'Shadows Into Light', cursive;
+	font-size: 18px;
+}}
+
+.tableau {{
+	display: flex;
+	flex-direction: column;
+	padding-left: 30px;
+}}
+
+.tableau center {{
+	text-align: left;
+}}
+</style>
 </head>
 <title>Préparation d'entretien</title>
 <body>
@@ -239,6 +531,37 @@ Formate {result} en HTML en suivant le modèle suivant, en créant une section p
 		</div>
 	</div>
 	<!-- Core du document -->
+        <!-- Section 0 -->
+        <table width="100%" class="personne">
+            <tr>
+ 				<td width="50%" style="background-color: #f0f3f8; text-align: right" class="right"><strong>la civilité et nom de l'époux</strong>
+                	<ul>
+                    <li>Client depuis la date d'entrée en relation de l'époux</li>
+                    <li>l'âge de l'époux</li>
+                    <li>Activité : la profession de l'époux</li>
+                    <li>Employeur : l'entreprise employeur de l'époux</li>
+                    <li>Segmentation : <strong>le segment de l'époux</strong></li>
+                    <li>Téléphone privé : le numéro de téléphone privé de l'époux</li>
+                    <li>Email privé : l'email privé de l'époux</li>
+                	</ul>
+                </td>
+				<td width="50%" style="background-color: #f0f3f8; text-align: left"><strong>la civilité et nom de l'épouse</strong>
+                	<ul>
+                    <li>Cliente depuis la date d'entrée en relation de l'épouse</li>
+                    <li>l'âge de l'épouse</li>
+                    <li>Activité : la profession de l'épouse</li>
+                    <li>Employeur : l'entreprise employeur de l'épouse</li>
+                    <li>Segmentation : <strong>le segment de l'épouse</strong></li>
+                    <li>Téléphone privé : le numéro de téléphone privé de l'épouse</li>
+                    <li>Email privé : l'email privé de l'épouse</li>
+                	</ul>
+                </td>
+            </tr>
+            <tr>
+                <td>        </td>
+                <td>        </td>
+            </tr>
+        </table>
 		<!-- Section -->
 		<div class="title">Thème</div>
 		&nbsp;
