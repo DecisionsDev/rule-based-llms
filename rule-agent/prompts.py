@@ -91,86 +91,6 @@ Return the JSON blob only. Don't provide explanation.
 #       For example, if the question is "what is the price of a pair of shoes" and the response is "$89", then generate: "the price of a pair of shoes is $89.".
 #       """
 
-NLG_SYSTEM_PROMPT = """
-Remet le contexte à 0.
-
-Voici les données à traiter :
-{input}
-{result}
-
-Ignorer les actions sans thème.
-Pour les enfants, utiliser uniquement le prénom.
-Pour l'époux et l'épouse, utiliser la civilité et le nom.
-Attribuer au foyer les actions sans personne.
-Préciser le solde des produits arrivés à terme.
-Rédiger une phrase par action.
-
-Voici un exemple :
-    Entrée : {{'personnes': [{{'id': 'Id01', 'roleRb': 'EPOUX', 'prenom': 'Toto', 'nom': 'Dupuis', 'civilite': 'MONSIEUR'}}, {{'id': 'Id02', 'roleRb': 'EPOUSE', 'prenom': 'Titi', 'nom': 'Dupuis', 'civilite': 'MADAME'}}, {{'id': 'Id03', 'roleRb': 'ENFANT', 'prenom': 'Tutu', 'nom': 'Dupuis', 'civilite': ''}}, {{'id': 'Id04', 'roleRb': 'ENFANT', 'prenom': 'Tata', 'nom': 'Dupuis', 'civilite': ''}}], 'actions': [{{'message': 'Recommander xxx', 'personne': 'Id01', 'produit': None, 'detail': 'DDD', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}, {{'message': 'Recommander xxx', 'personne': 'Id02', 'produit': None, 'detail': 'DDD', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}},{{'message': 'Recommander xxx', 'personne': 'Id03', 'produit': None, 'detail': 'DDD', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}},{{'message': 'Recommander xxx', 'personne': 'Id04', 'produit': None, 'detail': 'DDD', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}, {{'message': 'Compléter xxx', 'personne': 'Id01', 'produit': None, 'detail': '', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}, {{'message': 'Compléter xxx', 'personne': 'Id02', 'produit': None, 'detail': '', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}},{{'message': 'Recommander yyy', 'personne': 'Id01', 'produit': None, 'detail': 'DDD', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}, {{'message': 'Recommander yyy', 'personne': 'Id01', 'produit': None, 'detail': 'UUU', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}, {{'message': 'Proposer zzz', 'personne': 'Id02', 'produit': None, 'detail': '', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}]}}
-    Sortie :
-        Thème 1
-             - Recommander xxx (DDD) à Mr et Mme Dupuis, ainsi qu'à Tutu et Tata, afin d'améliorer un aspect.
-             - Compléter xxx de Mr et Mme Dupuis, afin d'améliorer un aspect.
-             - Recommander yyy (DDD, UUU) à Mr Dupuis, afin d'améliorer un aspect.
-        Thème 2
-             - Proposer zzz à Mme Dupuis, afin d'améliorer un aspect.
-Fin de l'exemple.
-
-Traduire chaque thème de français à la langue de la phrase {input}.
-Traduire le résultat de français à la langue de la phrase {input}.
-Proposer uniquement le résultat dans la langue de la phrase {input}.
-
-Formate le résultat en HTML en suivant le modèle suivant, en créant une section par thème :
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> <html> <head> <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script> <style type="text/css"> @page {{ size: a4; margin-bottom: 10; }} @media print {{ html,body {{width: 210mm; height: 297mm}} }} html {{ background-color: #D3D3D3; display: flex; justify-content: center; }} body {{ font-family: 'Roboto', sans-serif; font-size: small; background-color: white; width: 1024px; -webkit-print-color-adjust: exact; }} li {{ margin: 0; padding: 0.2em; }} .header-bg {{ width: 100%; color: white; position: relative; height: 207px; }} .header-bg img {{ position: absolute; top: 0; left: 0; z-index: 0; }} .header-bg>div {{ position: absolute; top: 0; left: 0; z-index: 1; display: flex; flex-direction: column; align-items: flex-end; width: 100%; padding-right: 10px; box-sizing: border-box; padding-top: 30px; }} .title {{ background-color: #305c9f; color: white; padding-left: 70px; position: relative; padding-top: 15px; padding-bottom: 15px; font-size: 18px; }} .title::before {{ content: ''; position: absolute; height: 8px; width: 90px; background-color: #f0f3f8; transform: rotate(-45deg); top: 20px; left: -11px; }} .comm-img {{ position: relative; display: inline-table; width:100%; }} .comm-img > img{{ width:100%; }} .comm-img::before {{ content: 'Commentaires'; position: absolute; height: 15px; width: 90px; top: 7px; left: 19px; font-family: 'Shadows Into Light', cursive; font-size: 18px; }} </style>
-</head>
-<title>Préparation d'entretien</title>
-<body>
-	<div class="header-bg">
-		<img width="100%" src='./images/IBM-Background.jpg' />
-		<div>
-			<div>
-				<div style="font-size: 24px;">Document de travail strictement à usage interne</div>
-				<div style="font-size: 12px; font-style: italic; text-align: right">Fiche éditée le dateRef</div>
-			</div>
-			<div style="padding-top: 22px">
-				<div style="font-size: 18px;">Préparation de l'entretien de civilité et nom du client</div>
-				<div style="font-size: 12px;text-align: right; font-weight: 200; font-style: italic;">(n° de pers. idClient)</div>
-				<div style="font-size: 18px;text-align: right;">Agence de rattachement : Orsay</div>
-				<div style="font-size: 18px;"></div>
-			</div>
-		</div>
-	</div>
-	<!-- Core du document -->
-		<!-- Section -->
-		<div class="title">Thème</div>
-		&nbsp;
-		<table cellspacing="2" width="100%"
-			style="background-color: #f0f3f8; border-style: hidden; border-color: white;">
-			<tr>
-				<td style="border-style: hidden;"><ul><li>Recommendation</li></ul></td>
-			</tr>
-		</table>
-		<div style="display: flex; justify-content: center;">
-			<div class="comm-img">
-				<img src='./images/Rectangle-big.svg' />
-			</div>
-		</div>
-		&nbsp;&nbsp;
-</body>
-</html>
-
-Traduire le résultat de français à la langue de la phrase {input}.
-Dans le résultat, traduire le mot 'Commentaires' de français à la langue de la phrase {input}
-
-@page {{
-	size: a4;
-	margin-bottom: 10;
-}}
-
-Voici les données à traiter : {result}
-Sortie : 
-       """
-
 NLG_SYSTEM_PROMPT1 = """
 Remet le contexte à 0.
 
@@ -193,20 +113,18 @@ Le thème suivant est "Financer ses projets".
 Terminer avec le dernier thème "Points d'attention".
 
 *exemple* :
-    Entrée : {{'personnes': [{{'id': 'Id01', 'dateEntreeRelation': '2009-12-31T23:00:00.000+0000', 'dateNaissance': '1954-12-30T23:00:00.000+0000', 'segment': 'SEGMENT_11', 'profession': 'Consultant', 'entrepriseEmployeur': 'IBM', 'roleRb': 'EPOUX', 'emailPrive': '', 'numeroTelephonePrive': '', 'prenom': 'Marcel', 'nom': 'Dupuis', 'civilite': 'MONSIEUR'}}, {{'id': 'Id02', 'dateEntreeRelation': '2009-12-31T23:00:00.000+0000', 'dateNaissance': '1956-08-30T23:00:00.000+0000', 'segment': 'SEGMENT_10', 'profession': 'Fonctionnaire', 'entrepriseEmployeur': 'Etat', 'roleRb': 'EPOUSE', 'emailPrive': 'geraldine.dupuisATorange.fr', 'numeroTelephonePrive': '', 'prenom': 'Géraldine', 'nom': 'Dupuis', 'civilite': 'MADAME'}}, {{'id': 'Id03', 'dateEntreeRelation': '2009-12-31T23:00:00.000+0000', 'dateNaissance': '1998-07-13T22:00:00.000+0000', 'segment': 'SEGMENT_01', 'profession': '', 'entrepriseEmployeur': '', 'roleRb': 'ENFANT', 'emailPrive': '', 'numeroTelephonePrive': '', 'prenom': 'Tutu', 'nom': 'Dupuis', 'civilite': 'MONSIEUR'}}, {{'id': 'Id04', 'dateEntreeRelation': '2009-12-31T23:00:00.000+0000', 'dateNaissance': '2000-03-31T22:00:00.000+0000', 'segment': 'SEGMENT_01', 'profession': '', 'entrepriseEmployeur': '', 'roleRb': 'ENFANT', 'emailPrive': '', 'numeroTelephonePrive': '', 'prenom': 'Tata', 'nom': 'Dupuis', 'civilite': 'MADEMOISELLE'}}], 'actions': [{{'message': 'Recommander xxx', 'personne': 'Id01', 'produit': None, 'detail': 'DDD', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}, {{'message': 'Recommander xxx', 'personne': 'Id02', 'produit': None, 'detail': 'DDD', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}},{{'message': 'Recommander xxx', 'personne': 'Id03', 'produit': None, 'detail': 'DDD', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}},{{'message': 'Recommander xxx', 'personne': 'Id04', 'produit': None, 'detail': 'DDD', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}, {{'message': 'Compléter xxx', 'personne': 'Id01', 'produit': None, 'detail': '', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}, {{'message': 'Compléter xxx', 'personne': 'Id02', 'produit': None, 'detail': '', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}},{{'message': 'Recommander yyy', 'personne': 'Id01', 'produit': None, 'detail': 'DDD', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}, {{'message': 'Recommander yyy', 'personne': 'Id01', 'produit': None, 'detail': 'UUU', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}, {{'message': 'Proposer zzz', 'personne': 'Id02', 'produit': None, 'detail': '', 'theme': 'Thème 2', 'justification': 'Améliorer un aspect'}}]}}
+    Entrée : {{'personnes': [{{'id': 'Id01', 'roleRb': 'EPOUX', 'prenom': 'Marcel', 'nom': 'Dupuis', 'civilite': 'MONSIEUR'}}, {{'id': 'Id02', 'roleRb': 'EPOUSE', 'prenom': 'Géraldine', 'nom': 'Dupuis', 'civilite': 'MADAME'}}, {{'id': 'Id03', 'roleRb': 'ENFANT', 'prenom': 'Tutu', 'nom': 'Dupuis', 'civilite': 'MONSIEUR'}}, {{'id': 'Id04', 'roleRb': 'ENFANT', 'prenom': 'Tata', 'nom': 'Dupuis', 'civilite': 'MADEMOISELLE'}}], 'actions': [{{'message': 'Recommander xxx', 'personne': 'Id01', 'produit': None, 'detail': 'DDD', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}, {{'message': 'Recommander xxx', 'personne': 'Id02', 'produit': None, 'detail': 'DDD', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}},{{'message': 'Recommander xxx', 'personne': 'Id03', 'produit': None, 'detail': 'DDD', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}},{{'message': 'Recommander xxx', 'personne': 'Id04', 'produit': None, 'detail': 'DDD', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}, {{'message': 'Compléter xxx', 'personne': 'Id01', 'produit': None, 'detail': '', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}, {{'message': 'Compléter xxx', 'personne': 'Id02', 'produit': None, 'detail': '', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}},{{'message': 'Recommander yyy', 'personne': 'Id01', 'produit': None, 'detail': 'DDD', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}, {{'message': 'Recommander yyy', 'personne': 'Id01', 'produit': None, 'detail': 'UUU', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}, {{'message': 'Proposer zzz', 'personne': 'Id02', 'produit': None, 'detail': '', 'theme': 'Thème 2', 'justification': 'Améliorer un aspect'}}]}}
     Sortie :
-      Thème 1
+      **Thème 1**
              - Recommander xxx (DDD) à Mr et Mme Dupuis, ainsi qu'à Tutu et Tata, afin d'améliorer un aspect.
              - Compléter xxx de Mr et Mme Dupuis, afin d'améliorer un aspect.
              - Recommander yyy (DDD, UUU) à Mr Dupuis, afin d'améliorer un aspect.
-      Thème 2
+      **Thème 2**
              - Proposer zzz à Mme Dupuis, afin d'améliorer un aspect.
 *Fin d'exemple*
 
-Voici les données à traiter : {result}
-
-Sortie : 
-
+Entrée : {result}
+Sortie :
 """
 
 NLG_SYSTEM_PROMPT1_SANSEX = """
@@ -251,18 +169,14 @@ Output :
 """
 
 NLG_SYSTEM_PROMPT2 = """
-Resets the context to 0.
-Translate {result} from French to the language of {input}.
-Putting it all together, Make sure each theme is a section in bold, and each action is a bullet point under it, properly formatted.
-Output :
+Remet le contexte à 0.
+Traduire "{result}" dans la langue de "{input}".
+Entrée :
+Sortie :
 """
        
 NLG_SYSTEM_PROMPT3 = """
 Remet le contexte à 0.
-
-Voici les données à traiter : 
-{input}
-{result}
 
 Formate {result} en HTML en suivant le modèle suivant, en créant une section par thème :
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> <html> 
@@ -523,8 +437,8 @@ li {{
 				<div style="font-size: 12px; font-style: italic; text-align: right">Fiche éditée le dateRef</div>
 			</div>
 			<div style="padding-top: 22px">
-				<div style="font-size: 18px;">Préparation de l'entretien de civilité et nom du client</div>
-				<div style="font-size: 12px;text-align: right; font-weight: 200; font-style: italic;">(n° de pers. idClient)</div>
+				<div style="font-size: 18px;">Préparation de l'entretien de : civilité du client et nom du client</div>
+				<div style="font-size: 12px;text-align: right; font-weight: 200; font-style: italic;">(n° de pers : id du client)</div>
 				<div style="font-size: 18px;text-align: right;">Agence de rattachement : Orsay</div>
 				<div style="font-size: 18px;"></div>
 			</div>
@@ -534,26 +448,26 @@ li {{
         <!-- Section 0 -->
         <table width="100%" class="personne">
             <tr>
- 				<td width="50%" style="background-color: #f0f3f8; text-align: right" class="right"><strong>la civilité et nom de l'époux</strong>
+ 				<td width="50%" style="background-color: #f0f3f8; text-align: right" class="right"><strong>civilite et nom du client</strong>
                 	<ul>
-                    <li>Client depuis la date d'entrée en relation de l'époux</li>
+                    <li>Client depuis dateEntreeRelation du client</li>
                     <li>l'âge de l'époux</li>
-                    <li>Activité : la profession de l'époux</li>
-                    <li>Employeur : l'entreprise employeur de l'époux</li>
-                    <li>Segmentation : <strong>le segment de l'époux</strong></li>
-                    <li>Téléphone privé : le numéro de téléphone privé de l'époux</li>
-                    <li>Email privé : l'email privé de l'époux</li>
+                    <li>Activité : profession du client</li>
+                    <li>Employeur : entrepriseEmployeur du client</li>
+                    <li>Segmentation : <strong>segment du client</strong></li>
+                    <li>Téléphone privé : numeroTelephonePrive du client</li>
+                    <li>Email privé : emailPrive du client</li>
                 	</ul>
                 </td>
-				<td width="50%" style="background-color: #f0f3f8; text-align: left"><strong>la civilité et nom de l'épouse</strong>
+				<td width="50%" style="background-color: #f0f3f8; text-align: left"><strong>civilite et nom de l'épouse</strong>
                 	<ul>
-                    <li>Cliente depuis la date d'entrée en relation de l'épouse</li>
+                    <li>Cliente depuis dateEntreeRelation de l'épouse</li>
                     <li>l'âge de l'épouse</li>
-                    <li>Activité : la profession de l'épouse</li>
-                    <li>Employeur : l'entreprise employeur de l'épouse</li>
-                    <li>Segmentation : <strong>le segment de l'épouse</strong></li>
-                    <li>Téléphone privé : le numéro de téléphone privé de l'épouse</li>
-                    <li>Email privé : l'email privé de l'épouse</li>
+                    <li>Activité : profession de l'épouse</li>
+                    <li>Employeur : entrepriseEmployeur de l'épouse</li>
+                    <li>Segmentation : <strong>segment de l'épouse</strong></li>
+                    <li>Téléphone privé : numeroTelephonePrive de l'épouse</li>
+                    <li>Email privé : emailPrive de l'épouse</li>
                 	</ul>
                 </td>
             </tr>
@@ -580,6 +494,7 @@ li {{
 </body>
 </html>
 
+Traduit le résultat dans la langue de {input}.
 Sortie : 
        """
 

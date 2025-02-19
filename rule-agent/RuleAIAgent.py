@@ -29,6 +29,7 @@ from CreateLLM import createLLM
 import prompts
 from DecisionServiceTools import initializeTools
 from RuleService import RuleService
+from langchain_core.globals import set_debug, set_verbose
 
 @tool
 def converse(input: str) -> str:
@@ -94,33 +95,38 @@ class RuleAIAgent:
         if s['tool_call_result'] == None:
             return converse.invoke({'input':s['originalInput']['input']})
         else:
+            set_debug(True)
+            set_verbose(False)
             #print(">RPA input:" + str(s['originalInput']['input']))
-            print(">RPA result:" + str(s['tool_call_result']))
+            #print(">RPA result:" + str(s['tool_call_result']))
 
             nlg_prompt1 = ChatPromptTemplate.from_messages(
-                [("system", prompts.NLG_SYSTEM_PROMPT1), ("user", "{input}")]
+                #[("system", prompts.NLG_SYSTEM_PROMPT1), ("user", "{input}")]
+                [("system", prompts.NLG_SYSTEM_PROMPT1), ("user", "")]
             )
             nlgChain1 = nlg_prompt1 | self.llm
             response1= nlgChain1.invoke({'input': s['originalInput']['input'], 'result': s['tool_call_result']})
-            print(">RPA NLG1: " + response1.content)
+            #print(">RPA NLG1: " + response1.content)
             
             nlg_prompt2 = ChatPromptTemplate.from_messages(
-                [("system", prompts.NLG_SYSTEM_PROMPT2), ("user", "{input}")]
+                #[("system", prompts.NLG_SYSTEM_PROMPT2), ("user", "{input}")]
+                [("system", prompts.NLG_SYSTEM_PROMPT2), ("user", "")]
             )
             nlgChain2 = nlg_prompt2 | self.llm
             response2= nlgChain2.invoke({'input': s['originalInput']['input'], 'result': response1.content})
-            print(">RPA NLG2: " + response2.content)
+            #print(">RPA NLG2: " + response2.content)
             
             nlg_prompt3 = ChatPromptTemplate.from_messages(
-                [("system", prompts.NLG_SYSTEM_PROMPT3), ("user", "{input}")]
+                #[("system", prompts.NLG_SYSTEM_PROMPT3), ("user", "{input}")]
+                [("system", prompts.NLG_SYSTEM_PROMPT3), ("user", "")]
             )
             nlgChain3 = nlg_prompt3 | self.llm
-            response3= nlgChain3.invoke({'input': s['originalInput']['input'], 'result': response2.content})            
-            with open("reports/output.html", "w") as file:
-                file.write(response3.content)
-            response3.content = response2.content + " [HTLM Report](http://localhost:9000/reports/output.html)"
+            #response3= nlgChain3.invoke({'input': s['originalInput']['input'], 'result': response2.content})            
+            #with open("reports/output.html", "w") as file:
+            #    file.write(response3.content)
+            #response3.content = response2.content + " [HTLM Report](http://localhost:9000/reports/output.html)"
             
-            return response3
+            return response2
 
     def processMessage(self, userInput: str) -> str:
         
