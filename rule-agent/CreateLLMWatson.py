@@ -35,7 +35,9 @@ def createLLMWatson():
 
     parameters = {
         GenTextParamsMetaNames.DECODING_METHOD: "greedy",
-        GenTextParamsMetaNames.MAX_NEW_TOKENS: 2600
+        GenTextParamsMetaNames.MIN_NEW_TOKENS: 0,
+        GenTextParamsMetaNames.MAX_NEW_TOKENS: 600,
+        GenTextParamsMetaNames.REPETITION_PENALTY : 1
     }
 
     llm = ChatWatsonx(

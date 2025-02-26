@@ -92,11 +92,10 @@ Return the JSON blob only. Don't provide explanation.
 #       """
 
 NLG_SYSTEM_PROMPT1 = """
-Remet le contexte à 0.
+Reset the context."""
 
-Concevoir une phrase par action, en respectant les consignes suivantes :
-- Ignorer les actions sans thème.
-- Attribuer au foyer les actions sans personne.
+NLG_USER_PROMPT1 = """
+Classer les actions par thème, en respectant les consignes suivantes :
 - Pour les enfants, utiliser uniquement le prénom.
 - Pour les époux, utiliser la civilité et le nom.
 - Remplacer MONSIEUR par Mr.
@@ -104,30 +103,26 @@ Concevoir une phrase par action, en respectant les consignes suivantes :
 - Préciser le solde des produits arrivés à terme, en euro.
 - Séparer la partie décimale de la partie entière par une virgule.
 
-Commencer avec le thème "Gérer le quotidien".
-Le thème suivant est "Données à recueillir/enrichir".
-Le thème suivant est "Se constituer un capital".
-Le thème suivant est "Client / Sa relation avec la banque".
-Le thème suivant est "Protéger ses biens et sa famille"
-Le thème suivant est "Financer ses projets".
-Terminer avec le dernier thème "Points d'attention".
+Commencer avec le thème 'Gérer le quotidien'.
+Le thème suivant est 'Données à recueillir/enrichir'.
+Le thème suivant est 'Se constituer un capital'.
+Le thème suivant est 'Client / Sa relation avec la banque'.
+Le thème suivant est 'Protéger ses biens et sa famille'.
+Le thème suivant est 'Financer ses projets'.
+Terminer avec le dernier thème 'Points d'attention'.
 
-*exemple* :
-    Entrée : {{'personnes': [{{'id': 'Id01', 'roleRb': 'EPOUX', 'prenom': 'Marcel', 'nom': 'Dupuis', 'civilite': 'MONSIEUR'}}, {{'id': 'Id02', 'roleRb': 'EPOUSE', 'prenom': 'Géraldine', 'nom': 'Dupuis', 'civilite': 'MADAME'}}, {{'id': 'Id03', 'roleRb': 'ENFANT', 'prenom': 'Tutu', 'nom': 'Dupuis', 'civilite': 'MONSIEUR'}}, {{'id': 'Id04', 'roleRb': 'ENFANT', 'prenom': 'Tata', 'nom': 'Dupuis', 'civilite': 'MADEMOISELLE'}}], 'actions': [{{'message': 'Recommander xxx', 'personne': 'Id01', 'produit': None, 'detail': 'DDD', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}, {{'message': 'Recommander xxx', 'personne': 'Id02', 'produit': None, 'detail': 'DDD', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}},{{'message': 'Recommander xxx', 'personne': 'Id03', 'produit': None, 'detail': 'DDD', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}},{{'message': 'Recommander xxx', 'personne': 'Id04', 'produit': None, 'detail': 'DDD', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}, {{'message': 'Compléter xxx', 'personne': 'Id01', 'produit': None, 'detail': '', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}, {{'message': 'Compléter xxx', 'personne': 'Id02', 'produit': None, 'detail': '', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}},{{'message': 'Recommander yyy', 'personne': 'Id01', 'produit': None, 'detail': 'DDD', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}, {{'message': 'Recommander yyy', 'personne': 'Id01', 'produit': None, 'detail': 'UUU', 'theme': 'Thème 1', 'justification': 'Améliorer un aspect'}}, {{'message': 'Proposer zzz', 'personne': 'Id02', 'produit': None, 'detail': '', 'theme': 'Thème 2', 'justification': 'Améliorer un aspect'}}]}}
-    Sortie :
-      **Thème 1**
-             - Recommander xxx (DDD) à Mr et Mme Dupuis, ainsi qu'à Tutu et Tata, afin d'améliorer un aspect.
-             - Compléter xxx de Mr et Mme Dupuis, afin d'améliorer un aspect.
-             - Recommander yyy (DDD, UUU) à Mr Dupuis, afin d'améliorer un aspect.
-      **Thème 2**
-             - Proposer zzz à Mme Dupuis, afin d'améliorer un aspect.
-*Fin d'exemple*
+Entrée : {{'personnes': [{{'id': 'Id01', 'roleRb': 'EPOUX', 'prenom': 'Marcel', 'nom': 'Dupuis', 'civilite': 'MONSIEUR'}}, {{'id': 'Id02', 'roleRb': 'EPOUSE', 'prenom': 'Géraldine', 'nom': 'Dupuis', 'civilite': 'MADAME'}}, {{'id': 'Id03', 'roleRb': 'ENFANT', 'prenom': 'Tutu', 'nom': 'Dupuis', 'civilite': 'MONSIEUR'}}, {{'id': 'Id04', 'roleRb': 'ENFANT', 'prenom': 'Tata', 'nom': 'Dupuis', 'civilite': 'MADEMOISELLE'}}], 'actions': [{{'message': 'Recommander xxx', 'personne': 'Id01', 'produit': None, 'detail': 'DDD', 'theme': 'Points d'attention', 'justification': 'Améliorer un aspect'}}, {{'message': 'Recommander xxx', 'personne': 'Id02', 'produit': None, 'detail': 'DDD', 'theme': 'Points d'attention', 'justification': 'Améliorer un aspect'}},{{'message': 'Recommander xxx', 'personne': 'Id03', 'produit': None, 'detail': 'DDD', 'theme': 'Points d'attention', 'justification': 'Améliorer un aspect'}},{{'message': 'Recommander xxx', 'personne': 'Id04', 'produit': None, 'detail': 'DDD', 'theme': 'Points d'attention', 'justification': 'Améliorer un aspect'}}, {{'message': 'Compléter xxx', 'personne': 'Id01', 'produit': None, 'detail': '', 'theme': 'Points d'attention', 'justification': 'Améliorer un aspect'}}, {{'message': 'Compléter xxx', 'personne': 'Id02', 'produit': None, 'detail': '', 'theme': 'Points d'attention', 'justification': 'Améliorer un aspect'}},{{'message': 'Recommander yyy', 'personne': 'Id01', 'produit': None, 'detail': 'DDD', 'theme': 'Points d'attention', 'justification': 'Améliorer un aspect'}}, {{'message': 'Recommander yyy', 'personne': 'Id01', 'produit': None, 'detail': 'UUU', 'theme': 'Points d'attention', 'justification': 'Améliorer un aspect'}}, {{'message': 'Proposer zzz', 'personne': 'Id02', 'produit': None, 'detail': '', 'theme': 'Gérer le quotidien', 'justification': 'Améliorer un aspect'}}]}}
+Sortie : **Gérer le quotidien**
+     - Proposer zzz à Mme Dupuis, afin d'améliorer un aspect.
+**Points d'attention**
+     - Recommander xxx (DDD) à Mr et Mme Dupuis, ainsi qu'à Tutu et Tata, afin d'améliorer un aspect.
+     - Compléter xxx de Mr et Mme Dupuis, afin d'améliorer un aspect.
+     - Recommander yyy (DDD, UUU) à Mr Dupuis, afin d'améliorer un aspect.
 
 Entrée : {result}
-Sortie :
-"""
+Sortie :"""
 
-NLG_SYSTEM_PROMPT1_SANSEX = """
+NLG_USER_PROMPT1_SANSEX = """
 Process the input and generate the appropriate output based on the following instructions.
 Your task is to transform a set of actions into a structured format with specific rules.
 
@@ -165,16 +160,14 @@ Putting it all together, Make sure each theme is a section in bold, and each act
 End the output after the last sentence.
 
 Input : {result}
-Output :
-"""
+Output :"""
 
 NLG_SYSTEM_PROMPT2 = """
-Remet le contexte à 0.
-Traduire "{result}" dans la langue de "{input}".
-Entrée :
-Sortie :
 """
-       
+
+NLG_USER_PROMPT2 = """
+Translate the following content into the language of "{input}" : "{result}"."""
+
 NLG_SYSTEM_PROMPT3 = """
 Remet le contexte à 0.
 
