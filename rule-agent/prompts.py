@@ -95,7 +95,8 @@ NLG_SYSTEM_PROMPT1 = """
 Reset the context."""
 
 NLG_USER_PROMPT1 = """
-Classer les actions par thème, en respectant les consignes suivantes :
+En l'absence de personne, afficher le message : 'Client inconnu.'.
+Sinon, classer les actions par thème, en respectant les consignes suivantes :
 - Pour les enfants, utiliser uniquement le prénom.
 - Pour les époux, utiliser la civilité et le nom.
 - Remplacer MONSIEUR par Mr.
@@ -110,6 +111,7 @@ Le thème suivant est 'Client / Sa relation avec la banque'.
 Le thème suivant est 'Protéger ses biens et sa famille'.
 Le thème suivant est 'Financer ses projets'.
 Terminer avec le dernier thème 'Points d'attention'.
+<|eom_id|>
 
 Entrée : {{'personnes': [{{'id': 'Id01', 'roleRb': 'EPOUX', 'prenom': 'Marcel', 'nom': 'Dupuis', 'civilite': 'MONSIEUR'}}, {{'id': 'Id02', 'roleRb': 'EPOUSE', 'prenom': 'Géraldine', 'nom': 'Dupuis', 'civilite': 'MADAME'}}, {{'id': 'Id03', 'roleRb': 'ENFANT', 'prenom': 'Tutu', 'nom': 'Dupuis', 'civilite': 'MONSIEUR'}}, {{'id': 'Id04', 'roleRb': 'ENFANT', 'prenom': 'Tata', 'nom': 'Dupuis', 'civilite': 'MADEMOISELLE'}}], 'actions': [{{'message': 'Recommander xxx', 'personne': 'Id01', 'produit': None, 'detail': 'DDD', 'theme': 'Points d'attention', 'justification': 'Améliorer un aspect'}}, {{'message': 'Recommander xxx', 'personne': 'Id02', 'produit': None, 'detail': 'DDD', 'theme': 'Points d'attention', 'justification': 'Améliorer un aspect'}},{{'message': 'Recommander xxx', 'personne': 'Id03', 'produit': None, 'detail': 'DDD', 'theme': 'Points d'attention', 'justification': 'Améliorer un aspect'}},{{'message': 'Recommander xxx', 'personne': 'Id04', 'produit': None, 'detail': 'DDD', 'theme': 'Points d'attention', 'justification': 'Améliorer un aspect'}}, {{'message': 'Compléter xxx', 'personne': 'Id01', 'produit': None, 'detail': '', 'theme': 'Points d'attention', 'justification': 'Améliorer un aspect'}}, {{'message': 'Compléter xxx', 'personne': 'Id02', 'produit': None, 'detail': '', 'theme': 'Points d'attention', 'justification': 'Améliorer un aspect'}},{{'message': 'Recommander yyy', 'personne': 'Id01', 'produit': None, 'detail': 'DDD', 'theme': 'Points d'attention', 'justification': 'Améliorer un aspect'}}, {{'message': 'Recommander yyy', 'personne': 'Id01', 'produit': None, 'detail': 'UUU', 'theme': 'Points d'attention', 'justification': 'Améliorer un aspect'}}, {{'message': 'Proposer zzz', 'personne': 'Id02', 'produit': None, 'detail': '', 'theme': 'Gérer le quotidien', 'justification': 'Améliorer un aspect'}}]}}
 Sortie : **Gérer le quotidien**
