@@ -26,16 +26,6 @@ process_jar_file() {
 search_and_deploy_ruleapp(){
   # Directory containing the .jar files
   directory="$DATADIR"
-
-  # Iterate over all .jar files in the directory
-  echo "$directory"**/decisionapps/*.jar
-  for jar_file in "$directory"/**/decisionapps/*.jar; do
-    if [[ -f "$jar_file" ]]; then
-      process_jar_file "$jar_file"
-    else
-      echo "No .jar files found in $directory"
-    fi
-  done
 }
 
 
