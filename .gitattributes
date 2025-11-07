@@ -1,0 +1,44 @@
+# Normalize line endings to prevent Windows CRLF issues in Docker containers
+
+# Shell scripts MUST use LF (Linux line endings)
+*.sh text eol=lf
+
+# Python files should use LF
+*.py text eol=lf
+
+# Docker files should use LF
+Dockerfile text eol=lf
+.dockerignore text eol=lf
+docker-compose.yml text eol=lf
+docker-compose.*.yml text eol=lf
+
+# Configuration files should use LF
+*.yaml text eol=lf
+*.yml text eol=lf
+*.json text eol=lf
+*.env text eol=lf
+*.env.* text eol=lf
+
+# Markdown files
+*.md text eol=lf
+
+# XML files (for Maven)
+*.xml text eol=lf
+pom.xml text eol=lf
+
+# Java files
+*.java text eol=lf
+*.drl text eol=lf
+
+# Binary files (don't normalize)
+*.jar binary
+*.war binary
+*.ear binary
+*.pdf binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.xlsx binary
+*.xls binary

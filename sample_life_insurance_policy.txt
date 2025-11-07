@@ -1,0 +1,91 @@
+LIFE INSURANCE POLICY DOCUMENT
+Sample Insurance Company
+Policy Number: LI-2024-001
+
+COVERAGE DETAILS
+
+Maximum Coverage Amount: $500,000
+Minimum Coverage Amount: $50,000
+
+ELIGIBILITY REQUIREMENTS
+
+Age Requirements:
+- Minimum Age: 18 years
+- Maximum Age: 65 years
+
+Health Requirements:
+- Applicants must complete a medical examination
+- Pre-existing conditions may affect eligibility
+
+PREMIUM CALCULATION
+
+Base Premium Factors:
+- Age of applicant
+- Coverage amount requested
+- Health status
+- Smoking status
+
+Premium Multipliers:
+- Non-smoker: 1.0x base rate
+- Smoker: 1.5x base rate
+- Excellent health: 0.9x base rate
+- Good health: 1.0x base rate
+- Fair health: 1.3x base rate
+- Poor health: Not eligible
+
+COVERAGE TIERS
+
+Tier 1: $50,000 - $100,000
+- Ages 18-55: Automatic approval for excellent/good health
+- Ages 56-65: Manual review required
+
+Tier 2: $100,001 - $250,000
+- Ages 18-50: Automatic approval for excellent/good health
+- Ages 51-65: Manual review required
+
+Tier 3: $250,001 - $500,000
+- All ages: Manual underwriting review required
+- Medical exam mandatory
+
+EXCLUSIONS
+
+The following are excluded from coverage:
+- Death resulting from illegal activities
+- Suicide within first 2 years of policy
+- Death during participation in hazardous activities without disclosure
+
+WAITING PERIODS
+
+Standard Waiting Period: 30 days from policy issue date
+Accidental Death: No waiting period
+
+BENEFICIARY REQUIREMENTS
+
+- Primary beneficiary must be designated
+- Contingent beneficiary recommended
+- Beneficiaries can be changed at any time
+
+PAYMENT TERMS
+
+Premium Payment Options:
+- Annual payment: 5% discount
+- Semi-annual payment: 2% discount
+- Quarterly payment: No discount
+- Monthly payment: No discount
+
+Grace Period: 31 days from due date
+
+POLICY RENEWAL
+
+- Guaranteed renewable until age 75
+- Premium rates may adjust based on age bands
+- No medical re-examination required for renewal
+
+CUSTOMER SERVICE
+
+For questions or claims:
+Phone: 1-800-LIFE-INS
+Email: claims@sampleinsurance.com
+Website: www.sampleinsurance.com
+
+This is a sample policy document for demonstration purposes only.

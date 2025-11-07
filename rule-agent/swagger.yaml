@@ -1,0 +1,645 @@
+openapi: 3.0.3
+info:
+  title: Underwriting Rule Generation API
+  description: |
+    AI-powered underwriting workflow that processes policy documents and generates Drools rules.
+
+    **Key Features:**
+    - Extract text from policy PDFs from S3
+    - LLM analyzes documents and generates custom extraction queries
+    - Extract structured data using AWS Textract (required)
+    - Generate Drools DRL rules automatically
+    - Deploy to Drools KIE Server with auto-generated container IDs
+    - Upload generated artifacts (JAR, DRL, Excel) to S3
+
+    **Prerequisites:**
+    - AWS S3 configured and accessible
+    - AWS Textract configured with proper IAM permissions
+    - Drools KIE Server running and accessible
+
+    **Multi-Tenant Support:**
+    - Separate containers per bank and policy type
+    - Format: `{bank_id}-{policy_type}-underwriting-rules`
+
+    **Zero Local Storage:**
+    - All files use temporary storage and auto-cleanup
+    - Generated rules saved to S3 only
+  version: 1.0.0
+  contact:
+    name: IBM Automation
+    url: https://github.com/DecisionsDev
+
+servers:
+  - url: http://localhost:9000/rule-agent
+    description: Local development server
+  - url: http://localhost:9000/rule-agent
+    description: Docker environment
+
+tags:
+  - name: Underwriting Workflow
+    description: Policy document processing and rule generation
+  - name: Drools Management
+    description: KIE Server container management
+  - name: Rule Testing
+    description: Test deployed Drools rules with sample data
+
+paths:
+  /process_policy_from_s3:
+    post:
+      tags:
+        - Underwriting Workflow
+      summary: Process policy document from S3
+      description: |
+        Process a policy PDF directly from S3 URL through the underwriting workflow.
+        No file download - reads directly from S3 into memory.
+        LLM analyzes the document and generates custom extraction queries automatically.
+      operationId: processPolicyFromS3
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - s3_url
+              properties:
+                s3_url:
+                  type: string
+                  format: uri
+                  description: Full S3 URL to the policy PDF
+                  example: https://uw-data-extraction.s3.us-east-1.amazonaws.com/policies/chase_insurance_2025.pdf
+                policy_type:
+                  type: string
+                  default: general
+                  description: Type of policy
+                  example: insurance
+                bank_id:
+                  type: string
+                  description: Bank/tenant identifier (recommended for multi-tenant deployments)
+                  example: chase
+            examples:
+              chase-insurance:
+                summary: Chase Insurance from S3
+                value:
+                  s3_url: https://uw-data-extraction.s3.us-east-1.amazonaws.com/policies/chase/insurance_2025.pdf
+                  policy_type: insurance
+                  bank_id: chase
+              bofa-loan:
+                summary: BofA Loan from S3
+                value:
+                  s3_url: https://uw-data-extraction.s3.us-east-1.amazonaws.com/policies/bofa/loan_policy.pdf
+                  policy_type: loan
+                  bank_id: bofa
+              no-bank:
+                summary: Without Bank ID (backwards compatible)
+                value:
+                  s3_url: https://uw-data-extraction.s3.us-east-1.amazonaws.com/policies/general_policy.pdf
+                  policy_type: insurance
+      responses:
+        '200':
+          description: Workflow completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkflowResult'
+        '400':
+          description: Bad request (missing s3_url, invalid URL)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /drools_containers:
+    get:
+      tags:
+        - Drools Management
+      summary: List all Drools KIE Server containers
+      description: Retrieve list of all deployed containers on the KIE Server
+      operationId: listContainers
+      responses:
+        '200':
+          description: List of containers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: object
+                    properties:
+                      kie-containers:
+                        type: object
+                        properties:
+                          kie-container:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                container-id:
+                                  type: string
+                                  example: chase-insurance-underwriting-rules
+                                status:
+                                  type: string
+                                  example: STARTED
+                                release-id:
+                                  type: object
+                                  properties:
+                                    group-id:
+                                      type: string
+                                      example: com.underwriting
+                                    artifact-id:
+                                      type: string
+                                      example: underwriting-rules
+                                    version:
+                                      type: string
+                                      example: 20250104.143000
+              examples:
+                multiple-containers:
+                  summary: Multiple Bank Containers
+                  value:
+                    result:
+                      kie-containers:
+                        kie-container:
+                          - container-id: chase-insurance-underwriting-rules
+                            status: STARTED
+                            release-id:
+                              group-id: com.underwriting
+                              artifact-id: underwriting-rules
+                              version: 20250104.143000
+                          - container-id: bofa-loan-underwriting-rules
+                            status: STARTED
+                            release-id:
+                              group-id: com.underwriting
+                              artifact-id: underwriting-rules
+                              version: 20250104.150000
+
+  /drools_container_status:
+    get:
+      tags:
+        - Drools Management
+      summary: Get status of specific container
+      description: Retrieve detailed status of a specific KIE Server container
+      operationId: getContainerStatus
+      parameters:
+        - name: container_id
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Container ID to check
+          example: chase-insurance-underwriting-rules
+      responses:
+        '200':
+          description: Container status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  container-id:
+                    type: string
+                  status:
+                    type: string
+                  release-id:
+                    type: object
+        '404':
+          description: Container not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /test_rules:
+    post:
+      tags:
+        - Rule Testing
+      summary: Test deployed Drools rules
+      description: |
+        Execute Drools rules with sample applicant and policy data to test underwriting decisions.
+
+        **How it works:**
+        1. Inserts Applicant and Policy facts into Drools working memory
+        2. Fires all rules
+        3. Retrieves the Decision object with approval status
+
+        **Common Test Scenarios:**
+        - Valid applicant (age 18-65, no health conditions, coverage ≤ $1M): Should approve
+        - Too young (age < 18): Should reject with age reason
+        - Too old (age > 65): Should reject with age reason
+        - Health conditions: Should reject with health reason
+        - High coverage (> $1M): Should reject with coverage reason
+      operationId: testRules
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - container_id
+                - applicant
+                - policy
+              properties:
+                container_id:
+                  type: string
+                  description: Drools container ID to test
+                  example: chase-insurance-underwriting-rules
+                applicant:
+                  type: object
+                  description: Applicant information
+                  required:
+                    - name
+                    - age
+                    - occupation
+                  properties:
+                    name:
+                      type: string
+                      example: John Doe
+                    age:
+                      type: integer
+                      minimum: 0
+                      maximum: 120
+                      example: 35
+                    occupation:
+                      type: string
+                      example: Engineer
+                    healthConditions:
+                      type: string
+                      nullable: true
+                      description: Health conditions (null for healthy applicant)
+                      example: null
+                policy:
+                  type: object
+                  description: Policy information
+                  required:
+                    - policyType
+                    - coverageAmount
+                    - term
+                  properties:
+                    policyType:
+                      type: string
+                      example: Term Life
+                    coverageAmount:
+                      type: number
+                      format: double
+                      minimum: 0
+                      example: 500000
+                    term:
+                      type: integer
+                      minimum: 0
+                      example: 20
+            examples:
+              valid-applicant:
+                summary: Valid Applicant (Should Approve)
+                description: Healthy 35-year-old with $500K coverage
+                value:
+                  container_id: chase-insurance-underwriting-rules
+                  applicant:
+                    name: John Doe
+                    age: 35
+                    occupation: Engineer
+                    healthConditions: null
+                  policy:
+                    policyType: Term Life
+                    coverageAmount: 500000
+                    term: 20
+              too-young:
+                summary: Too Young (Should Reject)
+                description: 17-year-old applicant - fails age requirement
+                value:
+                  container_id: chase-insurance-underwriting-rules
+                  applicant:
+                    name: Jane Smith
+                    age: 17
+                    occupation: Student
+                    healthConditions: null
+                  policy:
+                    policyType: Term Life
+                    coverageAmount: 100000
+                    term: 10
+              too-old:
+                summary: Too Old (Should Reject)
+                description: 70-year-old applicant - fails age requirement
+                value:
+                  container_id: chase-insurance-underwriting-rules
+                  applicant:
+                    name: Bob Senior
+                    age: 70
+                    occupation: Retired
+                    healthConditions: null
+                  policy:
+                    policyType: Term Life
+                    coverageAmount: 250000
+                    term: 10
+              health-conditions:
+                summary: Health Conditions (Should Reject)
+                description: Applicant with diabetes - fails health check
+                value:
+                  container_id: chase-insurance-underwriting-rules
+                  applicant:
+                    name: Alice Johnson
+                    age: 45
+                    occupation: Teacher
+                    healthConditions: Diabetes
+                  policy:
+                    policyType: Term Life
+                    coverageAmount: 300000
+                    term: 20
+              high-coverage:
+                summary: High Coverage (Should Reject)
+                description: Coverage over $1M - exceeds limit
+                value:
+                  container_id: chase-insurance-underwriting-rules
+                  applicant:
+                    name: Rich Person
+                    age: 40
+                    occupation: CEO
+                    healthConditions: null
+                  policy:
+                    policyType: Whole Life
+                    coverageAmount: 2000000
+                    term: 30
+              edge-case-min-age:
+                summary: Edge Case - Minimum Age (Should Approve)
+                description: 18-year-old applicant - minimum acceptable age
+                value:
+                  container_id: chase-insurance-underwriting-rules
+                  applicant:
+                    name: Young Adult
+                    age: 18
+                    occupation: College Student
+                    healthConditions: null
+                  policy:
+                    policyType: Term Life
+                    coverageAmount: 100000
+                    term: 20
+              edge-case-max-age:
+                summary: Edge Case - Just Within Max Age (Should Approve)
+                description: 64-year-old applicant - just within acceptable age range
+                value:
+                  container_id: chase-insurance-underwriting-rules
+                  applicant:
+                    name: Senior Citizen
+                    age: 64
+                    occupation: Consultant
+                    healthConditions: null
+                  policy:
+                    policyType: Term Life
+                    coverageAmount: 500000
+                    term: 10
+      responses:
+        '200':
+          description: Rules executed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RuleTestResult'
+              examples:
+                approved:
+                  summary: Approved Application
+                  value:
+                    status: success
+                    container_id: chase-insurance-underwriting-rules
+                    decision:
+                      approved: true
+                      reason: Initial evaluation
+                      requiresManualReview: false
+                      premiumMultiplier: 1.0
+                rejected-age:
+                  summary: Rejected - Age
+                  value:
+                    status: success
+                    container_id: chase-insurance-underwriting-rules
+                    decision:
+                      approved: false
+                      reason: Applicant age is outside acceptable range
+                      requiresManualReview: false
+                      premiumMultiplier: 1.0
+                rejected-health:
+                  summary: Rejected - Health Conditions
+                  value:
+                    status: success
+                    container_id: chase-insurance-underwriting-rules
+                    decision:
+                      approved: false
+                      reason: Applicant has health conditions
+                      requiresManualReview: false
+                      premiumMultiplier: 1.0
+                rejected-coverage:
+                  summary: Rejected - Coverage Too High
+                  value:
+                    status: success
+                    container_id: chase-insurance-underwriting-rules
+                    decision:
+                      approved: false
+                      reason: Policy coverage amount is too high
+                      requiresManualReview: false
+                      premiumMultiplier: 1.0
+        '400':
+          description: Bad request (missing required fields)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Container not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    WorkflowResult:
+      type: object
+      properties:
+        s3_url:
+          type: string
+          description: S3 URL of source document
+          example: https://bucket.s3.us-east-1.amazonaws.com/policies/chase_insurance.pdf
+        policy_type:
+          type: string
+          description: Type of policy processed
+          example: insurance
+        bank_id:
+          type: string
+          description: Bank identifier
+          example: chase
+        container_id:
+          type: string
+          description: Drools container ID (auto-generated from bank_id and policy_type)
+          example: chase-insurance-underwriting-rules
+        status:
+          type: string
+          enum: [in_progress, completed, failed]
+          description: Overall workflow status
+        jar_s3_url:
+          type: string
+          description: S3 URL of generated JAR file
+          example: https://bucket.s3.us-east-1.amazonaws.com/generated-rules/chase-insurance-underwriting-rules/20250104.143000/chase-insurance-underwriting-rules_20250104_143000.jar
+        drl_s3_url:
+          type: string
+          description: S3 URL of generated DRL file
+          example: https://bucket.s3.us-east-1.amazonaws.com/generated-rules/chase-insurance-underwriting-rules/20250104.143000/chase-insurance-underwriting-rules_20250104_143000.drl
+        excel_s3_url:
+          type: string
+          description: S3 URL of Excel spreadsheet with parsed rules (includes bank_id and policy_type in filename)
+          example: https://bucket.s3.us-east-1.amazonaws.com/generated-rules/chase-insurance-underwriting-rules/20250104.143000/chase_insurance_rules_20250104_143000.xlsx
+        steps:
+          type: object
+          description: Detailed step-by-step results
+          properties:
+            text_extraction:
+              type: object
+              properties:
+                status:
+                  type: string
+                length:
+                  type: integer
+                preview:
+                  type: string
+            query_generation:
+              type: object
+              properties:
+                status:
+                  type: string
+                method:
+                  type: string
+                  enum: [template, llm_generated]
+                queries:
+                  type: array
+                  items:
+                    type: string
+                count:
+                  type: integer
+            data_extraction:
+              type: object
+              properties:
+                status:
+                  type: string
+                method:
+                  type: string
+                  enum: [textract, mock]
+                data:
+                  type: object
+            rule_generation:
+              type: object
+              properties:
+                status:
+                  type: string
+                drl_length:
+                  type: integer
+                has_decision_table:
+                  type: boolean
+            deployment:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [success, partial, error]
+                message:
+                  type: string
+                container_id:
+                  type: string
+                release_id:
+                  type: object
+                  properties:
+                    group-id:
+                      type: string
+                    artifact-id:
+                      type: string
+                    version:
+                      type: string
+            s3_upload:
+              type: object
+              properties:
+                jar:
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                    s3_url:
+                      type: string
+                drl:
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                    s3_url:
+                      type: string
+                excel:
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                    s3_url:
+                      type: string
+                  description: Excel spreadsheet with parsed rules (filename includes bank_id and policy_type)
+
+    RuleTestResult:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [success, error]
+          description: Execution status
+          example: success
+        container_id:
+          type: string
+          description: Container ID that was tested
+          example: chase-insurance-underwriting-rules
+        decision:
+          type: object
+          description: Underwriting decision from rules execution
+          properties:
+            approved:
+              type: boolean
+              description: Whether the application is approved
+              example: true
+            reason:
+              type: string
+              description: Explanation for the decision
+              example: Initial evaluation
+            requiresManualReview:
+              type: boolean
+              description: Whether manual review is needed
+              example: false
+            premiumMultiplier:
+              type: number
+              format: double
+              description: Multiplier for premium calculation (1.0 = standard rate)
+              example: 1.0
+        full_response:
+          type: object
+          description: Complete Drools KIE Server response (for debugging)
+          properties:
+            msg:
+              type: string
+            result:
+              type: object
+            type:
+              type: string
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+          example: No file uploaded
+        status:
+          type: string
+          description: Error status
+          example: failed

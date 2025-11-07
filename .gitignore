@@ -47,5 +47,7 @@ hs_err_pid*
 
 # private files
 **/.env.local
+*.env
+llm.env
 tmp
 TODO.md

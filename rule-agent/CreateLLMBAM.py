@@ -30,7 +30,15 @@ def createLLMBAM():
     api_url = os.getenv("WATSONX_URL")
 
     creds = Credentials(api_key, api_endpoint=api_url)
-    params = TextGenerationParameters(decoding_method="greedy", max_new_tokens=400)
+
+    # Deterministic generation parameters
+    params = TextGenerationParameters(
+        decoding_method="greedy",  # Greedy decoding (deterministic)
+        max_new_tokens=4000,       # Increased for full rule generation
+        temperature=0.0,           # No randomness
+        random_seed=42             # Fixed seed for reproducibility
+    )
+
     client = Client(credentials=creds)
 
     llm = LangChainChatInterface(client=client,

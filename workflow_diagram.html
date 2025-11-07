@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Underwriting Workflow Diagram</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        #diagram {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .download-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        .download-btn:hover {
+            background-color: #45a049;
+        }
+        .instructions {
+            background-color: #e3f2fd;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196F3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Underwriting Rule Generation Workflow</h1>
+
+        <div class="instructions">
+            <strong>To save as PNG:</strong>
+            <ol>
+                <li>Wait for the diagram to fully render below</li>
+                <li>Right-click on the diagram</li>
+                <li>Select "Save image as..." or "Copy image"</li>
+                <li>Save with filename: <code>underwriting_workflow_diagram.png</code></li>
+            </ol>
+            <p><strong>Alternative:</strong> Use browser screenshot tools (e.g., Firefox's built-in screenshot tool) to capture the diagram area.</p>
+        </div>
+
+        <div id="diagram">
+            <pre class="mermaid">
+flowchart TD
+    Start([User Request]) --> API[POST /process_policy_from_s3]
+
+    API --> Input{Input Parameters}
+    Input -->|Required| S3URL[S3 URL to Policy PDF]
+    Input -->|Optional| PolicyType[Policy Type: insurance/loan/auto]
+    Input -->|Recommended| BankID[Bank ID: chase/bofa/wells-fargo]
+
+    S3URL --> Step0[Step 0: Parse S3 URL]
+    PolicyType --> Step0
+    BankID --> Step0
+
+    Step0 --> AutoGen[Auto-generate Container ID:<br/>bank_id-policy_type-underwriting-rules]
+    AutoGen --> Step1
+
+    Step1[Step 1: Extract Text from PDF] --> ReadS3[Read PDF from S3 into Memory<br/>No Local Download]
+    ReadS3 --> PyPDF2[PyPDF2: Extract Text]
+    PyPDF2 --> Step2[Step 2: LLM Generates Extraction Queries]
+    Step2 --> LLMAnalyze[LLM Analyzes Document<br/>and Creates Custom Queries]
+    LLMAnalyze --> Step3[Step 3: Extract Structured Data]
+
+    Step3 --> Textract[AWS Textract:<br/>Extract Structured Data from S3]
+    Textract --> Step4[Step 4: Generate Drools DRL Rules]
+    Step4 --> RuleGen[LLM Generates:<br/>- DRL Rules<br/>- Decision Tables<br/>- Explanations]
+
+    RuleGen --> Step5[Step 5: Automated Drools Deployment]
+
+    Step5 --> TempDir[Create Temporary Directory]
+    TempDir --> SaveDRL[Save DRL File]
+    SaveDRL --> CreateKJar[Create KJar Structure<br/>Maven Project Layout]
+    CreateKJar --> MavenBuild[Maven Build:<br/>mvn clean install]
+
+    MavenBuild --> BuildSuccess{Build<br/>Success?}
+    BuildSuccess -->|No| BuildFail[Status: Partial<br/>Manual Build Required]
+    BuildSuccess -->|Yes| CopyFiles[Copy JAR & DRL to<br/>Temp Location for S3]
+
+    CopyFiles --> DeployKIE[Deploy to Drools KIE Server]
+
+    DeployKIE --> ContainerExists{Container<br/>Exists?}
+    ContainerExists -->|Yes| Dispose[Dispose Old Container]
+    Dispose --> CreateNew[Create New Container<br/>with New Version]
+    ContainerExists -->|No| CreateNew
+
+    CreateNew --> DeploySuccess{Deployment<br/>Success?}
+    DeploySuccess -->|No| DeployFail[Status: Partial<br/>KJar Built, Deployment Failed]
+    DeploySuccess -->|Yes| CleanTemp[Auto-Delete Temp Build Directory]
+
+    CleanTemp --> Step6[Step 6: Upload Files to S3]
+
+    Step6 --> UploadJAR[Upload JAR File<br/>s3://bucket/generated-rules/<br/>container_id/version/file.jar]
+    UploadJAR --> UploadDRL[Upload DRL File<br/>s3://bucket/generated-rules/<br/>container_id/version/file.drl]
+
+    UploadDRL --> CheckBank{Bank ID<br/>Provided?}
+    CheckBank -->|Yes| GenerateExcel[Generate Excel Spreadsheet]
+    CheckBank -->|No| SkipExcel[Skip Excel Generation]
+
+    GenerateExcel --> ParseDRL[Parse DRL Rules:<br/>- Rule Names<br/>- Conditions<br/>- Actions<br/>- Priority]
+
+    ParseDRL --> CreateExcel[Create Multi-Sheet Excel:<br/>1. Summary Sheet<br/>2. Rules Sheet<br/>3. Raw DRL Sheet]
+
+    CreateExcel --> UploadExcel[Upload Excel to S3<br/>Filename: bank_id_policy_type_rules_timestamp.xlsx]
+
+    UploadExcel --> CleanExcel[Delete Temp Excel File]
+    SkipExcel --> FinalClean
+    CleanExcel --> FinalClean[Clean Up All Temp Files]
+
+    FinalClean --> Response[Return Response JSON]
+    BuildFail --> Response
+    DeployFail --> Response
+
+    Response --> ResponseContent{Response Contains}
+    ResponseContent --> RC1[container_id]
+    ResponseContent --> RC2[status: completed/partial/failed]
+    ResponseContent --> RC3[jar_s3_url]
+    ResponseContent --> RC4[drl_s3_url]
+    ResponseContent --> RC5[excel_s3_url]
+    ResponseContent --> RC6[Detailed Steps Results]
+
+    RC1 --> End([Workflow Complete])
+    RC2 --> End
+    RC3 --> End
+    RC4 --> End
+    RC5 --> End
+    RC6 --> End
+
+    style Start fill:#e1f5e1
+    style End fill:#e1f5e1
+    style Step1 fill:#e3f2fd
+    style Step2 fill:#e3f2fd
+    style Step3 fill:#e3f2fd
+    style Step4 fill:#e3f2fd
+    style Step5 fill:#e3f2fd
+    style Step6 fill:#e3f2fd
+    style GenerateExcel fill:#fff3e0
+    style CreateExcel fill:#fff3e0
+    style UploadExcel fill:#fff3e0
+    style DeployKIE fill:#f3e5f5
+    style CreateNew fill:#f3e5f5
+            </pre>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+    </script>
+</body>
+</html>
