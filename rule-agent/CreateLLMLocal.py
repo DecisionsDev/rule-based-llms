@@ -21,6 +21,13 @@ def createLLMLocal():
     ollama_server_url=os.getenv("OLLAMA_SERVER_URL","http://localhost:11434")
     ollama_model=os.getenv("OLLAMA_MODEL_NAME","mistral")
     print("Using Ollma Server: "+str(ollama_server_url))
-    return Ollama(base_url=ollama_server_url,model=ollama_model)
+
+    # Deterministic generation: temperature=0 ensures same input -> same output
+    return Ollama(
+        base_url=ollama_server_url,
+        model=ollama_model,
+        temperature=0.0,  # Deterministic output (no randomness)
+        seed=42           # Fixed seed for reproducibility
+    )
 
 

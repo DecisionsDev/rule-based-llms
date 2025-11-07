@@ -1,0 +1,42 @@
+---
+# Persistent Volume Claims for data storage
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: underwriting-data-pvc
+  namespace: underwriting
+spec:
+  accessModes:
+    - ReadWriteMany  # Allows multiple pods to access (needed for shared data)
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: standard  # Update based on your cloud provider
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: underwriting-uploads-pvc
+  namespace: underwriting
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: standard
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: underwriting-rules-pvc
+  namespace: underwriting
+spec:
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: standard

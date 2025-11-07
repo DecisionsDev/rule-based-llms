@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: underwriting
+  labels:
+    name: underwriting
+    app: underwriting-system

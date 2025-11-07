@@ -13,9 +13,25 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 #
-FROM python:3.10 as builder
+FROM python:3.10 AS builder
 WORKDIR /code
 
+# Install Maven and Java for automated KJar builds
+RUN apt-get update && apt-get install -y \
+    maven \
+    default-jdk \
+    && rm -rf /var/lib/apt/lists/*
+
+# Maven and Java are now available
+ENV MAVEN_HOME=/usr/share/maven
+
+# Configure Maven to use shared repository
+RUN mkdir -p /opt/jboss/.m2 && \
+    echo '<?xml version="1.0" encoding="UTF-8"?>' > /opt/jboss/.m2/settings.xml && \
+    echo '<settings><localRepository>/opt/jboss/.m2/repository</localRepository></settings>' >> /opt/jboss/.m2/settings.xml && \
+    chmod -R 777 /opt/jboss/.m2
+
+ENV MAVEN_OPTS="-Dmaven.repo.local=/opt/jboss/.m2/repository"
 
 COPY . /code
 RUN --mount=type=cache,target=/root/.cache/pip \

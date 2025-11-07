@@ -1,0 +1,340 @@
+LOAN APPLICATION POLICY DOCUMENT
+=================================
+
+Financial Institution: Sample Bank
+Document Version: 2.0
+Effective Date: January 2025
+Last Updated: January 2025
+
+=================================
+1. OVERVIEW
+=================================
+
+This document outlines the loan application and underwriting policies for Sample Bank's personal and business loan products. All loan applications must comply with these policies and applicable federal and state regulations.
+
+=================================
+2. ELIGIBILITY CRITERIA
+=================================
+
+2.1 Personal Loans
+------------------
+- Minimum age: 18 years
+- Minimum annual income: $25,000
+- Valid government-issued identification
+- Social Security Number or Tax ID
+- U.S. residency or legal work authorization
+- Minimum credit score: 620 (may vary by product)
+- Maximum debt-to-income ratio: 43%
+
+2.2 Business Loans
+------------------
+- Business must be operational for at least 2 years
+- Minimum annual revenue: $100,000
+- Valid business registration and EIN
+- Business credit score minimum: 140 (PAYDEX)
+- Personal guarantee required for loans over $250,000
+- Maximum business debt-service coverage ratio: 1.25
+
+=================================
+3. LOAN AMOUNTS AND TERMS
+=================================
+
+3.1 Personal Loans
+------------------
+- Minimum loan amount: $5,000
+- Maximum loan amount: $100,000
+- Loan terms: 12, 24, 36, 48, or 60 months
+- Interest rates: 6.99% - 24.99% APR (based on creditworthiness)
+
+3.2 Business Loans
+------------------
+- Minimum loan amount: $25,000
+- Maximum loan amount: $5,000,000
+- Loan terms: 12 to 120 months
+- Interest rates: 5.99% - 18.99% APR (based on business and personal credit)
+
+=================================
+4. CREDIT SCORE REQUIREMENTS
+=================================
+
+4.1 Credit Score Tiers
+----------------------
+Excellent Credit (760+):
+- Lowest interest rates available
+- Minimal documentation required
+- Expedited approval process
+- Loan amount up to maximum limits
+
+Good Credit (700-759):
+- Competitive interest rates
+- Standard documentation required
+- Normal approval timeline
+- Loan amount up to 90% of maximum limits
+
+Fair Credit (620-699):
+- Higher interest rates
+- Additional documentation may be required
+- Extended approval timeline
+- Loan amount up to 75% of maximum limits
+- May require co-signer or collateral
+
+Below Fair (< 620):
+- Applications reviewed on case-by-case basis
+- Significant compensating factors required
+- Collateral typically required
+- Higher down payment may be required
+- Co-signer may be required
+
+=================================
+5. INCOME VERIFICATION
+=================================
+
+5.1 Required Documentation
+--------------------------
+Employed Individuals:
+- Last 2 pay stubs
+- W-2 forms for past 2 years
+- Employer contact information
+- Year-to-date earnings statement
+
+Self-Employed Individuals:
+- Tax returns for past 2 years
+- Profit and loss statements
+- Bank statements for past 6 months
+- Business license and registration
+- 1099 forms if applicable
+
+Business Applicants:
+- Business tax returns for past 3 years
+- Financial statements (balance sheet, income statement, cash flow)
+- Business bank statements for past 12 months
+- Accounts receivable/payable aging reports
+- Business plan for new ventures or expansion loans
+
+=================================
+6. DEBT-TO-INCOME RATIO (DTI)
+=================================
+
+6.1 DTI Calculation
+-------------------
+DTI = (Total Monthly Debt Payments) / (Gross Monthly Income) × 100
+
+6.2 DTI Requirements
+--------------------
+- Preferred DTI: Below 36%
+- Maximum DTI: 43%
+- DTI above 43% requires:
+  * Excellent credit score (760+)
+  * Significant cash reserves (6+ months)
+  * Strong employment history (5+ years same employer)
+  * Compensating factors documented in file
+
+6.3 Included Debts
+------------------
+- Mortgage or rent payments
+- Auto loans
+- Student loans
+- Credit card minimum payments
+- Personal loans
+- Alimony or child support
+- Any other recurring debt obligations
+
+=================================
+7. COLLATERAL REQUIREMENTS
+=================================
+
+7.1 Secured Loans
+-----------------
+Personal Secured Loans:
+- Collateral value must be at least 120% of loan amount
+- Acceptable collateral: vehicles, savings accounts, CDs, investment accounts
+- Lien perfection required
+- Annual collateral valuation required
+
+Business Secured Loans:
+- Collateral value must be at least 150% of loan amount
+- Acceptable collateral: real estate, equipment, inventory, accounts receivable
+- Professional appraisal required for real estate
+- UCC-1 filing required for business assets
+
+7.2 Unsecured Loans
+-------------------
+- Higher credit requirements
+- Lower maximum loan amounts
+- Higher interest rates
+- Personal guarantee required for business loans
+
+=================================
+8. EMPLOYMENT HISTORY
+=================================
+
+8.1 Requirements
+----------------
+- Minimum 2 years continuous employment
+- Current employment must be at least 6 months
+- Job gaps exceeding 3 months must be explained
+- Career changes must show progressive income growth
+- Part-time or contract work may be considered with 2-year history
+
+8.2 Special Circumstances
+-------------------------
+- Recent graduates: May substitute education for employment history
+- Military service: Service time counts as employment
+- Disability or medical leave: May be excluded from gap calculation
+- Business owners: Business operational time substitutes for employment
+
+=================================
+9. LOAN-TO-VALUE RATIO (LTV)
+=================================
+
+9.1 Asset-Based Lending
+-----------------------
+Real Estate:
+- Maximum LTV: 80% for owner-occupied properties
+- Maximum LTV: 70% for investment properties
+- Maximum LTV: 65% for commercial properties
+
+Vehicles:
+- Maximum LTV: 90% for new vehicles
+- Maximum LTV: 80% for used vehicles (< 5 years)
+- Maximum LTV: 70% for used vehicles (5+ years)
+
+Equipment:
+- Maximum LTV: 80% for new equipment
+- Maximum LTV: 60% for used equipment
+
+=================================
+10. APPROVAL PROCESS
+=================================
+
+10.1 Application Review Steps
+-----------------------------
+1. Initial Application Submission
+   - Complete application form
+   - Authorize credit check
+   - Provide initial documentation
+
+2. Document Verification
+   - Verify income documentation
+   - Verify employment
+   - Verify identity
+   - Review credit report
+
+3. Underwriting Analysis
+   - Calculate DTI ratio
+   - Assess credit risk
+   - Evaluate collateral (if applicable)
+   - Review compensating factors
+   - Determine loan terms and rate
+
+4. Decision
+   - Approved: Proceed to closing
+   - Approved with Conditions: Additional documentation required
+   - Denied: Adverse action notice sent with reason
+
+10.2 Processing Timeline
+------------------------
+- Standard applications: 5-7 business days
+- Complex applications: 10-15 business days
+- Expedited processing: 2-3 business days (additional fee may apply)
+
+=================================
+11. DENIAL REASONS
+=================================
+
+Common reasons for loan denial:
+- Credit score below minimum threshold
+- Insufficient income
+- DTI ratio too high
+- Inadequate employment history
+- Recent bankruptcy or foreclosure
+- Too many recent credit inquiries
+- Insufficient collateral value
+- Unable to verify information
+- Outstanding judgments or liens
+- Fraudulent information provided
+
+=================================
+12. SPECIAL PROGRAMS
+=================================
+
+12.1 First-Time Borrower Program
+---------------------------------
+- Reduced credit score requirement: 600 minimum
+- Financial education course required
+- Maximum loan amount: $25,000
+- Co-signer encouraged but not required
+- Rate discount after 12 months of on-time payments
+
+12.2 Small Business Accelerator
+--------------------------------
+- For businesses 1-3 years old
+- Minimum revenue: $50,000
+- Maximum loan amount: $150,000
+- Business plan review required
+- Mentorship program available
+- Rate discount for revenue milestones
+
+=================================
+13. EXCEPTIONS AND OVERRIDES
+=================================
+
+13.1 Exception Process
+----------------------
+Applications not meeting standard criteria may be submitted for exception review if:
+- Strong compensating factors exist
+- Unique circumstances warrant special consideration
+- Relationship banking history demonstrates reliability
+
+13.2 Required Documentation for Exceptions
+-------------------------------------------
+- Detailed written explanation
+- Supporting documentation for compensating factors
+- Risk assessment by senior underwriter
+- Approval by department manager or above
+
+13.3 Compensating Factors
+-------------------------
+- Large down payment (20%+ above requirement)
+- Substantial cash reserves (12+ months)
+- Minimal debt despite high DTI
+- Recent positive credit events
+- Increasing income trend
+- Long-term customer relationship
+
+=================================
+14. REGULATORY COMPLIANCE
+=================================
+
+All loan decisions must comply with:
+- Equal Credit Opportunity Act (ECOA)
+- Fair Credit Reporting Act (FCRA)
+- Truth in Lending Act (TILA)
+- Fair Debt Collection Practices Act (FDCPA)
+- State lending laws and regulations
+- Anti-discrimination laws
+- Privacy regulations (GLBA)
+
+Non-discrimination policy:
+Sample Bank does not discriminate based on race, color, religion, national origin, sex, marital status, age, or because all or part of income derives from public assistance.
+
+=================================
+15. CONTACT INFORMATION
+=================================
+
+Loan Application Support:
+Phone: 1-800-LOAN-APP
+Email: loanapplications@samplebank.com
+Hours: Monday-Friday, 8:00 AM - 8:00 PM EST
+
+Underwriting Questions:
+Phone: 1-800-UNDERWRITE
+Email: underwriting@samplebank.com
+
+Customer Service:
+Phone: 1-800-SERVICE
+Available 24/7
+
+=================================
+END OF DOCUMENT
+=================================
