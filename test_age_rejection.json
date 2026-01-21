@@ -1,0 +1,16 @@
+{
+  "bank_id": "chase",
+  "policy_type": "insurance",
+  "applicant": {
+    "age": 70,
+    "annualIncome": 75000,
+    "creditScore": 720,
+    "healthConditions": "good",
+    "smoker": false
+  },
+  "policy": {
+    "coverageAmount": 500000,
+    "term": 20,
+    "policyType": "term_life"
+  }
+}

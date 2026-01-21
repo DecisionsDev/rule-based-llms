@@ -17,11 +17,11 @@ process_jar_file() {
     else
       echo "Cannot deploy Rules archive"
       echo "Please Verify your ODM Server".
-    fi 
-  else 
-    echo "Cannot connect to the ODM Server URL : $ODM_SERVER_URL. Exiting"
-    exit 1
-  fi 
+    fi
+  else
+    echo "Cannot connect to the ODM Server URL : $ODM_SERVER_URL. Skipping ODM deployment (ODM not available)."
+    # Don't exit - just skip ODM deployment
+  fi
 }
 search_and_deploy_ruleapp(){
   # Directory containing the .jar files

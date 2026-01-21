@@ -1,0 +1,2322 @@
+openapi: 3.0.3
+info:
+  title: Underwriting Rule Engine API
+  description: |
+    AI-powered underwriting system with PostgreSQL-backed rule engine management.
+
+    **Key Features:**
+    - Process policy documents from S3 and generate Drools rules automatically
+    - PostgreSQL database for persistent container registry
+    - Customer-facing API for dynamic service discovery
+    - Evaluate applications without knowing container details
+    - Multi-tenant isolation with separate containers per bank+policy
+    - Request tracking and analytics
+    - **NEW v2.2:** Pre-signed S3 URLs for secure document downloads
+
+    **Architecture:**
+    - Customer apps query by `bank_id` + `policy_type`
+    - System automatically routes to correct rule engine container
+    - All requests logged to database for analytics
+    - Health checking ensures high availability
+    - LLM-generated queries and Textract responses stored for audit trail
+
+    **What's New in v2.7:**
+    - Page numbers and clause references for all rules and queries
+    - Track exact source location of each rule in policy documents
+    - ExtractedRule schema includes `page_number` and `clause_reference`
+    - HierarchicalRule schema includes `page_number` and `clause_reference`
+    - ExtractionQuery schema includes `page_number` and `clause_reference`
+    - Better traceability and audit trail for compliance
+    - **Test Harness Generation**: Automated Excel test harness with hierarchical rules and test cases
+    - Test harness includes 5 sheets: Hierarchical Rules, Test Cases, Test Execution, Coverage Summary, Instructions
+    - Automated pass/fail formulas for test execution tracking
+    - Pre-signed URLs for test harness download via `test_harness_presigned_url`
+    - Container schema includes `s3_test_harness_url` and `test_harness_presigned_url`
+
+    **What's New in v2.6:**
+    - Enhanced `/api/v1/policies/update-hierarchical-rules` with optional DRL update
+    - Set `update_drl: true` to regenerate and redeploy DRL rules from hierarchical rules
+    - Makes hierarchical rules the source of truth for rule logic
+    - Automatically converts updated expected values to executable DRL
+    - Version management and deployment history logging included
+    
+    **What's in v2.5:**
+    - Endpoint `/api/v1/policies/update-hierarchical-rules` for updating validation fields
+    - Update expected/actual values, confidence scores, pass/fail status
+    - Batch updates with partial field support
+    - Update by rule_id (dot notation) or database ID
+
+    **What's in v2.4:**
+    - New endpoint `/api/v1/policies/update-rules` for updating rules without reprocessing documents
+    - Version management with automatic version incrementing
+    - Deployment history logging for audit trails
+    - Support for quick rule updates and fixes
+
+    **What's in v2.3:**
+    - Hierarchical rules with parent-child dependencies
+    - Tree-structured rule organization with unlimited nesting depth
+    - Rule validation with pass/fail status and confidence scores
+    - Expected vs. actual value tracking for each rule
+    - Optional inclusion of hierarchical rules in API responses
+
+    **What's in v2.2:**
+    - Pre-signed S3 URLs for all documents (policy, JAR, DRL, Excel)
+    - Secure 24-hour expiring download links
+    - Frontend-ready URLs requiring no AWS authentication
+    - Both permanent S3 URLs and temporary pre-signed URLs provided
+
+    **What's in v2.1:**
+    - Extraction queries with AWS Textract confidence scores stored in database
+    - Optional inclusion of queries and rules in API responses
+    - Complete transparency into rule extraction process
+    - Query performance and quality monitoring via confidence scores
+
+  version: 2.7.0
+  contact:
+    name: IBM Automation
+    url: https://github.com/DecisionsDev
+
+servers:
+  - url: http://localhost:9000/rule-agent
+    description: Local development server
+
+tags:
+  - name: Underwriting Workflow
+    description: Policy document processing and rule generation
+  - name: File Management
+    description: File upload and storage operations
+
+paths:
+  # ============================================================================
+  # CUSTOMER-FACING API
+  # ============================================================================
+
+  /api/v1/banks:
+    get:
+      tags:
+        - Customer API
+      summary: List all available banks
+      description: Discover which banks/organizations have deployed rule engines
+      operationId: listBanks
+      responses:
+        '200':
+          description: List of active banks
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  banks:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        bank_id:
+                          type: string
+                          example: chase
+                        bank_name:
+                          type: string
+                          example: Chase Bank
+                        description:
+                          type: string
+                          example: Chase Manhattan Bank underwriting policies
+
+  /api/v1/banks/{bank_id}/policies:
+    get:
+      tags:
+        - Customer API
+      summary: List available policies for a bank
+      description: |
+        Get all policy types available for a specific bank.
+
+        **New in v2.1:**
+        - Optional inclusion of extraction query counts
+        - Optional inclusion of extracted rule counts
+        - Optional full details with all queries and rules
+      operationId: listBankPolicies
+      parameters:
+        - name: bank_id
+          in: path
+          required: true
+          schema:
+            type: string
+          example: chase
+        - name: include_queries
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+          description: Include extraction query counts for each policy
+          example: true
+        - name: include_rules
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+          description: Include extracted rule counts for each policy
+          example: true
+        - name: include_hierarchical_rules
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+          description: Include hierarchical rule counts for each policy
+          example: true
+        - name: details
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+          description: Include full details with all queries, rules, and hierarchical rules (overrides all include_ parameters)
+          example: false
+      responses:
+        '200':
+          description: List of available policies
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  bank_id:
+                    type: string
+                    example: chase
+                  total_policies:
+                    type: integer
+                    example: 2
+                  policies:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        policy_type_id:
+                          type: string
+                          example: insurance
+                        policy_name:
+                          type: string
+                          example: Insurance Underwriting
+                        description:
+                          type: string
+                        category:
+                          type: string
+                          example: insurance
+                        extraction_queries_count:
+                          type: integer
+                          description: Number of extraction queries (only if include_queries or details is true)
+                          example: 20
+                        extracted_rules_count:
+                          type: integer
+                          description: Number of extracted rules (only if include_rules or details is true)
+                          example: 15
+                        hierarchical_rules_count:
+                          type: integer
+                          description: Number of top-level hierarchical rules (only if include_hierarchical_rules or details is true)
+                          example: 5
+                        extraction_queries:
+                          type: array
+                          description: Full extraction queries (only if details is true)
+                          items:
+                            $ref: '#/components/schemas/ExtractionQuery'
+                        extracted_rules:
+                          type: array
+                          description: Full extracted rules (only if details is true)
+                          items:
+                            $ref: '#/components/schemas/ExtractedRule'
+                        hierarchical_rules:
+                          type: array
+                          description: Full hierarchical rules tree (only if details is true)
+                          items:
+                            $ref: '#/components/schemas/HierarchicalRule'
+
+  /api/v1/policies:
+    get:
+      tags:
+        - Customer API
+      summary: Query specific policy container with extraction details and test cases
+      description: |
+        Check if rules are deployed for a specific bank+policy combination.
+
+        **New in v2.1:**
+        - Optional inclusion of extraction queries with confidence scores
+        - Optional inclusion of extracted rules
+        - Optional inclusion of hierarchical rules tree
+        - Provides transparency into the rule extraction process
+
+        **New in v2.2:**
+        - Optional inclusion of auto-generated test cases
+        - Test case statistics by category (positive, negative, boundary, edge_case)
+      operationId: queryPolicies
+      parameters:
+        - name: bank_id
+          in: query
+          required: true
+          schema:
+            type: string
+          example: chase
+          description: Bank identifier
+        - name: policy_type
+          in: query
+          required: true
+          schema:
+            type: string
+          example: insurance
+          description: Policy type identifier
+        - name: include_queries
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+          description: Include LLM-generated extraction queries with Textract responses and confidence scores
+          example: true
+        - name: include_rules
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+          description: Include extracted underwriting rules
+          example: true
+        - name: include_hierarchical_rules
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+          description: Include hierarchical rules tree with parent-child dependencies
+          example: true
+        - name: include_test_cases
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+          description: Include auto-generated test cases for policy validation
+          example: true
+      responses:
+        '200':
+          description: Container information with optional extraction details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  container:
+                    $ref: '#/components/schemas/ContainerInfo'
+                  extraction_queries:
+                    type: array
+                    description: Extraction queries with responses (only if include_queries is true)
+                    items:
+                      $ref: '#/components/schemas/ExtractionQuery'
+                  extraction_queries_count:
+                    type: integer
+                    description: Number of extraction queries (only if include_queries is true)
+                    example: 20
+                  extracted_rules:
+                    type: array
+                    description: Extracted rules (only if include_rules is true)
+                    items:
+                      $ref: '#/components/schemas/ExtractedRule'
+                  extracted_rules_count:
+                    type: integer
+                    description: Number of extracted rules (only if include_rules is true)
+                    example: 15
+                  hierarchical_rules:
+                    type: array
+                    description: Hierarchical rules tree (only if include_hierarchical_rules is true)
+                    items:
+                      $ref: '#/components/schemas/HierarchicalRule'
+                  hierarchical_rules_count:
+                    type: integer
+                    description: Number of top-level hierarchical rules (only if include_hierarchical_rules is true)
+                    example: 5
+                  test_cases:
+                    type: array
+                    description: Auto-generated test cases (only if include_test_cases is true)
+                    items:
+                      $ref: '#/components/schemas/TestCase'
+                  test_cases_count:
+                    type: integer
+                    description: Total number of test cases (only if include_test_cases is true)
+                    example: 7
+                  test_cases_by_category:
+                    type: object
+                    description: Test case statistics by category (only if include_test_cases is true)
+                    properties:
+                      positive:
+                        type: integer
+                        example: 3
+                      negative:
+                        type: integer
+                        example: 2
+                      boundary:
+                        type: integer
+                        example: 1
+                      edge_case:
+                        type: integer
+                        example: 1
+              examples:
+                basic-response:
+                  summary: Basic response (no optional data)
+                  value:
+                    status: success
+                    container:
+                      container_id: chase-insurance-underwriting-rules
+                      bank_id: chase
+                      policy_type_id: insurance
+                      endpoint: http://drools-chase-insurance:8080
+                      status: running
+                      health_status: healthy
+                      deployed_at: "2025-11-12T10:00:00"
+                      s3_policy_url: "https://uw-data-extraction.s3.us-east-1.amazonaws.com/sample-policies/chase_insurance_policy.pdf"
+                      policy_presigned_url: "https://uw-data-extraction.s3.amazonaws.com/sample-policies/chase_insurance_policy.pdf?AWSAccessKeyId=AKIAZB6VY36KXF7T43V5&Signature=0p80af2fjnczmsXdiDNZH011aRE%3D&Expires=1763167243"
+                      s3_jar_url: "https://uw-data-extraction.s3.us-east-1.amazonaws.com/generated-rules/chase-insurance/20251113.235623/chase-insurance_20251113_235629.jar"
+                      jar_presigned_url: "https://uw-data-extraction.s3.amazonaws.com/generated-rules/chase-insurance/20251113.235623/chase-insurance_20251113_235629.jar?AWSAccessKeyId=AKIAZB6VY36KXF7T43V5&Signature=oQRX4o%2BwG9w2BjYeToyaJJYecEU%3D&Expires=1763167243"
+                      s3_drl_url: "https://uw-data-extraction.s3.us-east-1.amazonaws.com/generated-rules/chase-insurance/20251113.235623/chase-insurance_20251113_235629.drl"
+                      drl_presigned_url: "https://uw-data-extraction.s3.amazonaws.com/generated-rules/chase-insurance/20251113.235623/chase-insurance_20251113_235629.drl?AWSAccessKeyId=AKIAZB6VY36KXF7T43V5&Signature=0p80af2fjnczmsXdiDNZH011aRE%3D&Expires=1763167243"
+                      s3_excel_url: "https://uw-data-extraction.s3.us-east-1.amazonaws.com/generated-rules/chase-insurance/20251113.235623/chase_insurance_rules_20251113_235630.xlsx"
+                      excel_presigned_url: "https://uw-data-extraction.s3.amazonaws.com/generated-rules/chase-insurance/20251113.235623/chase_insurance_rules_20251113_235630.xlsx?AWSAccessKeyId=AKIAZB6VY36KXF7T43V5&Signature=lW3SDM5uUFwh5wTohnepXMVNNl0%3D&Expires=1763167243"
+                      s3_test_harness_url: "https://uw-data-extraction.s3.us-east-1.amazonaws.com/chase/insurance/test-harness/chase_insurance_test_harness_20251118_143000.xlsx"
+                      test_harness_presigned_url: "https://uw-data-extraction.s3.amazonaws.com/chase/insurance/test-harness/chase_insurance_test_harness_20251118_143000.xlsx?AWSAccessKeyId=AKIAZB6VY36KXF7T43V5&Signature=aB3cD4eF5gH6iJ7kL8mN9oP0qR1sT2u%3D&Expires=1763167243"
+                with-queries-and-rules:
+                  summary: Response with extraction queries and rules
+                  value:
+                    status: success
+                    container:
+                      container_id: chase-insurance-underwriting-rules
+                      bank_id: chase
+                      policy_type_id: insurance
+                      endpoint: http://drools-chase-insurance:8080
+                      status: running
+                      health_status: healthy
+                      deployed_at: "2025-11-12T10:00:00"
+                      s3_policy_url: "https://uw-data-extraction.s3.us-east-1.amazonaws.com/sample-policies/chase_insurance_policy.pdf"
+                      policy_presigned_url: "https://uw-data-extraction.s3.amazonaws.com/sample-policies/chase_insurance_policy.pdf?AWSAccessKeyId=AKIAZB6VY36KXF7T43V5&Signature=0p80af2fjnczmsXdiDNZH011aRE%3D&Expires=1763167243"
+                      s3_jar_url: "https://uw-data-extraction.s3.us-east-1.amazonaws.com/generated-rules/chase-insurance/20251113.235623/chase-insurance_20251113_235629.jar"
+                      jar_presigned_url: "https://uw-data-extraction.s3.amazonaws.com/generated-rules/chase-insurance/20251113.235623/chase-insurance_20251113_235629.jar?AWSAccessKeyId=AKIAZB6VY36KXF7T43V5&Signature=oQRX4o%2BwG9w2BjYeToyaJJYecEU%3D&Expires=1763167243"
+                      s3_drl_url: "https://uw-data-extraction.s3.us-east-1.amazonaws.com/generated-rules/chase-insurance/20251113.235623/chase-insurance_20251113_235629.drl"
+                      drl_presigned_url: "https://uw-data-extraction.s3.amazonaws.com/generated-rules/chase-insurance/20251113.235623/chase-insurance_20251113_235629.drl?AWSAccessKeyId=AKIAZB6VY36KXF7T43V5&Signature=0p80af2fjnczmsXdiDNZH011aRE%3D&Expires=1763167243"
+                      s3_excel_url: "https://uw-data-extraction.s3.us-east-1.amazonaws.com/generated-rules/chase-insurance/20251113.235623/chase_insurance_rules_20251113_235630.xlsx"
+                      excel_presigned_url: "https://uw-data-extraction.s3.amazonaws.com/generated-rules/chase-insurance/20251113.235623/chase_insurance_rules_20251113_235630.xlsx?AWSAccessKeyId=AKIAZB6VY36KXF7T43V5&Signature=lW3SDM5uUFwh5wTohnepXMVNNl0%3D&Expires=1763167243"
+                      s3_test_harness_url: "https://uw-data-extraction.s3.us-east-1.amazonaws.com/chase/insurance/test-harness/chase_insurance_test_harness_20251118_143000.xlsx"
+                      test_harness_presigned_url: "https://uw-data-extraction.s3.amazonaws.com/chase/insurance/test-harness/chase_insurance_test_harness_20251118_143000.xlsx?AWSAccessKeyId=AKIAZB6VY36KXF7T43V5&Signature=aB3cD4eF5gH6iJ7kL8mN9oP0qR1sT2u%3D&Expires=1763167243"
+                    extraction_queries_count: 20
+                    extraction_queries:
+                      - id: 1
+                        query_text: "What is the maximum coverage amount?"
+                        response_text: "$1,000,000"
+                        confidence_score: 95.5
+                        page_number: 5
+                        clause_reference: "Article III, Section 3.1"
+                        document_hash: "abc123..."
+                        source_document: "s3://bucket/policy.pdf"
+                        extraction_method: "textract"
+                        query_order: 1
+                        is_active: true
+                        created_at: "2025-11-12T09:00:00"
+                        updated_at: "2025-11-12T09:00:00"
+                      - id: 2
+                        query_text: "What is the minimum age requirement?"
+                        response_text: "18 years"
+                        confidence_score: 98.2
+                        page_number: 3
+                        clause_reference: "Article II, Section 2.1"
+                        document_hash: "abc123..."
+                        source_document: "s3://bucket/policy.pdf"
+                        extraction_method: "textract"
+                        query_order: 2
+                        is_active: true
+                        created_at: "2025-11-12T09:00:00"
+                        updated_at: "2025-11-12T09:00:00"
+                    extracted_rules_count: 15
+                    extracted_rules:
+                      - id: 1
+                        rule_name: "Minimum Age Requirement"
+                        requirement: "Applicant must be at least 18 years old"
+                        category: "Age Requirements"
+                        page_number: 3
+                        clause_reference: "Article II, Section 2.1"
+                        source_document: "s3://bucket/policy.pdf"
+                        document_hash: "abc123..."
+                        extraction_timestamp: "2025-11-12T09:00:00"
+                        is_active: true
+                        created_at: "2025-11-12T09:00:00"
+                        updated_at: "2025-11-12T09:00:00"
+        '404':
+          description: No active container found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/v1/policies/update-rules:
+    post:
+      tags:
+        - Customer API
+      summary: Update policy rules and redeploy
+      description: |
+        **Update deployed rules for an existing policy without reprocessing the entire document.**
+
+        This endpoint allows you to:
+        - Update rules for an existing bank+policy combination
+        - Parse and save new DRL rules to the database
+        - Redeploy rules to Drools KIE Server (increments version)
+        - Upload new artifacts (JAR, DRL) to S3
+        - Log deployment history for audit trail
+
+        **Use Case:**
+        After initial policy processing via `/process_policy_from_s3`, you can use this endpoint
+        to update rules without reanalyzing the source document. This is useful for:
+        - Tweaking existing rules
+        - Adding new rules
+        - Fixing rule logic errors
+        - Rolling out rule updates quickly
+
+        **Prerequisites:**
+        - An active container must exist for the bank+policy (created via `/process_policy_from_s3`)
+        - DRL content must be valid Drools syntax
+
+        **Version Management:**
+        Each update increments the container version number automatically.
+      operationId: updatePolicyRules
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - bank_id
+                - policy_type
+                - drl_content
+              properties:
+                bank_id:
+                  type: string
+                  description: Bank identifier
+                  example: chase
+                policy_type:
+                  type: string
+                  description: Policy type identifier
+                  example: insurance
+                drl_content:
+                  type: string
+                  description: |
+                    Complete DRL (Drools Rule Language) content with updated rules.
+                    Must include package declaration and valid rule syntax.
+                  example: |
+                    package com.underwriting;
+                    
+                    rule "Minimum Age Requirement"
+                    when
+                        $applicant : Applicant(age < 18)
+                        $decision : Decision()
+                    then
+                        $decision.setApproved(false);
+                        $decision.addRejectionReason("Applicant must be at least 18 years old");
+                    end
+                    
+                    rule "Maximum Age Limit"
+                    when
+                        $applicant : Applicant(age > 65)
+                        $decision : Decision()
+                    then
+                        $decision.setApproved(false);
+                        $decision.addRejectionReason("Applicant must be 65 years or younger");
+                    end
+            examples:
+              update-insurance-rules:
+                summary: Update Insurance Rules
+                value:
+                  bank_id: chase
+                  policy_type: insurance
+                  drl_content: |
+                    package com.underwriting;
+                    
+                    rule "Age Requirement"
+                    when
+                        $applicant : Applicant(age < 18 || age > 65)
+                        $decision : Decision()
+                    then
+                        $decision.setApproved(false);
+                        $decision.addRejectionReason("Age must be between 18 and 65");
+                    end
+                    
+                    rule "Minimum Credit Score"
+                    when
+                        $applicant : Applicant(creditScore < 600)
+                        $decision : Decision()
+                    then
+                        $decision.setApproved(false);
+                        $decision.addRejectionReason("Minimum credit score of 600 required");
+                    end
+      responses:
+        '200':
+          description: Rules updated and redeployed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: completed
+                  bank_id:
+                    type: string
+                    example: chase
+                  policy_type:
+                    type: string
+                    example: insurance
+                  container_id:
+                    type: string
+                    example: chase-insurance-underwriting-rules
+                  new_version:
+                    type: integer
+                    description: New container version after update
+                    example: 2
+                  steps:
+                    type: object
+                    description: Details of each step in the update process
+                    properties:
+                      update_database_rules:
+                        type: object
+                        properties:
+                          status:
+                            type: string
+                            example: success
+                          count:
+                            type: integer
+                            example: 5
+                          rule_ids:
+                            type: array
+                            items:
+                              type: integer
+                            example: [101, 102, 103, 104, 105]
+                      redeployment:
+                        type: object
+                        properties:
+                          status:
+                            type: string
+                            example: success
+                          container_id:
+                            type: string
+                            example: chase-insurance-underwriting-rules
+                          release_id:
+                            type: object
+                            properties:
+                              group-id:
+                                type: string
+                                example: com.underwriting
+                              artifact-id:
+                                type: string
+                                example: underwriting-rules
+                              version:
+                                type: string
+                                example: "20251115.143022"
+                      update_container:
+                        type: object
+                        properties:
+                          status:
+                            type: string
+                            example: success
+                          new_version:
+                            type: integer
+                            example: 2
+                      s3_upload:
+                        type: object
+                        properties:
+                          jar:
+                            type: object
+                            properties:
+                              status:
+                                type: string
+                                example: success
+                              s3_url:
+                                type: string
+                                example: "s3://uw-data-extraction/generated-rules/chase-insurance/20251115.143022/chase-insurance_20251115_143022.jar"
+                          drl:
+                            type: object
+                            properties:
+                              status:
+                                type: string
+                                example: success
+                              s3_url:
+                                type: string
+                                example: "s3://uw-data-extraction/generated-rules/chase-insurance/20251115.143022/chase-insurance_20251115_143022.drl"
+              example:
+                status: completed
+                bank_id: chase
+                policy_type: insurance
+                container_id: chase-insurance-underwriting-rules
+                new_version: 2
+                steps:
+                  update_database_rules:
+                    status: success
+                    count: 5
+                    rule_ids: [101, 102, 103, 104, 105]
+                  redeployment:
+                    status: success
+                    container_id: chase-insurance-underwriting-rules
+                    release_id:
+                      group-id: com.underwriting
+                      artifact-id: underwriting-rules
+                      version: "20251115.143022"
+                    message: "Rules deployed to dedicated container drools-chase-insurance-underwriting-rules"
+                  update_container:
+                    status: success
+                    new_version: 2
+                  s3_upload:
+                    jar:
+                      status: success
+                      s3_url: "s3://uw-data-extraction/generated-rules/chase-insurance/20251115.143022/chase-insurance_20251115_143022.jar"
+                    drl:
+                      status: success
+                      s3_url: "s3://uw-data-extraction/generated-rules/chase-insurance/20251115.143022/chase-insurance_20251115_143022.drl"
+        '400':
+          description: Bad request - missing required fields or invalid DRL
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                status: error
+                message: "drl_content is required. Provide the updated Drools rules."
+        '404':
+          description: No active container found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                status: error
+                message: "No active container found for bank 'chase' and policy type 'insurance'. Please deploy rules first using /process_policy_from_s3"
+        '500':
+          description: Server error during update/redeployment
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: failed
+                  error:
+                    type: string
+                    example: "Maven build failed"
+                  steps:
+                    type: object
+                    description: Details of completed and failed steps
+
+  /api/v1/policies/update-hierarchical-rules:
+    post:
+      tags:
+        - Customer API
+      summary: Update hierarchical rules validation fields (and optionally DRL logic)
+      description: |
+        **Update fields in hierarchical rules without regenerating the entire rule tree.**
+
+        This endpoint allows you to update validation-related fields in hierarchical rules:
+        - **expected**: Expected value or condition
+        - **actual**: Actual value or result from evaluation
+        - **confidence**: Confidence score (0.0-1.0)
+        - **passed**: Pass/fail status (boolean)
+        - **description**: Rule description
+        - **name**: Rule name
+
+        **NEW: Optional DRL Update (v2.6)**
+        Set `update_drl: true` to also regenerate and redeploy DRL rules based on updated
+        expected values. This makes hierarchical rules the **source of truth** for rule logic:
+        - Updates hierarchical rules in database
+        - Converts hierarchical rules back to executable DRL
+        - Redeploys to Drools KIE Server
+        - Increments container version
+        - Uploads new artifacts to S3
+        - Logs deployment history
+
+        **Use Cases:**
+        - Set expected values after initial rule creation
+        - Record actual values from policy evaluations
+        - Update confidence scores based on validation results
+        - Mark rules as passed/failed
+        - Fix or clarify rule descriptions
+        - **NEW:** Update rule logic by changing expected values (with `update_drl: true`)
+
+        **Features:**
+        - Batch updates (multiple rules in one request)
+        - Partial updates (only update fields you provide)
+        - Update by rule_id (dot notation) or database ID
+        - Atomic updates with error handling
+        - **NEW:** Optional DRL regeneration and redeployment
+
+        **Prerequisites:**
+        - Hierarchical rules must exist for the bank+policy combination
+        - Created via `/process_policy_from_s3` endpoint
+        - If using `update_drl: true`, an active container must exist
+      operationId: updateHierarchicalRules
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - bank_id
+                - policy_type
+                - updates
+              properties:
+                bank_id:
+                  type: string
+                  description: Bank identifier
+                  example: chase
+                policy_type:
+                  type: string
+                  description: Policy type identifier
+                  example: insurance
+                update_drl:
+                  type: boolean
+                  description: |
+                    **NEW in v2.6:** Optional flag to also regenerate and redeploy DRL rules.
+                    When true, converts updated hierarchical rules back to DRL and redeploys.
+                    This makes hierarchical rules the source of truth for rule logic.
+                  default: false
+                  example: true
+                updates:
+                  type: array
+                  description: Array of rule updates
+                  minItems: 1
+                  items:
+                    type: object
+                    properties:
+                      rule_id:
+                        type: string
+                        description: Dot notation rule identifier (e.g., "1.1", "1.2.3"). Use this OR id.
+                        example: "1.1"
+                      id:
+                        type: integer
+                        description: Database ID of the rule. Use this OR rule_id.
+                        example: 42
+                      expected:
+                        type: string
+                        description: Expected value or condition
+                        example: "Age >= 18"
+                      actual:
+                        type: string
+                        description: Actual value or result
+                        example: "Age = 25"
+                      confidence:
+                        type: number
+                        format: float
+                        minimum: 0.0
+                        maximum: 1.0
+                        description: Confidence score
+                        example: 0.95
+                      passed:
+                        type: boolean
+                        description: Whether the rule passed validation
+                        example: true
+                      description:
+                        type: string
+                        description: Rule description
+                        example: "Verify applicant meets minimum age requirement"
+                      name:
+                        type: string
+                        description: Rule name
+                        example: "Age Requirement Check"
+                    oneOf:
+                      - required: [rule_id]
+                      - required: [id]
+            examples:
+              update-by-rule-id:
+                summary: Update rules by dot notation ID (metadata only)
+                value:
+                  bank_id: chase
+                  policy_type: insurance
+                  update_drl: false
+                  updates:
+                    - rule_id: "1.1"
+                      expected: "Age >= 18"
+                      actual: "Age = 25"
+                      confidence: 0.95
+                      passed: true
+                    - rule_id: "1.2"
+                      expected: "Credit Score >= 600"
+                      actual: "Credit Score = 720"
+                      confidence: 0.98
+                      passed: true
+              update-with-drl-regeneration:
+                summary: Update expected values and redeploy DRL (NEW v2.6)
+                value:
+                  bank_id: chase
+                  policy_type: insurance
+                  update_drl: true
+                  updates:
+                    - rule_id: "1.2"
+                      name: "Credit Score Check"
+                      expected: "Credit Score >= 650"
+                      description: "Increased minimum credit score requirement"
+              update-by-database-id:
+                summary: Update rules by database ID
+                value:
+                  bank_id: chase
+                  policy_type: insurance
+                  updates:
+                    - id: 42
+                      expected: "Income >= $50,000"
+                      confidence: 0.88
+                    - id: 43
+                      passed: false
+                      actual: "Income = $45,000"
+              partial-update:
+                summary: Partial update (only some fields)
+                value:
+                  bank_id: chase
+                  policy_type: insurance
+                  updates:
+                    - rule_id: "2.1"
+                      confidence: 0.92
+                    - rule_id: "2.2"
+                      description: "Updated description for clarity"
+      responses:
+        '200':
+          description: Rules updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [success, no_updates, partial]
+                    example: success
+                  bank_id:
+                    type: string
+                    example: chase
+                  policy_type:
+                    type: string
+                    example: insurance
+                  updated_count:
+                    type: integer
+                    description: Number of rules successfully updated
+                    example: 3
+                  updated_ids:
+                    type: array
+                    description: Database IDs of updated rules
+                    items:
+                      type: integer
+                    example: [42, 43, 44]
+                  new_version:
+                    type: integer
+                    description: New container version (only if update_drl was true)
+                    example: 2
+                  drl_update:
+                    type: object
+                    description: DRL regeneration and redeployment result (only if update_drl was true)
+                    properties:
+                      status:
+                        type: string
+                        example: success
+                      container_id:
+                        type: string
+                        example: chase-insurance-underwriting-rules
+                      release_id:
+                        type: object
+                        properties:
+                          group-id:
+                            type: string
+                          artifact-id:
+                            type: string
+                          version:
+                            type: string
+                      s3_upload:
+                        type: object
+                        properties:
+                          jar:
+                            type: object
+                          drl:
+                            type: object
+                  errors:
+                    type: array
+                    description: Errors for rules that failed to update (only if partial success)
+                    items:
+                      type: object
+                      properties:
+                        error:
+                          type: string
+                        identifier:
+                          type: string
+                        message:
+                          type: string
+              examples:
+                success:
+                  summary: All updates successful
+                  value:
+                    status: success
+                    bank_id: chase
+                    policy_type: insurance
+                    updated_count: 3
+                    updated_ids: [42, 43, 44]
+                partial-success:
+                  summary: Some updates failed
+                  value:
+                    status: partial
+                    bank_id: chase
+                    policy_type: insurance
+                    updated_count: 2
+                    updated_ids: [42, 43]
+                    error_count: 1
+                    message: "Updated 2 rules, but 1 failed."
+                    errors:
+                      - error: "Rule not found"
+                        identifier: "rule_id=1.5"
+                        bank_id: "chase"
+                        policy_type_id: "insurance"
+        '207':
+          description: Multi-Status - Some updates succeeded, some failed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: partial
+                  message:
+                    type: string
+                    example: "Updated 2 rules, but 1 failed."
+                  updated_count:
+                    type: integer
+                    example: 2
+                  error_count:
+                    type: integer
+                    example: 1
+                  errors:
+                    type: array
+                    items:
+                      type: object
+        '400':
+          description: Bad request - invalid input or all updates failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                missing-identifier:
+                  summary: Missing rule identifier
+                  value:
+                    error: "updates array is required"
+                all-failed:
+                  summary: All updates failed
+                  value:
+                    status: failed
+                    message: "All updates failed. See errors for details."
+                    updated_count: 0
+                    error_count: 3
+                    errors:
+                      - error: "Rule not found"
+                        identifier: "rule_id=99.99"
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/v1/evaluate-policy:
+    post:
+      tags:
+        - Customer API
+      summary: Evaluate policy application
+      description: |
+        **Main endpoint for customer applications to evaluate applications using deployed rules.**
+
+        Automatically:
+        - Looks up the correct container in database
+        - Routes to appropriate rule engine
+        - Performs health checks
+        - Logs request for analytics
+        - Returns decision
+      operationId: evaluatePolicy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - bank_id
+                - policy_type
+                - applicant
+              properties:
+                bank_id:
+                  type: string
+                  description: Bank identifier
+                  example: chase
+                policy_type:
+                  type: string
+                  description: Policy type identifier
+                  example: insurance
+                applicant:
+                  type: object
+                  description: Applicant data (field names must match DRL declarations)
+                  example:
+                    age: 35
+                    annualIncome: 75000
+                    creditScore: 720
+                    healthConditions: good
+                    smoker: false
+                policy:
+                  type: object
+                  description: Policy-specific data (optional, field names must match DRL)
+                  example:
+                    coverageAmount: 500000
+                    termYears: 20
+                    type: term_life
+            examples:
+              insurance-application:
+                summary: Insurance Application (Approved)
+                value:
+                  bank_id: chase
+                  policy_type: insurance
+                  applicant:
+                    age: 35
+                    annualIncome: 75000
+                    creditScore: 720
+                    healthConditions: good
+                    smoker: false
+                  policy:
+                    coverageAmount: 500000
+                    termYears: 20
+                    type: term_life
+              insurance-application-rejected-age:
+                summary: Insurance Application (Rejected - Age)
+                value:
+                  bank_id: chase
+                  policy_type: insurance
+                  applicant:
+                    age: 70
+                    annualIncome: 75000
+                    creditScore: 720
+                    healthConditions: good
+                    smoker: false
+                  policy:
+                    coverageAmount: 500000
+                    termYears: 20
+                    type: term_life
+              insurance-application-rejected-credit:
+                summary: Insurance Application (Rejected - Credit Score)
+                value:
+                  bank_id: chase
+                  policy_type: insurance
+                  applicant:
+                    age: 35
+                    annualIncome: 75000
+                    creditScore: 550
+                    healthConditions: good
+                    smoker: false
+                  policy:
+                    coverageAmount: 500000
+                    termYears: 20
+                    type: term_life
+              loan-application:
+                summary: Loan Application (Approved)
+                value:
+                  bank_id: chase
+                  policy_type: loan
+                  applicant:
+                    age: 35
+                    annualIncome: 85000
+                    creditScore: 720
+                  policy:
+                    loanAmount: 150000
+                    personalGuarantee: false
+              loan-application-high-amount:
+                summary: Loan Application (High Amount with Personal Guarantee)
+                value:
+                  bank_id: chase
+                  policy_type: loan
+                  applicant:
+                    age: 45
+                    annualIncome: 250000
+                    creditScore: 780
+                  policy:
+                    loanAmount: 2000000
+                    personalGuarantee: true
+              loan-application-rejected-age:
+                summary: Loan Application (Rejected - Under 18)
+                value:
+                  bank_id: chase
+                  policy_type: loan
+                  applicant:
+                    age: 17
+                    annualIncome: 30000
+                    creditScore: 680
+                  policy:
+                    loanAmount: 50000
+                    personalGuarantee: false
+              loan-application-rejected-income:
+                summary: Loan Application (Rejected - Low Income)
+                value:
+                  bank_id: chase
+                  policy_type: loan
+                  applicant:
+                    age: 28
+                    annualIncome: 20000
+                    creditScore: 680
+                  policy:
+                    loanAmount: 50000
+                    personalGuarantee: false
+              loan-application-rejected-credit:
+                summary: Loan Application (Rejected - Credit Score)
+                value:
+                  bank_id: chase
+                  policy_type: loan
+                  applicant:
+                    age: 35
+                    annualIncome: 60000
+                    creditScore: 590
+                  policy:
+                    loanAmount: 100000
+                    personalGuarantee: false
+              loan-application-rejected-no-guarantee:
+                summary: Loan Application (Rejected - Missing Personal Guarantee)
+                value:
+                  bank_id: chase
+                  policy_type: loan
+                  applicant:
+                    age: 40
+                    annualIncome: 120000
+                    creditScore: 750
+                  policy:
+                    loanAmount: 500000
+                    personalGuarantee: false
+              loan-application-rejected-amount-limit:
+                summary: Loan Application (Rejected - Exceeds Maximum)
+                value:
+                  bank_id: chase
+                  policy_type: loan
+                  applicant:
+                    age: 50
+                    annualIncome: 500000
+                    creditScore: 800
+                  policy:
+                    loanAmount: 6000000
+                    personalGuarantee: true
+      responses:
+        '200':
+          description: Decision returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EvaluationResult'
+        '404':
+          description: No rules deployed for this bank+policy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '503':
+          description: Rule container unhealthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/v1/discovery:
+    get:
+      tags:
+        - Customer API
+      summary: Service discovery
+      description: Get all banks with their available policies in one call
+      operationId: serviceDiscovery
+      responses:
+        '200':
+          description: Complete service catalog
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  services:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        bank_id:
+                          type: string
+                        bank_name:
+                          type: string
+                        available_policies:
+                          type: array
+                          items:
+                            type: string
+                        total_containers:
+                          type: integer
+
+  /api/v1/extracted-rules:
+    get:
+      tags:
+        - Customer API
+      summary: Get extracted policy rules
+      description: |
+        Retrieve extracted underwriting rules for a specific bank and policy type.
+
+        **Use Case:**
+        Frontend applications can display the actual underwriting rules to customers
+        so they understand what criteria will be evaluated when they apply.
+
+        **Features:**
+        - Returns only active rules by default
+        - Rules are grouped by category (Age Requirements, Credit Score, etc.)
+        - Includes source document information
+        - Timestamped for version tracking
+      operationId: getExtractedRules
+      parameters:
+        - name: bank_id
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Bank identifier
+          example: chase
+        - name: policy_type
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Policy type identifier
+          example: insurance
+      responses:
+        '200':
+          description: List of extracted rules
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  bank_id:
+                    type: string
+                    example: chase
+                  policy_type:
+                    type: string
+                    example: insurance
+                  rule_count:
+                    type: integer
+                    example: 29
+                  rules:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ExtractedRule'
+              examples:
+                insurance-rules:
+                  summary: Insurance underwriting rules
+                  value:
+                    status: success
+                    bank_id: chase
+                    policy_type: insurance
+                    rule_count: 3
+                    rules:
+                      - id: 1
+                        rule_name: Minimum Age Requirement
+                        requirement: Applicant must be at least 18 years old (MANDATORY - Applications under 18 are AUTOMATICALLY REJECTED)
+                        category: Age Requirements
+                        page_number: 3
+                        clause_reference: "Article II, Section 2.1"
+                        source_document: sample_life_insurance_policy.txt
+                        document_hash: abc123def456
+                        extraction_timestamp: "2025-11-10T10:30:00"
+                        is_active: true
+                        created_at: "2025-11-10T10:30:00"
+                        updated_at: "2025-11-10T10:30:00"
+                      - id: 2
+                        rule_name: Minimum Credit Score
+                        requirement: Credit score must be at least 600 (MANDATORY - Applications under 600 are AUTOMATICALLY REJECTED)
+                        category: Credit Score Requirements
+                        page_number: 5
+                        clause_reference: "Article III, Section 3.1"
+                        source_document: sample_life_insurance_policy.txt
+                        document_hash: abc123def456
+                        extraction_timestamp: "2025-11-10T10:30:00"
+                        is_active: true
+                        created_at: "2025-11-10T10:30:00"
+                        updated_at: "2025-11-10T10:30:00"
+                      - id: 3
+                        rule_name: Minimum Annual Income
+                        requirement: Annual income must be at least $25,000
+                        category: Income Requirements
+                        page_number: 7
+                        clause_reference: "Article IV, Section 4.1"
+                        source_document: sample_life_insurance_policy.txt
+                        document_hash: abc123def456
+                        extraction_timestamp: "2025-11-10T10:30:00"
+                        is_active: true
+                        created_at: "2025-11-10T10:30:00"
+                        updated_at: "2025-11-10T10:30:00"
+        '400':
+          description: Missing required parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                status: error
+                message: Both bank_id and policy_type query parameters are required
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  # ============================================================================
+  # ADMIN API - WORKFLOW
+  # ============================================================================
+
+  /process_policy_from_s3:
+    post:
+      tags:
+        - Admin - Workflow
+      summary: Process policy document from S3
+      description: |
+        **Admin endpoint:** Process a policy PDF from S3 and generate rules.
+
+        Workflow:
+        1. Extract text from S3 PDF
+        2. LLM analyzes and generates extraction queries
+        3. AWS Textract extracts structured data
+        3.5. **NEW:** Save extraction queries and Textract responses with confidence scores to database
+        4. LLM generates DRL rules
+        4.5. Transform rules to user-friendly text using OpenAI
+        5. Deploy to Drools KIE Server
+        6. Upload artifacts to S3
+        6.5. Register in PostgreSQL database
+        7. Save extracted rules with user-friendly descriptions
+      operationId: processPolicyFromS3
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - s3_url
+                - policy_type
+                - bank_id
+              properties:
+                s3_url:
+                  type: string
+                  format: uri
+                  example: s3://bucket/policies/chase-insurance.pdf
+                policy_type:
+                  type: string
+                  example: insurance
+                bank_id:
+                  type: string
+                  example: chase
+      responses:
+        '200':
+          description: Workflow completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkflowResult'
+
+  /upload_file:
+      post:
+        tags:
+          - File Management
+        summary: Upload file to S3 bucket
+        description: |
+          Upload any file to AWS S3 bucket with organized folder structure.
+          
+          **Features:**
+          - Files are stored in organized folders: `{folder}/YYYY-MM-DD/filename_timestamp.ext`
+          - Automatic filename sanitization and timestamping to prevent overwrites
+          - Support for multiple file types (PDF, images, documents, etc.)
+          - File size validation (max 100 MB)
+          - Returns S3 URL for immediate access
+          
+          **Storage Structure:**
+          - Default folder: `uploads/`
+          - Date-based subfolders: `uploads/2025-11-07/`
+          - Timestamped filenames: `document_20251107_143022.pdf`
+          
+          **Security:**
+          - Filename sanitization prevents path traversal attacks
+          - Folder name validation
+          - Content type detection based on file extension
+        operationId: uploadFile
+        requestBody:
+          required: true
+          content:
+            multipart/form-data:
+              schema:
+                type: object
+                required:
+                  - file
+                properties:
+                  file:
+                    type: string
+                    format: binary
+                    description: File to upload (any file type supported)
+                  folder:
+                    type: string
+                    description: 'S3 folder name where file will be stored (default: "uploads")'
+                    example: uploads
+              encoding:
+                file:
+                  contentType: application/octet-stream
+        responses:
+          '200':
+            description: File uploaded successfully
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                      example: success
+                    message:
+                      type: string
+                      example: File uploaded successfully to S3
+                    data:
+                      type: object
+                      properties:
+                        s3_url:
+                          type: string
+                          format: uri
+                          description: Full S3 URL to access the uploaded file
+                          example: https://uw-data-extraction.s3.us-east-1.amazonaws.com/uploads/2025-11-07/document_20251107_143022.pdf
+                        s3_key:
+                          type: string
+                          description: S3 key (path) of the uploaded file
+                          example: uploads/2025-11-07/document_20251107_143022.pdf
+                        bucket:
+                          type: string
+                          description: S3 bucket name
+                          example: uw-data-extraction
+                        filename:
+                          type: string
+                          description: Timestamped filename stored in S3
+                          example: document_20251107_143022.pdf
+                        original_filename:
+                          type: string
+                          description: Original filename provided by user
+                          example: document.pdf
+                        folder:
+                          type: string
+                          description: Folder where file is stored
+                          example: uploads
+                        file_size:
+                          type: integer
+                          description: File size in bytes
+                          example: 245760
+                        content_type:
+                          type: string
+                          description: MIME content type
+                          example: application/pdf
+                examples:
+                  pdf-upload:
+                    summary: PDF file upload
+                    value:
+                      status: success
+                      message: File uploaded successfully to S3
+                      data:
+                        s3_url: https://uw-data-extraction.s3.us-east-1.amazonaws.com/uploads/2025-11-07/policy_20251107_143022.pdf
+                        s3_key: uploads/2025-11-07/policy_20251107_143022.pdf
+                        bucket: uw-data-extraction
+                        filename: policy_20251107_143022.pdf
+                        original_filename: policy.pdf
+                        folder: uploads
+                        file_size: 245760
+                        content_type: application/pdf
+                  image-upload:
+                    summary: Image file upload
+                    value:
+                      status: success
+                      message: File uploaded successfully to S3
+                      data:
+                        s3_url: https://uw-data-extraction.s3.us-east-1.amazonaws.com/uploads/2025-11-07/image_20251107_143022.png
+                        s3_key: uploads/2025-11-07/image_20251107_143022.png
+                        bucket: uw-data-extraction
+                        filename: image_20251107_143022.png
+                        original_filename: screenshot.png
+                        folder: uploads
+                        file_size: 102400
+                        content_type: image/png
+          '400':
+            description: Bad request (missing file, invalid folder, file too large, etc.)
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                      example: error
+                    message:
+                      type: string
+                      example: No file provided. Please include a file in the "file" field.
+                    error_code:
+                      type: string
+                      enum:
+                        - MISSING_FILE
+                        - EMPTY_FILENAME
+                        - EMPTY_FILE
+                        - FILE_TOO_LARGE
+                        - INVALID_FOLDER
+                      example: MISSING_FILE
+                examples:
+                  missing-file:
+                    summary: No file provided
+                    value:
+                      status: error
+                      message: 'No file provided. Please include a file in the "file" field.'
+                      error_code: MISSING_FILE
+                  file-too-large:
+                    summary: File exceeds size limit
+                    value:
+                      status: error
+                      message: 'File size (104857600 bytes) exceeds maximum allowed size (104857600 bytes)'
+                      error_code: FILE_TOO_LARGE
+                      file_size: 104857600
+                      max_size: 104857600
+          '500':
+            description: Internal server error (S3 upload failed, network error, etc.)
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                      example: error
+                    message:
+                      type: string
+                      example: 'S3 upload failed: AccessDenied'
+                    error:
+                      type: string
+                      example: 'Access Denied'
+                    error_code:
+                      type: string
+                      example: AccessDenied
+
+  # ============================================================================
+  # ADMIN API - DEPLOYMENTS
+  # ============================================================================
+
+  /api/v1/deployments:
+    get:
+      tags:
+        - Admin - Deployments
+      summary: List all deployments
+      description: Query deployed rule containers with optional filters
+      operationId: listDeployments
+      parameters:
+        - name: bank_id
+          in: query
+          schema:
+            type: string
+        - name: policy_type
+          in: query
+          schema:
+            type: string
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [deploying, running, stopped, failed, unhealthy]
+        - name: active_only
+          in: query
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: List of deployments
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  total:
+                    type: integer
+                  deployments:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DeploymentInfo'
+
+  /api/v1/deployments/{id}:
+    get:
+      tags:
+        - Admin - Deployments
+      summary: Get deployment details
+      description: Get detailed information about a specific deployment including statistics
+      operationId: getDeployment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Deployment details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  deployment:
+                    $ref: '#/components/schemas/DeploymentInfo'
+                  statistics:
+                    type: object
+                    properties:
+                      total_requests:
+                        type: integer
+                      successful_requests:
+                        type: integer
+                      failed_requests:
+                        type: integer
+                      avg_execution_time_ms:
+                        type: number
+                      success_rate:
+                        type: number
+
+  # ============================================================================
+  # SYSTEM
+  # ============================================================================
+
+  /api/v1/health:
+    get:
+      tags:
+        - System
+      summary: System health check
+      description: Check if database and Drools are connected
+      operationId: healthCheck
+      responses:
+        '200':
+          description: System healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [healthy, unhealthy]
+                  database:
+                    type: string
+                    enum: [connected, disconnected]
+                  drools:
+                    type: string
+                    enum: [connected, disconnected]
+        '503':
+          description: System unhealthy
+
+components:
+  schemas:
+    ContainerInfo:
+      type: object
+      properties:
+        container_id:
+          type: string
+          example: chase-insurance-underwriting-rules
+        bank_id:
+          type: string
+          example: chase
+        policy_type_id:
+          type: string
+          example: insurance
+        endpoint:
+          type: string
+          example: http://drools-chase-insurance:8080
+        status:
+          type: string
+          enum: [deploying, running, stopped, failed, unhealthy]
+        health_status:
+          type: string
+          enum: [healthy, unhealthy, unknown]
+        deployed_at:
+          type: string
+          format: date-time
+        s3_policy_url:
+          type: string
+          format: uri
+          description: S3 URL of the original policy document
+          example: https://uw-data-extraction.s3.us-east-1.amazonaws.com/sample-policies/chase_insurance_policy.pdf
+        policy_presigned_url:
+          type: string
+          format: uri
+          description: Pre-signed S3 URL for downloading the policy document (expires in 24 hours)
+          example: https://uw-data-extraction.s3.amazonaws.com/sample-policies/chase_insurance_policy.pdf?AWSAccessKeyId=...&Signature=...&Expires=1763167243
+        s3_jar_url:
+          type: string
+          format: uri
+          description: S3 URL of the compiled JAR file
+          example: https://uw-data-extraction.s3.us-east-1.amazonaws.com/generated-rules/chase-insurance/20251113.235623/chase-insurance_20251113_235629.jar
+        jar_presigned_url:
+          type: string
+          format: uri
+          description: Pre-signed S3 URL for downloading the JAR file (expires in 24 hours)
+          example: https://uw-data-extraction.s3.amazonaws.com/generated-rules/chase-insurance/20251113.235623/chase-insurance_20251113_235629.jar?AWSAccessKeyId=...&Signature=...&Expires=1763167243
+        s3_drl_url:
+          type: string
+          format: uri
+          description: S3 URL of the DRL rules file
+          example: https://uw-data-extraction.s3.us-east-1.amazonaws.com/generated-rules/chase-insurance/20251113.235623/chase-insurance_20251113_235629.drl
+        drl_presigned_url:
+          type: string
+          format: uri
+          description: Pre-signed S3 URL for downloading the DRL file (expires in 24 hours)
+          example: https://uw-data-extraction.s3.amazonaws.com/generated-rules/chase-insurance/20251113.235623/chase-insurance_20251113_235629.drl?AWSAccessKeyId=...&Signature=...&Expires=1763167243
+        s3_excel_url:
+          type: string
+          format: uri
+          description: S3 URL of the Excel spreadsheet with rules
+          example: https://uw-data-extraction.s3.us-east-1.amazonaws.com/generated-rules/chase-insurance/20251113.235623/chase_insurance_rules_20251113_235630.xlsx
+        excel_presigned_url:
+          type: string
+          format: uri
+          description: Pre-signed S3 URL for downloading the Excel file (expires in 24 hours)
+          example: https://uw-data-extraction.s3.amazonaws.com/generated-rules/chase-insurance/20251113.235623/chase_insurance_rules_20251113_235630.xlsx?AWSAccessKeyId=...&Signature=...&Expires=1763167243
+        s3_test_harness_url:
+          type: string
+          format: uri
+          description: S3 URL of the test harness Excel file with hierarchical rules and test cases (NEW in v2.7)
+          example: https://uw-data-extraction.s3.us-east-1.amazonaws.com/chase/insurance/test-harness/chase_insurance_test_harness_20251118_143000.xlsx
+        test_harness_presigned_url:
+          type: string
+          format: uri
+          description: Pre-signed S3 URL for downloading the test harness file (expires in 24 hours) (NEW in v2.7)
+          example: https://uw-data-extraction.s3.amazonaws.com/chase/insurance/test-harness/chase_insurance_test_harness_20251118_143000.xlsx?AWSAccessKeyId=...&Signature=...&Expires=1763167243
+
+    DeploymentInfo:
+      type: object
+      properties:
+        id:
+          type: integer
+        container_id:
+          type: string
+        bank_id:
+          type: string
+        policy_type_id:
+          type: string
+        endpoint:
+          type: string
+        status:
+          type: string
+        health_status:
+          type: string
+        platform:
+          type: string
+        version:
+          type: integer
+        is_active:
+          type: boolean
+        deployed_at:
+          type: string
+          format: date-time
+        s3_policy_url:
+          type: string
+          format: uri
+          description: S3 URL of the original policy document
+        policy_presigned_url:
+          type: string
+          format: uri
+          description: Pre-signed S3 URL for downloading the policy document (expires in 24 hours)
+        s3_jar_url:
+          type: string
+          format: uri
+          description: S3 URL of the compiled JAR file
+        jar_presigned_url:
+          type: string
+          format: uri
+          description: Pre-signed S3 URL for downloading the JAR file (expires in 24 hours)
+        s3_drl_url:
+          type: string
+          format: uri
+          description: S3 URL of the DRL rules file
+        drl_presigned_url:
+          type: string
+          format: uri
+          description: Pre-signed S3 URL for downloading the DRL file (expires in 24 hours)
+        s3_excel_url:
+          type: string
+          format: uri
+          description: S3 URL of the Excel spreadsheet with rules
+        excel_presigned_url:
+          type: string
+          format: uri
+          description: Pre-signed S3 URL for downloading the Excel file (expires in 24 hours)
+        s3_test_harness_url:
+          type: string
+          format: uri
+          description: S3 URL of the test harness Excel file with hierarchical rules and test cases (NEW in v2.7)
+        test_harness_presigned_url:
+          type: string
+          format: uri
+          description: Pre-signed S3 URL for downloading the test harness file (expires in 24 hours) (NEW in v2.7)
+
+    EvaluationResult:
+      type: object
+      properties:
+        status:
+          type: string
+          example: success
+        bank_id:
+          type: string
+        policy_type:
+          type: string
+        container_id:
+          type: string
+        decision:
+          type: object
+          description: Rule engine decision (format depends on deployed rules)
+          example:
+            approved: true
+            reasons: ["Good credit score", "Stable income"]
+            premium_rate: 0.85
+        execution_time_ms:
+          type: integer
+          example: 45
+        hierarchical_rules:
+          type: array
+          description: Evaluated hierarchical rules showing which requirements were checked and their pass/fail status
+          items:
+            $ref: '#/components/schemas/EvaluatedHierarchicalRule'
+        rule_evaluation_summary:
+          type: object
+          description: Summary of hierarchical rules evaluation
+          properties:
+            total_rules:
+              type: integer
+              description: Total number of rules evaluated
+              example: 87
+            passed:
+              type: integer
+              description: Number of rules that passed
+              example: 75
+            failed:
+              type: integer
+              description: Number of rules that failed
+              example: 5
+            not_evaluated:
+              type: integer
+              description: Number of rules that could not be evaluated
+              example: 7
+            pass_rate:
+              type: number
+              format: float
+              description: Percentage of rules that passed
+              example: 86.21
+            failed_rules:
+              type: array
+              description: List of failed rules with details
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  expected:
+                    type: string
+                  actual:
+                    type: string
+
+    WorkflowResult:
+      type: object
+      properties:
+        s3_url:
+          type: string
+          format: uri
+          description: S3 URL of the original policy document
+        policy_type:
+          type: string
+        bank_id:
+          type: string
+        container_id:
+          type: string
+        status:
+          type: string
+          enum: [in_progress, completed, failed]
+        policy_presigned_url:
+          type: string
+          format: uri
+          description: Pre-signed S3 URL for downloading the policy document (expires in 24 hours)
+        jar_s3_url:
+          type: string
+          format: uri
+          description: S3 URL of the compiled JAR file
+        jar_presigned_url:
+          type: string
+          format: uri
+          description: Pre-signed S3 URL for downloading the JAR file (expires in 24 hours)
+        drl_s3_url:
+          type: string
+          format: uri
+          description: S3 URL of the DRL rules file
+        drl_presigned_url:
+          type: string
+          format: uri
+          description: Pre-signed S3 URL for downloading the DRL file (expires in 24 hours)
+        excel_s3_url:
+          type: string
+          format: uri
+          description: S3 URL of the Excel spreadsheet with rules
+        excel_presigned_url:
+          type: string
+          format: uri
+          description: Pre-signed S3 URL for downloading the Excel file (expires in 24 hours)
+        steps:
+          type: object
+
+    ExtractedRule:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Unique rule identifier
+          example: 1
+        rule_name:
+          type: string
+          description: Name or title of the rule
+          example: Minimum Age Requirement
+        requirement:
+          type: string
+          description: The actual requirement or rule text
+          example: Applicant must be at least 18 years old (MANDATORY - Applications under 18 are AUTOMATICALLY REJECTED)
+        category:
+          type: string
+          description: Category for grouping rules
+          example: Age Requirements
+        page_number:
+          type: integer
+          description: 'Page number in the source document where this rule was found (NEW in v2.7)'
+          example: 3
+        clause_reference:
+          type: string
+          description: 'Clause or section reference in the policy document (e.g., "Article II, Section 3.1", "Clause 5.2") (NEW in v2.7)'
+          example: "Article II, Section 2.1"
+        source_document:
+          type: string
+          description: Source document path or name from which the rule was extracted
+          example: sample_life_insurance_policy.txt
+        document_hash:
+          type: string
+          description: Hash of the source document for change detection
+          example: abc123def456
+        extraction_timestamp:
+          type: string
+          format: date-time
+          description: When the rule was extracted from the document
+          example: "2025-11-10T10:30:00"
+        is_active:
+          type: boolean
+          description: Whether this rule is currently active
+          example: true
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the record was created
+          example: "2025-11-10T10:30:00"
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp when the record was last updated
+          example: "2025-11-10T10:30:00"
+
+    HierarchicalRule:
+      type: object
+      description: A rule in a hierarchical tree structure with parent-child dependencies
+      properties:
+        id:
+          type: string
+          description: Dot-notation ID representing position in hierarchy
+          example: "11.1.1.1.1"
+        name:
+          type: string
+          description: Name or title of the rule
+          example: "Verify applicant age"
+        description:
+          type: string
+          description: Detailed description of the rule requirement
+          example: "Check if the applicant meets the minimum age requirement of 18 years"
+        expected:
+          type: string
+          description: Expected value or condition
+          example: "Age >= 18"
+        actual:
+          type: string
+          description: Actual value or result
+          example: "Age = 25"
+        confidence:
+          type: number
+          format: float
+          description: Confidence score for this rule (0-1)
+          minimum: 0
+          maximum: 1
+          example: 0.95
+        passed:
+          type: boolean
+          description: Whether the rule passed validation
+          example: true
+        page_number:
+          type: integer
+          description: 'Page number in the source document where this rule was found (NEW in v2.7)'
+          example: 3
+        clause_reference:
+          type: string
+          description: 'Clause or section reference in the policy document (e.g., "Article II, Section 3.1", "Clause 5.2") (NEW in v2.7)'
+          example: "Article II, Section 2.1"
+        dependencies:
+          type: array
+          description: Child rules that this rule depends on
+          items:
+            $ref: '#/components/schemas/HierarchicalRule'
+          example:
+            - id: "11.1.1.1.1.1"
+              name: "Verify birth date"
+              description: "Extract and validate birth date from application"
+              expected: "Valid date format"
+              actual: "1998-05-15"
+              confidence: 0.98
+              passed: true
+              page_number: 3
+              clause_reference: "Article II, Section 2.1.1"
+              dependencies: []
+
+    EvaluatedHierarchicalRule:
+      type: object
+      description: A hierarchical rule that has been evaluated against application data with actual values and pass/fail status
+      properties:
+        id:
+          type: string
+          description: Dot-notation ID representing position in hierarchy
+          example: "1.1.1"
+        name:
+          type: string
+          description: Name or title of the rule
+          example: "Minimum Age Check"
+        description:
+          type: string
+          description: Detailed description of the rule requirement
+          example: "Verify applicant is at least 18 years old"
+        expected:
+          type: string
+          description: Expected value or condition
+          example: "Age >= 18"
+        actual:
+          type: string
+          description: Actual value from application data
+          example: "Age = 35"
+        confidence:
+          type: number
+          format: float
+          description: LLM confidence score for this rule (0-1)
+          minimum: 0
+          maximum: 1
+          example: 0.99
+        passed:
+          type: boolean
+          description: Whether the rule passed validation (true/false/null if not evaluated)
+          example: true
+        page_number:
+          type: integer
+          description: 'Page number in the source document where this rule was found (NEW in v2.7)'
+          example: 3
+        clause_reference:
+          type: string
+          description: 'Clause or section reference in the policy document (e.g., "Article II, Section 3.1", "Clause 5.2") (NEW in v2.7)'
+          example: "Article II, Section 2.1.1"
+        dependencies:
+          type: array
+          description: Child rules that this rule depends on (also evaluated)
+          items:
+            $ref: '#/components/schemas/EvaluatedHierarchicalRule'
+
+    ExtractionQuery:
+      type: object
+      description: LLM-generated extraction query with AWS Textract response and confidence score
+      properties:
+        id:
+          type: integer
+          description: Unique query identifier
+          example: 1
+        query_text:
+          type: string
+          description: The query text generated by LLM for data extraction
+          example: "What is the maximum coverage amount?"
+        response_text:
+          type: string
+          description: The extracted response from AWS Textract
+          example: "$1,000,000"
+        confidence_score:
+          type: number
+          format: float
+          description: Textract confidence score (0-100)
+          minimum: 0
+          maximum: 100
+          example: 95.5
+        page_number:
+          type: integer
+          description: 'Page number in the source document where this query was targeted (NEW in v2.7)'
+          example: 3
+        clause_reference:
+          type: string
+          description: 'Clause or section reference in the policy document (e.g., "Article II, Section 3.1", "Clause 5.2") (NEW in v2.7)'
+          example: "Article II, Section 2.1"
+        document_hash:
+          type: string
+          description: Hash of the source document for linking to containers
+          example: "abc123def456..."
+        source_document:
+          type: string
+          description: Source document path or S3 URL
+          example: "s3://bucket/policies/chase-insurance.pdf"
+        extraction_method:
+          type: string
+          description: Method used for extraction
+          enum: [textract, manual]
+          default: textract
+          example: textract
+        query_order:
+          type: integer
+          description: Order in which query was generated
+          example: 1
+        is_active:
+          type: boolean
+          description: Whether this query is currently active
+          example: true
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the record was created
+          example: "2025-11-12T09:00:00"
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp when the record was last updated
+          example: "2025-11-12T09:00:00"
+
+    TestCase:
+      type: object
+      description: Auto-generated test case for policy evaluation
+      properties:
+        id:
+          type: integer
+          description: Unique test case identifier
+          example: 1
+        test_case_name:
+          type: string
+          description: Descriptive name of the test case
+          example: "Ideal Applicant - Mid-Age, Good Health"
+        description:
+          type: string
+          description: Detailed description of the test scenario
+          example: "35-year-old non-smoker with excellent health, high income, and good credit score. Should be approved with low risk."
+        category:
+          type: string
+          enum:
+            - positive
+            - negative
+            - boundary
+            - edge_case
+            - regression
+          description: Test case category
+          example: "positive"
+        priority:
+          type: integer
+          minimum: 1
+          maximum: 3
+          description: Test priority (1=high, 2=medium, 3=low)
+          example: 1
+        applicant_data:
+          type: object
+          description: JSONB object containing applicant details
+          example:
+            age: 35
+            annualIncome: 75000
+            creditScore: 720
+            healthConditions: "good"
+            smoker: false
+        policy_data:
+          type: object
+          description: JSONB object containing policy details
+          example:
+            coverageAmount: 500000
+            termYears: 20
+            type: "term_life"
+        expected_decision:
+          type: string
+          enum:
+            - approved
+            - rejected
+            - pending
+          description: Expected decision outcome
+          example: "approved"
+        expected_reasons:
+          type: array
+          items:
+            type: string
+          description: Array of expected approval/rejection reasons
+          example:
+            - "Meets all eligibility criteria"
+            - "Low risk profile"
+        expected_risk_category:
+          type: integer
+          minimum: 1
+          maximum: 5
+          description: Expected risk score (1=lowest risk, 5=highest risk)
+          example: 2
+        is_auto_generated:
+          type: boolean
+          description: True if generated by LLM, false if manually created
+          example: true
+        generation_method:
+          type: string
+          enum:
+            - llm
+            - manual
+            - template
+            - boundary_analysis
+          description: Method used to generate the test case
+          example: "llm"
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when test case was created
+          example: "2025-11-15T10:30:00"
+
+    Error:
+      type: object
+      properties:
+        status:
+          type: string
+          example: error
+        message:
+          type: string
+          example: No active rules deployed for bank 'chase' and policy type 'insurance'

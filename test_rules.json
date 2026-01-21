@@ -1,0 +1,14 @@
+{
+  "container_id": "chase-insurance-underwriting-rules",
+  "applicant": {
+    "name": "John Doe",
+    "age": 35,
+    "occupation": "Engineer",
+    "healthConditions": null
+  },
+  "policy": {
+    "policyType": "Term Life",
+    "coverageAmount": 500000,
+    "term": 20
+  }
+}

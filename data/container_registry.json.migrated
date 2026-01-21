@@ -1,0 +1,74 @@
+{
+  "chase-insurance-underwriting-rules": {
+    "platform": "docker",
+    "container_name": "drools-chase-insurance-underwriting-rules",
+    "docker_container_id": "c85edceb06b46bb0cb3b4d466abe95082084795dded73aba76d6b17d1026f5dc",
+    "endpoint": "http://drools-chase-insurance-underwriting-rules:8080",
+    "port": 8086,
+    "created_at": "2025-11-07T15:14:39.624991",
+    "status": "running"
+  },
+  "chase-loan-underwriting-rules": {
+    "platform": "docker",
+    "container_name": "drools-chase-loan-underwriting-rules",
+    "docker_container_id": "2021d2f4a958506a154c9b6b8eb3e40968564d4cf304bbdff5d2cd357cfd3d1e",
+    "endpoint": "http://drools-chase-loan-underwriting-rules:8080",
+    "port": 8082,
+    "created_at": "2025-11-06T19:57:33.814290",
+    "status": "running"
+  },
+  "general-underwriting-rules": {
+    "platform": "docker",
+    "container_name": "drools-general-underwriting-rules",
+    "docker_container_id": "14693c8595b9db648ba87b82866bf6e2e7692431d6148fb0d20a83f9c7185951",
+    "endpoint": "http://drools-general-underwriting-rules:8080",
+    "port": 8083,
+    "created_at": "2025-11-07T01:44:59.274740",
+    "status": "running"
+  },
+  "life_insurance_test-underwriting-rules": {
+    "platform": "docker",
+    "container_name": "drools-life_insurance_test-underwriting-rules",
+    "docker_container_id": "3089f7b2864054605af248fb8809e882773968d3935badf0510b50704b5943f4",
+    "endpoint": "http://drools-life_insurance_test-underwriting-rules:8080",
+    "port": 8084,
+    "created_at": "2025-11-07T02:20:08.293940",
+    "status": "running"
+  },
+  "chase-life_insurance-underwriting-rules": {
+    "platform": "docker",
+    "container_name": "drools-chase-life_insurance-underwriting-rules",
+    "docker_container_id": "aad012794deaa27a539da5aa92fc3ca54698b87e7604127afd0f7e55bf6ce368",
+    "endpoint": "http://drools-chase-life_insurance-underwriting-rules:8080",
+    "port": 8089,
+    "created_at": "2025-11-08T04:17:30.246304",
+    "status": "running"
+  },
+  "chase-life_insurance_debug-underwriting-rules": {
+    "platform": "docker",
+    "container_name": "drools-chase-life_insurance_debug-underwriting-rules",
+    "docker_container_id": "63bac6a52f08af107da64fb04197f0872d724e25f7b7b309d2a3cbc9baff564a",
+    "endpoint": "http://drools-chase-life_insurance_debug-underwriting-rules:8080",
+    "port": 8081,
+    "created_at": "2025-11-07T15:46:29.673089",
+    "status": "running"
+  },
+  "chase-life_insurance_fixed-underwriting-rules": {
+    "platform": "docker",
+    "container_name": "drools-chase-life_insurance_fixed-underwriting-rules",
+    "docker_container_id": "53cfa6b9b5c17c8e0509021c089b1c00cc1ad6fdc8d593ecb87eca0a101ff22b",
+    "endpoint": "http://drools-chase-life_insurance_fixed-underwriting-rules:8080",
+    "port": 8087,
+    "created_at": "2025-11-07T16:04:22.840248",
+    "status": "running"
+  },
+  "test-life_insurance_test-underwriting-rules": {
+    "platform": "docker",
+    "container_name": "drools-test-life_insurance_test-underwriting-rules",
+    "docker_container_id": "64ba66af45ecb7cb5f0277616526ed84da56f6e3f0b32ee7760a6ab663accdf3",
+    "endpoint": "http://drools-test-life_insurance_test-underwriting-rules:8080",
+    "port": 8088,
+    "created_at": "2025-11-07T20:48:23.849700",
+    "status": "running"
+  }
+}

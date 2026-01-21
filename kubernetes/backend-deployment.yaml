@@ -1,0 +1,106 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: underwriting-backend
+  namespace: underwriting
+  labels:
+    app: underwriting-backend
+    component: backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: underwriting-backend
+  template:
+    metadata:
+      labels:
+        app: underwriting-backend
+        component: backend
+    spec:
+      serviceAccountName: underwriting-backend-sa
+      containers:
+      - name: backend
+        image: your-registry/underwriting-backend:latest  # Update with your image
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9000
+          name: http
+        env:
+        - name: PYTHONUNBUFFERED
+          value: "1"
+        - name: DATADIR
+          value: "/data"
+        - name: UPLOAD_DIR
+          value: "/uploads"
+        - name: DROOLS_RULES_DIR
+          value: "/generated_rules"
+        - name: ORCHESTRATION_PLATFORM
+          value: "kubernetes"
+        - name: K8S_NAMESPACE
+          value: "underwriting"
+        - name: K8S_SERVICE_TYPE
+          value: "ClusterIP"
+        envFrom:
+        - secretRef:
+            name: underwriting-secrets  # Create this secret with AWS, LLM credentials
+        volumeMounts:
+        - name: data
+          mountPath: /data
+        - name: uploads
+          mountPath: /uploads
+        - name: generated-rules
+          mountPath: /generated_rules
+        - name: docker-sock
+          mountPath: /var/run/docker.sock
+          readOnly: false
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "2Gi"
+            cpu: "1000m"
+        livenessProbe:
+          httpGet:
+            path: /rule-agent/health
+            port: 9000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /rule-agent/health
+            port: 9000
+          initialDelaySeconds: 10
+          periodSeconds: 5
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: underwriting-data-pvc
+      - name: uploads
+        persistentVolumeClaim:
+          claimName: underwriting-uploads-pvc
+      - name: generated-rules
+        persistentVolumeClaim:
+          claimName: underwriting-rules-pvc
+      - name: docker-sock
+        hostPath:
+          path: /var/run/docker.sock
+          type: Socket
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: underwriting-backend-svc
+  namespace: underwriting
+  labels:
+    app: underwriting-backend
+spec:
+  type: LoadBalancer  # Use NodePort or ClusterIP + Ingress for production
+  selector:
+    app: underwriting-backend
+  ports:
+  - port: 9000
+    targetPort: 9000
+    protocol: TCP
+    name: http

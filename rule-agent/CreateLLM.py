@@ -17,6 +17,7 @@ import os
 from CreateLLMLocal import createLLMLocal
 from CreateLLMWatson import  createLLMWatson
 from CreateLLMBAM import  createLLMBAM
+from CreateLLMOpenAI import createLLMOpenAI
 
 def createLLM():
     llm_type = os.getenv("LLM_TYPE","LOCAL_OLLAMA")
@@ -29,6 +30,9 @@ def createLLM():
     elif llm_type == "WATSONX":
         print("Using LLM Service: IBM watsonx.ai")
         return createLLMWatson()
+    elif llm_type == "OPENAI":
+        print("Using LLM Service: OpenAI")
+        return createLLMOpenAI()
     else:
         print ("Env variable LLM_TYPE not defined.")
         return None

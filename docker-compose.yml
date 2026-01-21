@@ -1,50 +1,133 @@
-version: "3.8"
+# Streamlined Docker Compose - Underwriting AI (Backend Only)
+# Includes: Drools + Backend API (ODM optional - commented out)
+
 services:
-  odm:
-    image: ibmcom/odm
-    hostname: odm
-    container_name: odm
+  # PostgreSQL Database for rule container registry
+  postgres:
+    image: postgres:15-alpine
+    hostname: postgres
+    container_name: postgres
     environment:
-      - LICENSE=accept
-      - SAMPLE=true
+      - POSTGRES_DB=underwriting_db
+      - POSTGRES_USER=underwriting_user
+      - POSTGRES_PASSWORD=underwriting_pass
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./rule-agent/db/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: curl -k -f http://localhost:9060/res/login.jsf || exit 1
+      test: ["CMD-SHELL", "pg_isready -U underwriting_user -d underwriting_db"]
       interval: 5s
-      timeout: 10s
-      retries: 30
+      timeout: 5s
+      retries: 5
       start_period: 10s
     ports:
-      - 9060:9060
+      - 5432:5432
+    networks:
+      - underwriting-net
+
+  # Drools KIE Server for underwriting rules
+  drools:
+    image: quay.io/kiegroup/kie-server-showcase:latest
+    hostname: drools
+    container_name: drools
+    volumes:
+      - maven-repository:/opt/jboss/.m2/repository
+    environment:
+      - KIE_SERVER_ID=underwriting-kie-server
+      - KIE_SERVER_USER=kieserver
+      - KIE_SERVER_PWD=kieserver1!
+      - KIE_SERVER_LOCATION=http://drools:8080/kie-server/services/rest/server
+      - KIE_SERVER_CONTROLLER_USER=kieserver
+      - KIE_SERVER_CONTROLLER_PWD=kieserver1!
+    healthcheck:
+      test: curl -f -u kieserver:kieserver1! http://localhost:8080/kie-server/services/rest/server || exit 1
+      interval: 10s
+      timeout: 10s
+      retries: 30
+      start_period: 30s
+    ports:
+      - 8080:8080
+    networks:
+      - underwriting-net
+
+  # Backend service with underwriting workflow
   backend:
     image: backend
     hostname: backend
+    container_name: backend
     volumes:
       - ./data:/data
+      - ./uploads:/uploads
+      - ./generated_rules:/generated_rules
+      - rule-cache:/data/rule_cache  # Persistent cache for deterministic rule generation
+      - maven-repository:/opt/jboss/.m2/repository
+      - /var/run/docker.sock:/var/run/docker.sock  # Docker-in-Docker for container orchestration
     build: rule-agent
     depends_on:
-       odm:
-         condition: service_healthy
+      postgres:
+        condition: service_healthy
+      drools:
+        condition: service_healthy
     environment:
-      - ODM_SERVER_URL=http://odm:9060
-      - ODM_USERNAME=odmAdmin
-      - ODM_PASSWORD=odmAdmin
+      # Python settings
       - PYTHONUNBUFFERED=1
+
+      # File paths
       - DATADIR=/data
-    env_file: 
-      - "llm.env"
+      - UPLOAD_DIR=/uploads
+      - DROOLS_RULES_DIR=/generated_rules
+
+      # Deterministic rule generation cache
+      - RULE_CACHE_DIR=/data/rule_cache
+
+      # Policy completeness - TOC-based extraction
+      - USE_TOC_EXTRACTION=true  # Systematic section-by-section analysis (recommended)
+
+      # Container orchestration (separate containers per rule set)
+      - USE_CONTAINER_ORCHESTRATOR=true  # Enabled for development and production
+      - ORCHESTRATION_PLATFORM=docker
+      - DOCKER_NETWORK=underwriting-net
+
+      # PostgreSQL Database Configuration
+      - DATABASE_URL=postgresql://underwriting_user:underwriting_pass@postgres:5432/underwriting_db
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=underwriting_db
+      - DB_USER=underwriting_user
+      - DB_PASSWORD=underwriting_pass
+    env_file:
+      - "llm.env"  # All Drools, AWS, and LLM config loaded from here
     ports:
       - 9000:9000
-    extra_hosts:   
-      - "host.containers.internal:host-gateway"
-# If you are using Podman, comment out the line above and uncomment the following line with your IP address:
-#      - "host.containers.internal:${HOST_IP_ADDRESS}"
-  frontend:
-    image: chatbot-frontend
-    build: 
-      context: chatbot-frontend
-      args:
-      - API_URL=http://localhost:9000
-    depends_on:
-      - backend
-    ports:
-      - 8080:80
+    networks:
+      - underwriting-net
+
+  # ODM Decision Server (OPTIONAL - Uncomment if needed)
+  # odm:
+  #   image: ibmcom/odm
+  #   hostname: odm
+  #   container_name: odm
+  #   environment:
+  #     - LICENSE=accept
+  #     - SAMPLE=true
+  #   healthcheck:
+  #     test: curl -k -f http://localhost:9060/res/login.jsf || exit 1
+  #     interval: 5s
+  #     timeout: 10s
+  #     retries: 30
+  #     start_period: 10s
+  #   ports:
+  #     - 9060:9060
+  #   networks:
+  #     - underwriting-net
+
+networks:
+  underwriting-net:
+    driver: bridge
+
+volumes:
+  uploads:
+  generated_rules:
+  maven-repository:
+  rule-cache:  # Persistent cache for deterministic rule generation
+  postgres-data:  # PostgreSQL persistent storage

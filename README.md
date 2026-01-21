@@ -4,7 +4,7 @@ This project demonstrates the integration of Large Language Models (LLMs) with a
 
 For an in-depth understanding, refer to [this presentation](<doc/Rule-based LLMs Presentation.pptx>) and [this video](<doc/Rule-based LLMs Video.mp4>).
 
-This solution features a chatbot powered by an LLM that interacts with rule-based Decision Services. 
+This solution features a chatbot powered by an LLM that interacts with rule-based Decision Services.
 
 When a user's question can be resolved through an existing Decision Service, the LLM provides the necessary parameters to call the service and uses the result to answer the query.
 
@@ -21,9 +21,29 @@ We are using [IBM Operational Decision Manager](https://www.ibm.com/products/ope
 
 See dedicated READMEs in all sub-projects
 
+# Running the Application
+
+Follow these steps to run the application:
+
+1. **Put the `llm.env` file in the root folder**
+
+2. **Run the migration files (excluding rollback migration files)**
+   ```bash
+   psql -U your_username -d your_database -f db/migrations/001_create_extracted_rules_table.sql
+   psql -U your_username -d your_database -f db/migrations/002_create_policy_extraction_queries_table.sql
+   psql -U your_username -d your_database -f db/migrations/003_create_hierarchical_rules_table.sql
+   ```
+
+3. **Build and run with Docker**
+   ```bash
+   docker-compose up -d --build
+   ```
+
+---
+
 # Running the Demo Application
 
-A demo application (HR Service) showcases the system’s capabilities. Follow the instructions below to run the demo and explore the integration.
+A demo application (HR Service) showcases the system's capabilities. Follow the instructions below to run the demo and explore the integration.
 
 <img src="doc/demo_hr.gif"  />
 
@@ -31,7 +51,7 @@ A demo application (HR Service) showcases the system’s capabilities. Follow th
 
 ## Prerequisites
 
-Ensure your system meets the requirements and all dependencies are installed. 
+Ensure your system meets the requirements and all dependencies are installed.
 
 This demo has been successfully tested on MacOS M1 and Windows 11 using Rancher Desktop. We strongly recommend using these configurations.
 
@@ -62,20 +82,20 @@ You can run this demonstration using two different LLM configurations and depend
 
 ### Launch the docker topology
 
-1. **Open a New Terminal**  
-   - On **Windows**: Open a Command Prompt and run the `wsl` command to start the Windows Subsystem for Linux (if applicable).  
-   - On **macOS/Linux**: Open a terminal.  
+1. **Open a New Terminal**
+   - On **Windows**: Open a Command Prompt and run the `wsl` command to start the Windows Subsystem for Linux (if applicable).
+   - On **macOS/Linux**: Open a terminal.
 
-2. **Log In to Docker**  
-   - To access Docker images, ensure you are logged in to Docker. Run the following command in your terminal:  
+2. **Log In to Docker**
+   - To access Docker images, ensure you are logged in to Docker. Run the following command in your terminal:
      ```bash
      docker login
-     ```  
-   - If you do not have a Docker account, you will need to [create one here](https://hub.docker.com/signup).  
+     ```
+   - If you do not have a Docker account, you will need to [create one here](https://hub.docker.com/signup).
 
 > Why is this necessary?
 >   Docker enforces download rate limits for unauthenticated users. Logging in ensures you can pull images without interruptions caused by these limits, which is especially important for this demonstration.
-   
+
 3. **Build the docker demonstration**
 ```shell
 docker-compose build
@@ -92,14 +112,14 @@ Wait
 5. Wait a few minutes until you see the message `` * Running on all addresses (0.0.0.0)```
 6. Now that the demo is set up, you're ready to use it. For further instructions on how to interact with the demo, please refer to the next step [Usage Guide](#using-the-chatbot-ui).
 
-> Notes: 
+> Notes:
 > If you are already running ODM somewhere, you need to set-up the following environment variables:
 >```sh
 > export ODM_SERVER_URL=<ODM Runtime URL>
 > export ODM_USERNAME=<ODM user, default odmAdmin>
 > export ODM_PASSWORD=<ODM user password, default odmAdmin>
 > ```
-> And change the docker-compose.yml file accordingly. 
+> And change the docker-compose.yml file accordingly.
 
 
 > If you want to run this demonstration with ADS instead of Operation Decision Manager see this [documentation](README_ADS.md)
@@ -108,9 +128,9 @@ Wait
 
 ### Demo Walkthrough: Chatbot and Rule-based Decision Services
 
-Once the Docker setup is complete, access the chatbot web application at [http://localhost:8080](http://localhost:8080). 
+Once the Docker setup is complete, access the chatbot web application at [http://localhost:8080](http://localhost:8080).
 
-In this chatbot, you can ask questions that will be answered by combining the capabilities of the underlying LLM and the rule-based decision services. 
+In this chatbot, you can ask questions that will be answered by combining the capabilities of the underlying LLM and the rule-based decision services.
 
 The chatbot can answer questions in two modes:
 - **LLM-only**: The answer is generated purely by the LLM, possibly augmented with policy documents via Retrieval-Augmented Generation (RAG).
@@ -142,19 +162,19 @@ This answer is based on the business policies encoded within the decision servic
 
 
 
-## Using the application 
+## Using the application
 
-An HR Service example is pre-package with the application. The source for this example is provided in the ```decision_services``` directory. You can find here an ADS implementation (```decision_services/hr_decision_service/HRDecisionService.zip```) and an ODM implementation (the XOM and the RuleProject). 
+An HR Service example is pre-package with the application. The source for this example is provided in the ```decision_services``` directory. You can find here an ADS implementation (```decision_services/hr_decision_service/HRDecisionService.zip```) and an ODM implementation (the XOM and the RuleProject).
 
-By default, the corresponding Ruleapp is deployed to ODM is linked to the application with the tool descriptor ```data/hrservice/tool_descriptors/hrservice.GetNumberOfVacationPerYearInput.json```. 
+By default, the corresponding Ruleapp is deployed to ODM is linked to the application with the tool descriptor ```data/hrservice/tool_descriptors/hrservice.GetNumberOfVacationPerYearInput.json```.
 
 If you want to use the ADS version, you need to have access to an ADS service, import the ```decision_services/hr_decision_service/HRDecisionService.zip``` and deploy the decision service. You also need to set-up the backend application to use ADS: see [Setup ADS](#setup-ads) section in this Readme.
 
-You then need to rename ```data/hrservice/tool_descriptors/hrservice.GetNumberOfVacationPerYearInput.json.ads``` to ```data/hrservice/tool_descriptors/hrservice.GetNumberOfVacationPerYearInput.json``` so that the application can use it.   
+You then need to rename ```data/hrservice/tool_descriptors/hrservice.GetNumberOfVacationPerYearInput.json.ads``` to ```data/hrservice/tool_descriptors/hrservice.GetNumberOfVacationPerYearInput.json``` so that the application can use it.
 
 # Extending the demonstration with a Custom Use-Case
 
-Follow this [instructions](README_EXTEND.md) to add a new use-case to the application. 
+Follow this [instructions](README_EXTEND.md) to add a new use-case to the application.
 
 
 # FAQ
@@ -167,10 +187,10 @@ docker system prune
    * If docker-compose is not found, try:
 
 ```sh
-docker compose up 
+docker compose up
 ```
 # License
 The files in this repository are licensed under the [Apache License 2.0](LICENSE).
 
 # Copyright
-© Copyright IBM Corporation 2024.
+� Copyright IBM Corporation 2024.

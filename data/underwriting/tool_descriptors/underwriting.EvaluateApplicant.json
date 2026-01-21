@@ -1,0 +1,29 @@
+{
+    "engine": "drools",
+    "toolName": "EvaluateUnderwritingApplicant",
+    "toolDescription": "Evaluate an insurance applicant based on underwriting rules. Use this tool to determine if an applicant is approved for coverage and at what premium rate.",
+    "toolPath": "/kie-server/services/rest/server/containers/underwriting-rules/ksession/ksession-rules",
+    "args": [
+        {
+            "argName": "applicantAge",
+            "argType": "number",
+            "argDescription": "Age of the insurance applicant in years"
+        },
+        {
+            "argName": "coverageAmount",
+            "argType": "number",
+            "argDescription": "Requested coverage amount in dollars"
+        },
+        {
+            "argName": "applicantName",
+            "argType": "str",
+            "argDescription": "Name of the applicant"
+        },
+        {
+            "argName": "healthStatus",
+            "argType": "str",
+            "argDescription": "Health status of applicant (excellent, good, fair, poor)"
+        }
+    ],
+    "output": "approved"
+}

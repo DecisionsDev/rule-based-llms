@@ -1,0 +1,204 @@
+LIFE INSURANCE POLICY DOCUMENT
+Chase Insurance Company
+Policy Number: LI-2024-001
+Effective Date: January 1, 2024
+
+ARTICLE I: COVERAGE DETAILS
+
+Section 1.1 Coverage Limits
+The maximum coverage amount available under this policy is One Million Dollars ($1,000,000). The minimum coverage amount is Fifty Thousand Dollars ($50,000). Actual coverage amounts will be determined based on applicant qualifications as outlined in this document.
+
+Section 1.2 Underwriting Evaluation Process
+This policy employs a comprehensive underwriting system wherein applications are evaluated through multiple sequential stages. Each stage builds upon the results of previous evaluations to determine eligibility, coverage limits, and premium rates.
+
+ARTICLE II: PRIMARY ELIGIBILITY REQUIREMENTS
+
+Section 2.1 Age Requirements
+Applicants must be at least eighteen (18) years of age and no older than sixty-five (65) years of age at the time of application. Applications from individuals outside this age range will be automatically rejected without further consideration.
+
+Section 2.2 Credit Score Requirements
+All applicants must possess a minimum credit score of 600. Applications with credit scores below this threshold will be automatically rejected. Credit scores are used to establish qualification tiers as follows: Excellent Credit (Tier A) for scores of 750 or above, Good Credit (Tier B) for scores between 700 and 749, and Fair Credit (Tier C) for scores between 600 and 699. These tier designations affect subsequent income requirements, coverage limitations, and premium calculations.
+
+Section 2.3 Health Status Declaration
+All applicants must declare their health status as excellent, good, fair, or poor. Applications declaring poor health status will be automatically rejected. Applicants with fair health status are subject to additional income requirements and coverage restrictions as detailed in Article III. Applicants with good or excellent health proceed through standard evaluation processes.
+
+Section 2.4 Criminal Background Verification
+Applications from individuals with a DUI conviction within the past five (5) years will be automatically rejected. Applications from individuals with a felony conviction within the past ten (10) years will be automatically rejected.
+
+ARTICLE III: INCOME AND FINANCIAL CAPACITY REQUIREMENTS
+
+Section 3.1 Income Requirements Based on Credit Tier and Health Status
+Minimum income requirements and maximum coverage multipliers are established based on the combination of credit tier and health status.
+
+For Tier A (Excellent Credit, 750 or above): Applicants with excellent health must have minimum annual income of Twenty Thousand Dollars ($20,000) and may obtain coverage up to twelve (12) times annual income. Applicants with good health must have minimum annual income of Twenty-Five Thousand Dollars ($25,000) and may obtain coverage up to ten (10) times annual income. Applicants with fair health must have minimum annual income of Thirty-Five Thousand Dollars ($35,000) and may obtain coverage up to eight (8) times annual income.
+
+For Tier B (Good Credit, 700-749): Applicants with excellent health must have minimum annual income of Thirty Thousand Dollars ($30,000) and may obtain coverage up to ten (10) times annual income. Applicants with good health must have minimum annual income of Thirty-Five Thousand Dollars ($35,000) and may obtain coverage up to nine (9) times annual income. Applicants with fair health must have minimum annual income of Forty-Five Thousand Dollars ($45,000) and may obtain coverage up to seven (7) times annual income.
+
+For Tier C (Fair Credit, 600-699): All applicants regardless of health category must have minimum annual income of Fifty Thousand Dollars ($50,000) and may obtain coverage up to six (6) times annual income. Special restriction applies: Applicants with Tier C credit combined with fair health status will be automatically rejected. Only Tier C applicants with good or excellent health are eligible for consideration.
+
+Applications with income below the applicable minimum threshold will be automatically rejected. Coverage requests exceeding the applicable income multiplier will be automatically rejected.
+
+Section 3.2 Debt-to-Income Ratio Requirements
+Maximum allowable debt-to-income (DTI) ratios vary based on applicant age and credit tier.
+
+For applicants aged 18 through 35 years: Tier A applicants may have DTI up to forty-five percent (45%). Tier B applicants may have DTI up to forty percent (40%). Tier C applicants may have DTI up to thirty-five percent (35%).
+
+For applicants aged 36 through 50 years: Tier A applicants may have DTI up to forty percent (40%). Tier B applicants may have DTI up to thirty-five percent (35%). Tier C applicants may have DTI up to thirty percent (30%).
+
+For applicants aged 51 through 65 years: Tier A applicants may have DTI up to thirty-five percent (35%). Tier B applicants may have DTI up to thirty percent (30%). Tier C applicants may have DTI up to twenty-five percent (25%).
+
+Applications exceeding the applicable DTI limit will be automatically rejected.
+
+Section 3.3 Asset Verification Requirements
+For coverage amounts exceeding Three Hundred Thousand Dollars ($300,000), applicants must possess liquid assets equivalent to at least two (2) years of projected annual premiums. Premium estimates for this purpose are calculated as Coverage Amount divided by 1,000, multiplied by an Age Factor of 1.0 for ages 18-35, 1.5 for ages 36-50, or 2.0 for ages 51-65.
+
+For coverage amounts exceeding Five Hundred Thousand Dollars ($500,000), applicants must possess total assets (liquid plus property) equivalent to at least three (3) times annual income. Required documentation includes bank statements, investment account statements, and property deeds.
+
+Applications with insufficient assets for the requested coverage tier will require manual underwriting review.
+
+ARTICLE IV: LIFESTYLE AND OCCUPATIONAL RISK FACTORS
+
+Section 4.1 Smoking Status Requirements
+Smoking status affects both premium multipliers and maximum allowable coverage based on age and health status combinations.
+
+For smokers aged 40 years or younger with excellent health: A premium smoking multiplier of 1.8 times base rate applies. Maximum coverage is limited to Seven Hundred Fifty Thousand Dollars ($750,000).
+
+For smokers aged 40 years or younger with good health: A premium smoking multiplier of 2.0 times base rate applies. Maximum coverage is limited to Five Hundred Thousand Dollars ($500,000).
+
+For smokers aged 40 years or younger with fair health: All applications require manual underwriting review.
+
+For smokers aged 41 through 50 years: A premium smoking multiplier of 2.2 times base rate applies. Maximum coverage is limited to Four Hundred Thousand Dollars ($400,000). Physician certification is required.
+
+For smokers over age 50: A premium smoking multiplier of 2.5 times base rate applies. Maximum coverage is limited to Two Hundred Fifty Thousand Dollars ($250,000). Cardiac stress test is required. Special rejection rule: Smokers over age 55 with fair health status will be automatically rejected.
+
+Section 4.2 Hazardous Occupation Requirements
+Hazardous occupations include but are not limited to: pilots, miners, offshore workers, law enforcement officers, firefighters, construction workers at heights, commercial fishermen, and similar high-risk professions.
+
+For hazardous occupations aged 45 years or younger with coverage up to Three Hundred Thousand Dollars ($300,000): A premium occupation multiplier of 1.4 times base rate applies. Purchase of additional accidental death rider is required.
+
+For hazardous occupations aged 45 years or younger with coverage exceeding Three Hundred Thousand Dollars ($300,000): A premium occupation multiplier of 1.6 times base rate applies. Purchase of additional accidental death rider and annual safety certification are required.
+
+For hazardous occupations over age 45: All applications require manual underwriting review regardless of coverage amount.
+
+ARTICLE V: RISK CATEGORY CLASSIFICATION
+
+Section 5.1 Risk Point Calculation System
+Applications are classified into risk categories using a point-based system that evaluates multiple factors. The total risk points determine the risk category and approval pathway.
+
+Risk points are assigned as follows: Credit Score Tier: Tier A (750 or above) receives zero (0) points, Tier B (700-749) receives two (2) points, Tier C (600-699) receives five (5) points. Age Bracket: ages 18-30 receive zero (0) points, ages 31-40 receive one (1) point, ages 41-50 receive three (3) points, ages 51-60 receive five (5) points, ages 61-65 receive eight (8) points. Health Status: excellent health receives zero (0) points, good health receives two (2) points, fair health receives six (6) points. Smoking Status: non-smokers receive zero (0) points, smokers receive five (5) points. Debt-to-Income Ratio: DTI below 20% receives zero (0) points, DTI 20-30% receives one (1) point, DTI 30-40% receives three (3) points, DTI above 40% receives five (5) points. Occupation Type: standard occupations receive zero (0) points, hazardous occupations receive four (4) points.
+
+Section 5.2 Risk Category Assignments
+Based on total risk points calculated above, applicants are assigned to one of five risk categories.
+
+Category 1 (Low Risk): Zero through five (0-5) total points. Approval pathway is automatic approval for qualifying coverage tiers. Premium adjustment is standard rates.
+
+Category 2 (Moderate Risk): Six through ten (6-10) total points. Approval pathway is conditional approval with additional requirements. Premium adjustment is 1.3 times base rate multiplier.
+
+Category 3 (Elevated Risk): Eleven through fifteen (11-15) total points. Approval pathway requires manual underwriting review. Premium adjustment is 1.7 times base rate multiplier.
+
+Category 4 (High Risk): Sixteen through twenty (16-20) total points. Approval pathway requires senior underwriter review. Premium adjustment is 2.2 times base rate multiplier. Maximum coverage cap of Two Hundred Fifty Thousand Dollars ($250,000) applies regardless of income.
+
+Category 5 (Extreme Risk): Twenty-one (21) or more total points. Applications are automatically rejected.
+
+ARTICLE VI: COVERAGE TIERS AND APPROVAL RULES
+
+Section 6.1 Coverage Tiers for Category 1 (Low Risk) Applicants
+Tier 1 Coverage (Fifty Thousand to One Hundred Fifty Thousand Dollars, $50,000-$150,000): Automatic approval with standard documentation required.
+
+Tier 2 Coverage (One Hundred Fifty Thousand One to Four Hundred Thousand Dollars, $150,001-$400,000): Automatic approval with standard documentation and medical history review.
+
+Tier 3 Coverage (Four Hundred Thousand One to Seven Hundred Fifty Thousand Dollars, $400,001-$750,000): Automatic approval with complete medical examination required.
+
+Tier 4 Coverage (Seven Hundred Fifty Thousand One to One Million Dollars, $750,001-$1,000,000): Fast-track manual review process (3 business days). Medical examination and financial documentation required.
+
+Section 6.2 Coverage Tiers for Category 2 (Moderate Risk) Applicants
+Tier 1 Coverage (Fifty Thousand to One Hundred Fifty Thousand Dollars, $50,000-$150,000): Automatic approval with additional premium adjustment of 1.2 times multiplier on base premium.
+
+Tier 2 Coverage (One Hundred Fifty Thousand One to Three Hundred Thousand Dollars, $150,001-$300,000): Conditional approval. Medical examination and physician health letter required.
+
+Tier 3 Coverage (Three Hundred Thousand One to Five Hundred Thousand Dollars, $300,001-$500,000): Manual review required.
+
+Tier 4 Coverage (Five Hundred Thousand One Dollars and above, $500,001+): Not available for Category 2 risk applicants.
+
+Section 6.3 Coverage Tiers for Category 3 (Elevated Risk) Applicants
+Tier 1 Coverage (Fifty Thousand to One Hundred Thousand Dollars, $50,000-$100,000): Conditional approval with additional premium adjustment of 1.5 times multiplier on base premium. Complete medical examination, EKG, and blood work required.
+
+Tier 2 Coverage (One Hundred Thousand One Dollars and above, $100,001+): Manual review required for all coverage amounts in this tier.
+
+Section 6.4 Coverage for Category 4 (High Risk) Applicants
+All Coverage Amounts: Senior underwriter review required. Maximum coverage limit of Two Hundred Fifty Thousand Dollars ($250,000) applies as a hard cap. Minimum premium adjustment of 2.0 times base rate.
+
+ARTICLE VII: PREMIUM CALCULATION
+
+Section 7.1 Base Premium Determination
+Annual base premium is calculated using the following formula: Coverage Amount divided by 1,000, multiplied by Age Band Monthly Rate, multiplied by 12 months, multiplied by Risk Category Rate.
+
+Age Band Rates per One Thousand Dollars ($1,000) of coverage per month are as follows: Ages 18-25: sixty cents ($0.60), Ages 26-35: seventy-five cents ($0.75), Ages 36-45: one dollar twenty cents ($1.20), Ages 46-55: two dollars ($2.00), Ages 56-65: three dollars fifty cents ($3.50).
+
+Risk Category Rate Multipliers are: Category 1 (Low Risk): 1.0 times, Category 2 (Moderate Risk): 1.3 times, Category 3 (Elevated Risk): 1.7 times, Category 4 (High Risk): 2.2 times.
+
+Section 7.2 Premium Adjustment Factors Applied in Sequence
+After base premium calculation, the following adjustment factors are applied in the specified sequence, with each multiplier applied to the result of the previous calculation.
+
+Step 1 - Health Status Adjustment: Excellent health: 0.85 times (15% discount), Good health: 1.0 times (no adjustment), Fair health: 1.5 times (50% surcharge).
+
+Step 2 - Credit Score Adjustment: Tier A (750 or above): 0.92 times (8% discount), Tier B (700-749): 1.0 times (no adjustment), Tier C (600-699): 1.25 times (25% surcharge).
+
+Step 3 - Smoking Status Adjustment: Non-smokers: 1.0 times (no adjustment). Smokers: Use applicable smoking risk factor from Article IV, Section 4.1, ranging from 1.8 to 2.5 times depending on age and health status.
+
+Step 4 - Occupation Adjustment: Standard occupations: 1.0 times (no adjustment). Hazardous occupations: Use applicable hazard risk factor from Article IV, Section 4.2, ranging from 1.4 to 1.6 times depending on age and coverage amount.
+
+Step 5 - Debt-to-Income Adjustment: DTI below 20%: 0.95 times (5% discount for low debt), DTI 20-30%: 1.0 times (no adjustment), DTI 30-40%: 1.1 times (10% surcharge), DTI above 40%: 1.2 times (20% surcharge).
+
+Step 6 - Coverage Tier Adjustment: Tier 1: 1.0 times (no adjustment), Tier 2: 1.05 times (5% administrative fee), Tier 3: 1.15 times (15% underwriting fee), Tier 4: 1.25 times (25% enhanced review fee).
+
+Final Annual Premium equals Base Premium multiplied by Step 1, multiplied by Step 2, multiplied by Step 3, multiplied by Step 4, multiplied by Step 5, multiplied by Step 6.
+
+Section 7.3 Payment Frequency Options
+Annual payment: 8% discount applied to final annual premium. Semi-annual payment: 4% discount applied to final annual premium, divided into two (2) payments. Quarterly payment: No discount, divided into four (4) payments. Monthly payment: 5% surcharge applied to final annual premium, divided into twelve (12) payments.
+
+Section 7.4 Premium Cap Protections
+To ensure premiums remain reasonable, the following caps apply.
+
+For Category 2 (Moderate Risk) applicants over age 50: Maximum annual premium is the lesser of calculated premium or 8% of coverage amount.
+
+For Category 3 (Elevated Risk) applicants over age 45: Maximum annual premium is the lesser of calculated premium or 10% of coverage amount.
+
+For Category 4 (High Risk) applicants of any age: Maximum annual premium is the lesser of calculated premium or 12% of coverage amount.
+
+ARTICLE VIII: FINAL APPROVAL DECISION CRITERIA
+
+Section 8.1 Automatic Approval
+Applications receive automatic approval when all of the following conditions are met: Passed all primary eligibility requirements (age, credit, health, background); Passed all financial capacity requirements (income, DTI, assets); Risk Category 1 (Low Risk), or Risk Category 2 with Tier 1 coverage; Requested coverage within maximum allowable limits based on income and risk factors; Requested coverage matches assigned coverage tier; No additional documentation pending.
+
+Section 8.2 Conditional Approval
+Applications receive conditional approval when: Passed all mandatory primary and financial requirements; Risk Category 2 with Tier 2 coverage, or Risk Category 3 with Tier 1 coverage; Additional requirements must be completed within specified timeframes: Medical examination to be scheduled within thirty (30) days, Financial documentation to be submitted within fifteen (15) days, Physician certification for specific health conditions as applicable.
+
+Section 8.3 Manual Underwriting Review
+Applications requiring manual review (5-10 business days) include: Risk Category 3 (Elevated Risk); Risk Category 4 (High Risk); Coverage amount over Five Hundred Thousand Dollars ($500,000) for any risk category; Unusual occupation or health circumstances; Calculated premium exceeds 10% of requested coverage amount.
+
+Section 8.4 Senior Underwriter Review
+Applications requiring senior underwriter review (10-15 business days) include: Risk Category 4 (High Risk) with any elevated factors; Coverage amount over Seven Hundred Fifty Thousand Dollars ($750,000) with additional risk factors; Applicant age over 60 with multiple risk factors present; Complex financial situations requiring expert assessment.
+
+Section 8.5 Automatic Rejection
+Applications are automatically rejected if any of the following occur: Failed primary eligibility requirements (age, minimum credit score, poor health, criminal background); Failed financial capacity requirements (insufficient income, excessive DTI); Risk Category 5 (Extreme Risk) with 21 or more risk points; Requested coverage exceeds maximum allowable coverage and cannot be adjusted; Fraud indicators detected during verification process; Incomplete application after sixty (60) days.
+
+ARTICLE IX: ADDITIONAL POLICY TERMS
+
+Section 9.1 Exclusions
+The following are excluded from coverage: Death resulting from illegal activities; Suicide within first two (2) years of policy; Death during participation in hazardous activities without disclosure; Pre-existing conditions not disclosed during application; Death in war zones or during military combat operations.
+
+Section 9.2 Waiting Periods
+Standard Waiting Period: Thirty (30) days from policy issue date. Accidental Death: No waiting period. Pre-existing Conditions: Twelve (12) month waiting period if applicable.
+
+Section 9.3 Beneficiary Requirements
+Primary beneficiary must be designated (mandatory requirement). Contingent beneficiary recommended. Beneficiaries can be changed at any time. Estate cannot be primary beneficiary if living relatives exist.
+
+Section 9.4 Payment Terms
+Premium payment options are described in Article VII, Section 7.3. Grace Period: Thirty-one (31) days from due date. Late Payment Fee: Fifty Dollars ($50) per missed payment. Policy Lapse: Occurs after ninety (90) days of non-payment.
+
+Section 9.5 Policy Renewal
+Policy is guaranteed renewable until age seventy-five (75). Premium rates may adjust based on age bands. No medical re-examination required for renewal. Risk category reassessment every five (5) years for policies over Five Hundred Thousand Dollars ($500,000).
+
+Section 9.6 Customer Service
+For questions or claims contact: Phone: 1-800-LIFE-INS, Email: claims@chaseinsurance.com, Website: www.chaseinsurance.com

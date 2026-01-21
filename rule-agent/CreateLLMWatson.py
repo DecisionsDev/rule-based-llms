@@ -33,9 +33,12 @@ def createLLMWatson():
     api_url = os.getenv("WATSONX_URL")
     project_id = os.getenv("WATSONX_PROJECT_ID")
 
+    # Deterministic generation parameters
     parameters = {
-        GenTextParamsMetaNames.DECODING_METHOD: "greedy",
-        GenTextParamsMetaNames.MAX_NEW_TOKENS: 400
+        GenTextParamsMetaNames.DECODING_METHOD: "greedy",  # Greedy decoding (deterministic)
+        GenTextParamsMetaNames.MAX_NEW_TOKENS: 4000,       # Increased for full rule generation
+        GenTextParamsMetaNames.TEMPERATURE: 0.0,           # No randomness
+        GenTextParamsMetaNames.RANDOM_SEED: 42,            # Fixed seed for reproducibility
     }
 
     llm = ChatWatsonx(

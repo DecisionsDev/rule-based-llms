@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Underwriting Workflow Diagram</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        #diagram {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .download-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        .download-btn:hover {
+            background-color: #45a049;
+        }
+        .instructions {
+            background-color: #e3f2fd;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196F3;
+        }
+        .legend {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border-left: 4px solid #9C27B0;
+        }
+        .legend h3 {
+            margin-top: 0;
+            color: #9C27B0;
+        }
+        .legend ul {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Underwriting Rule Generation Workflow (TOC-Based + Textract)</h1>
+
+        <div class="legend">
+            <h3>Key Improvements</h3>
+            <ul>
+                <li><strong>TOC-Based Extraction:</strong> Systematic section-by-section analysis ensures complete policy coverage</li>
+                <li><strong>Section Boundary Detection:</strong> Uses 3 strategies (number+title, number-only, title-only) to accurately extract section content</li>
+                <li><strong>30-char Threshold:</strong> Filters out pure headers to prevent LLM hallucination</li>
+                <li><strong>Anti-Hallucination Prompts:</strong> Explicit instructions to only extract policies from actual content</li>
+                <li><strong>Batch Textract Queries:</strong> 30 queries per batch due to AWS limits</li>
+                <li><strong>Two-Pass Textract Parsing:</strong> Maps QUERY blocks to QUERY_RESULT blocks via Relationships</li>
+                <li><strong>Deterministic Caching:</strong> Temperature=0 + content hash ensures identical PDFs generate identical rules</li>
+                <li><strong>Container-Per-Ruleset:</strong> Separate Docker containers for each rule set (optional, enabled by default)</li>
+            </ul>
+        </div>
+
+        <div class="instructions">
+            <strong>To save as PNG:</strong>
+            <ol>
+                <li>Wait for the diagram to fully render below</li>
+                <li>Right-click on the diagram</li>
+                <li>Select "Save image as..." or "Copy image"</li>
+                <li>Save with filename: <code>underwriting_workflow_diagram.png</code></li>
+            </ol>
+            <p><strong>Alternative:</strong> Use browser screenshot tools (e.g., Firefox's built-in screenshot tool) to capture the diagram area.</p>
+        </div>
+
+        <div id="diagram">
+            <pre class="mermaid">
+flowchart TD
+    Start([User Request]) --> API[POST /process_policy_from_s3]
+
+    API --> Input{Input Parameters}
+    Input -->|Required| S3URL[S3 URL to Policy PDF]
+    Input -->|Required| PolicyType[Policy Type: life_insurance/loan/auto]
+    Input -->|Required| BankID[Bank ID: chase/bofa/wells-fargo]
+    Input -->|Optional| UseCache[use_cache: true default]
+
+    S3URL --> Step0[Step 0: Parse S3 URL & Check Cache]
+    PolicyType --> Step0
+    BankID --> Step0
+    UseCache --> Step0
+
+    Step0 --> CacheCheck{Rule Cache<br/>Exists?}
+    CacheCheck -->|Yes| CacheHit[Return Cached Rules<br/>Skip Steps 1-4]
+    CacheCheck -->|No| AutoGen[Auto-generate Container ID:<br/>bank_id-policy_type-underwriting-rules]
+
+    AutoGen --> Step1[Step 1: Extract Text from PDF]
+    Step1 --> ReadS3[Read PDF from S3 into Memory<br/>No Local Download]
+    ReadS3 --> PyPDF2[PyPDF2: Extract Full Text]
+
+    PyPDF2 --> Step2[Step 2: TOC-Based Policy Extraction]
+    Step2 --> ExtractTOC[LLM Extracts Table of Contents<br/>Pattern-based if no explicit TOC]
+    ExtractTOC --> TOCResult[TOC Structure: 19 sections<br/>with numbers & titles]
+
+    TOCResult --> SectionLoop[For Each Section in TOC]
+    SectionLoop --> FindBoundary[Extract Section Content:<br/>3 Strategies for Boundaries]
+    FindBoundary --> Strategy1[1. Number + Title in same line]
+    FindBoundary --> Strategy2[2. Line starts with section number]
+    FindBoundary --> Strategy3[3. Title match only fallback]
+
+    Strategy1 --> ContentCheck{Section Content<br/> >= 30 chars?}
+    Strategy2 --> ContentCheck
+    Strategy3 --> ContentCheck
+
+    ContentCheck -->|No| SkipSection[Skip Section<br/>Header-only, no content]
+    ContentCheck -->|Yes| AnalyzeSection[LLM Analyzes Section Content]
+
+    AnalyzeSection --> AntiHallucinate[Anti-Hallucination Rules:<br/>- Only extract explicit policies<br/>- Return empty if just header<br/>- No assumptions/inferences]
+
+    AntiHallucinate --> ExtractPolicies[Extract Policies from Section:<br/>- Policy statement<br/>- Policy type<br/>- Numeric threshold<br/>- Severity]
+
+    ExtractPolicies --> GenerateQuery[Generate Textract Query<br/>for Each Policy]
+
+    GenerateQuery --> MoreSections{More<br/>Sections?}
+    MoreSections -->|Yes| SectionLoop
+    MoreSections -->|No| AllPolicies[All Policies Collected:<br/>~276 policies extracted]
+
+    SkipSection --> MoreSections
+
+    AllPolicies --> AllQueries[All Queries Generated:<br/>~119 queries total]
+
+    AllQueries --> Step3[Step 3: AWS Textract Extraction]
+    Step3 --> BatchQueries[Split into Batches<br/>30 queries per batch<br/>AWS Textract limit]
+
+    BatchQueries --> BatchLoop[For Each Batch]
+    BatchLoop --> StartTextract[Start Textract Job<br/>with S3 PDF URL]
+    StartTextract --> WaitComplete[Wait for Job Completion]
+    WaitComplete --> ParseResponse[Parse Textract Response]
+
+    ParseResponse --> TwoPassParse[Two-Pass Parsing:]
+    TwoPassParse --> Pass1[Pass 1: Build ID Mapping<br/>QUERY.Relationships.ANSWER.Ids -> Alias]
+    Pass1 --> Pass2[Pass 2: Extract Answers<br/>QUERY_RESULT.Id -> Alias -> Answer]
+
+    Pass2 --> DebugLog[Debug Output:<br/>- Result ID to alias mapping: X entries<br/>- Queries extracted: Y/Z]
+
+    DebugLog --> MoreBatches{More<br/>Batches?}
+    MoreBatches -->|Yes| BatchLoop
+    MoreBatches -->|No| AllAnswers[All Textract Results:<br/>~78/119 queries answered]
+
+    AllAnswers --> Step4[Step 4: Generate Drools DRL Rules]
+    Step4 --> RuleGen[LLM Generates with Temperature=0:<br/>- DRL Rules<br/>- Decision Tables<br/>- Explanations]
+
+    RuleGen --> CacheRules[Cache Rules by Content Hash<br/>Deterministic: Same PDF = Same Rules]
+
+    CacheRules --> Step5[Step 5: Automated Drools Deployment]
+    CacheHit --> Step5
+
+    Step5 --> OrchestratorCheck{Container<br/>Orchestrator<br/>Enabled?}
+
+    OrchestratorCheck -->|Yes| CheckContainerExists{Docker Container<br/>in Registry?}
+    OrchestratorCheck -->|No| DeployToShared[Deploy to Shared Drools Container]
+
+    CheckContainerExists -->|Yes| ReuseContainer[Reuse Existing Container<br/>Update KIE Container Inside]
+    CheckContainerExists -->|No| CreateDockerContainer[Create New Docker Container:<br/>drools-container_id]
+
+    CreateDockerContainer --> AssignPort[Assign Port: 8081, 8082, etc.]
+    AssignPort --> StartContainer[Start Container & Wait for Health]
+    StartContainer --> RegisterContainer[Register in container_registry.json]
+
+    RegisterContainer --> DeployKJar
+    ReuseContainer --> DeployKJar
+    DeployToShared --> DeployKJar
+
+    DeployKJar[Build & Deploy KJar]
+    DeployKJar --> TempDir[Create Temporary Directory]
+    TempDir --> SaveDRL[Save DRL File]
+    SaveDRL --> CreateKJar[Create KJar Structure<br/>Maven Project Layout]
+    CreateKJar --> MavenBuild[Maven Build:<br/>mvn clean install]
+
+    MavenBuild --> BuildSuccess{Build<br/>Success?}
+    BuildSuccess -->|No| BuildFail[Status: Partial<br/>Manual Build Required]
+    BuildSuccess -->|Yes| CopyFiles[Copy JAR & DRL to<br/>Temp Location for S3]
+
+    CopyFiles --> DeployKIE[Deploy to KIE Server]
+
+    DeployKIE --> KIEExists{KIE Container<br/>Exists?}
+    KIEExists -->|Yes| Dispose[Dispose Old KIE Container<br/>Same container_id]
+    Dispose --> CreateNew[Create New KIE Container<br/>with New Version timestamp]
+    KIEExists -->|No| CreateNew
+
+    CreateNew --> DeploySuccess{Deployment<br/>Success?}
+    DeploySuccess -->|No| DeployFail[Status: Partial<br/>KJar Built, Deployment Failed]
+    DeploySuccess -->|Yes| CleanTemp[Auto-Delete Temp Build Directory]
+
+    CleanTemp --> Step6[Step 6: Upload Files to S3]
+
+    Step6 --> UploadJAR[Upload JAR File<br/>s3://bucket/generated-rules/<br/>container_id/version/file.jar]
+    UploadJAR --> UploadDRL[Upload DRL File<br/>s3://bucket/generated-rules/<br/>container_id/version/file.drl]
+
+    UploadDRL --> GenerateExcel[Generate Excel Spreadsheet]
+
+    GenerateExcel --> ParseDRL[Parse DRL Rules:<br/>- Rule Names<br/>- Conditions<br/>- Actions<br/>- Priority]
+
+    ParseDRL --> CreateExcel[Create Multi-Sheet Excel:<br/>1. Summary Sheet<br/>2. Rules Sheet<br/>3. Raw DRL Sheet]
+
+    CreateExcel --> UploadExcel[Upload Excel to S3<br/>Filename: bank_policy_rules_timestamp.xlsx]
+
+    UploadExcel --> CleanExcel[Delete Temp Excel File]
+    CleanExcel --> FinalClean[Clean Up All Temp Files]
+
+    FinalClean --> Response[Return Response JSON]
+    BuildFail --> Response
+    DeployFail --> Response
+
+    Response --> ResponseContent{Response Contains}
+    ResponseContent --> RC1[container_id]
+    ResponseContent --> RC2[status: completed/partial/failed]
+    ResponseContent --> RC3[jar_s3_url]
+    ResponseContent --> RC4[drl_s3_url]
+    ResponseContent --> RC5[excel_s3_url]
+    ResponseContent --> RC6[cache_hit: true/false]
+    ResponseContent --> RC7[policies_extracted count]
+    ResponseContent --> RC8[queries_generated count]
+    ResponseContent --> RC9[textract_results count]
+
+    RC1 --> End([Workflow Complete])
+    RC2 --> End
+    RC3 --> End
+    RC4 --> End
+    RC5 --> End
+    RC6 --> End
+    RC7 --> End
+    RC8 --> End
+    RC9 --> End
+
+    style Start fill:#e1f5e1
+    style End fill:#e1f5e1
+    style Step1 fill:#e3f2fd
+    style Step2 fill:#fff3e0
+    style Step3 fill:#f3e5f5
+    style Step4 fill:#e3f2fd
+    style Step5 fill:#e3f2fd
+    style Step6 fill:#e3f2fd
+    style ExtractTOC fill:#fff3e0
+    style FindBoundary fill:#fff3e0
+    style AnalyzeSection fill:#fff3e0
+    style AntiHallucinate fill:#ffebee
+    style TwoPassParse fill:#f3e5f5
+    style Pass1 fill:#f3e5f5
+    style Pass2 fill:#f3e5f5
+    style CacheRules fill:#e8f5e9
+    style CreateDockerContainer fill:#fce4ec
+    style RegisterContainer fill:#fce4ec
+            </pre>
+        </div>
+    </div>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+    </script>
+</body>
+</html>
