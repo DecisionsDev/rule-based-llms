@@ -5,7 +5,7 @@ onnxruntime==1.19.2
 flask
 flask-cors
 langchain
-langchain_community==0.2.6
+langchain_community==0.3.27
 langchain_core
 langchain-text-splitters
 langsmith
